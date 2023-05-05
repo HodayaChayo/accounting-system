@@ -1,24 +1,16 @@
 import React from 'react';
-
-import './App.css';
+import Header from './components/Header/Header.js';
+import Main from './components/Main/Main.js';
+import Footer from './components/Footer/Footer.js';
 
 function App() {
-  const [data, setData] = React.useState(null);
-
-  React.useEffect(() => {
-    fetch('/api')
-      .then(res => res.json())
-      .then(data => setData(data.message));
-  }, []);
-
   return (
     <div className='App'>
-      <header className='App-header'>
-        <p>{!data ? 'Loading...' : data}</p>
-      </header>
+      <Header />
+      <Main />
+      <Footer />
     </div>
   );
 }
-///hodaya
 
 export default App;
