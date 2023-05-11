@@ -1,22 +1,17 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-// import Header from './components/Header/Header.js';
-// import Main from './components/Main/Main.js';
-// import Footer from './components/Footer/Footer.js';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './components/pages/Login/Login.js';
+import Home from './components/pages/Home/Home.js';
 
 function App() {
   return (
     <div className='App'>
       <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Login/>}>
-        </Route>
-      </Routes>
+        <Routes>
+          <Route path='/' element={<Login />}></Route>
+          <Route path='/home' element={<Home/>}></Route>
+        </Routes>
       </BrowserRouter>
-      {/* <Header />
-      <Login/>
-      <Footer /> */}
     </div>
   );
 }

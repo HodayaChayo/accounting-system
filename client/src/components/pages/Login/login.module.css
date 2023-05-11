@@ -1,5 +1,11 @@
-.login{
+.main{
+  display: flex;
+}
+
+.login {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
   /* border: solid red 3px; */
 }

@@ -5,12 +5,13 @@
   padding: 0;
 }
 
-:root{
+/* :root{
   font-size: 62.5%;
-}
+} */
 
-.App{
-  font-size: 1.6rem;
+.body{
+  /* font-size: 1.6rem; */
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   display: block;
   display: flex;
   flex-direction: column;
