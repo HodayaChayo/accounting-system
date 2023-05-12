@@ -1,6 +1,17 @@
 import React from 'react';
-export default function Button(props){
-  return(
-    <button>{props.text}</button>
-  )
+
+const handleClick = (e) => {
+  e.preventDefault();
+  console.log('The link was clicked.');
+}
+
+export default function Button(props) {
+
+
+  return (
+    <button onClick={handleClick}>
+      {props.text}
+      {props.fun()}
+    </button>
+  );
 }
