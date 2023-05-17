@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const handleClick = (e) => {
-  e.preventDefault();
-  console.log('The link was clicked.');
-}
+export default class Button extends Component {
+  handleClick = e => {
+    e.preventDefault();
+    console.log('The link was clicked.');
+    
+      this.props.fun();
+    
+  };
 
-export default function Button(props) {
-
-
-  return (
-    <button onClick={handleClick}>
-      {props.text}
-      {props.fun()}
-    </button>
-  );
+  render() {
+    return <button onClick={this.handleClick}>{this.props.text}</button>;
+  }
 }

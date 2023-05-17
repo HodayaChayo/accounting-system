@@ -23,20 +23,20 @@ app.post('/login', (req, res) => {
   req.on('end', () => {
     try {
       // we get here when all the data has been received (all chunks)
-      console.log('No more data');
-      console.log(body);
       const obj = JSON.parse(body);
 
       // do something with JSON
       console.log(obj);
-      const name = obj[0];
-      const pass = obj[1];
+      const name = obj.name;
+      const pass = obj.pass;
 
       console.log(name);
       console.log(pass);
 
       let connect = false;
       // check if the userName and password exist and correct
+
+      console.log(isUserExist(name, pass));
 
       let result = {};
       result.isConnect = connect;

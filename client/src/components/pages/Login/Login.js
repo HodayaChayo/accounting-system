@@ -13,8 +13,8 @@ export default class Login extends Component {
   editUserName = event => {
     this.setState(() => {
       return {
-        name: event.target.value,
-        password: this.password,
+        userName: event.target.value,
+        password: this.state.password,
       };
     });
   };
@@ -22,15 +22,14 @@ export default class Login extends Component {
   editPassword = event => {
     this.setState(() => {
       return {
-        userName: this.userName,
+        userName: this.state.userName,
         password: event.target.value,
       };
     });
   };
 
-  loginVerification = obj => {
-    const data = { name: obj.userName, pas: obj.password };
-    console.log('login verification is working');
+  loginVerification = (name, pass) => {
+    const data = { name, pass };
     console.log(this.state);
     console.log(data);
     fetch('login', {
@@ -67,7 +66,7 @@ export default class Login extends Component {
               onChange={this.editUserName}
             ></input>
             <input
-              type='email'
+              type='password'
               name='password'
               placeholder='סיסמה'
               onChange={this.editPassword}
@@ -75,7 +74,7 @@ export default class Login extends Component {
             <Button
               text='כניסה'
               fun={() => {
-                this.loginVerification(this.state);
+                this.loginVerification(this.state.userName, this.state.password);
               }}
             />
           </form>
