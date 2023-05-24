@@ -36,7 +36,9 @@ app.post('/login', (req, res) => {
       let connect = false;
       // check if the userName and password exist and correct
 
-      console.log(isUserExist(name, pass));
+      // console.log(isUserExist(name, pass));
+      let resulttttt = isUserExist(name, pass)
+      console.log(resulttttt);
 
       let result = {};
       result.isConnect = connect;
