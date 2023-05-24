@@ -28,6 +28,17 @@ export default class Login extends Component {
     });
   };
 
+  // Function that checking if the mail is contain @ and dot.
+  checkUserName = tmpUserName => {
+    return /\S+@\S+\.\S+/.test(tmpUserName);
+  };
+
+  // check that password length is above 8 and contain at least one letter and number
+  checkPassword = tmpPassword => {
+    if (tmpPassword.length >= 8 && tmpPassword.length < 20)
+      return /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/.test(tmpPassword);
+  };
+
   loginVerification = (name, pass) => {
     const data = { name, pass };
     console.log(this.state);
@@ -74,7 +85,10 @@ export default class Login extends Component {
             <Button
               text='כניסה'
               fun={() => {
-                this.loginVerification(this.state.userName, this.state.password);
+                this.loginVerification(
+                  this.state.userName,
+                  this.state.password
+                );
               }}
             />
           </form>
