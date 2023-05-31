@@ -1,0 +1,12 @@
+.addPopup{
+  background-color: #f8b7b7;
+  width: 420px;
+  padding: 30px 40px;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  left: 50%;
+  top: 50%;
+  border-radius: 8px;
+  display: 1;
+  font-family: “Poppins”,sans-serif;
+}

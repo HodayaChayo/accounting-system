@@ -2,7 +2,7 @@
 
 const path = require('path');
 const express = require('express');
-const {db, isUserExist} = require('./db-connection')
+const { isUserExist } = require('./db-connection');
 const port = process.env.port || 3001;
 
 const app = express();
@@ -10,12 +10,14 @@ const app = express();
 // Have Node serve the files for our built React app
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 
-// 
+// connection to react html
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
 
-app.post('/login', (req, res) => {
+// app.use('/login', connection);
+
+app.post('/login',(req, res) => {
   const body = [];
   req.on('data', chunk => {
     body.push(chunk);
@@ -37,9 +39,8 @@ app.post('/login', (req, res) => {
       // check if the userName and password exist and correct
 
       // console.log(isUserExist(name, pass));
-      let resulttttt = isUserExist(name, pass)
-      console.log(resulttttt);
-
+      connect = isUserExist(name, pass);
+      console.log(connect);
       let result = {};
       result.isConnect = connect;
       // return answer to client

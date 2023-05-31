@@ -1,4 +1,13 @@
 .tableDiv {
-  color: red;
   border: solid red 2px;
+  display: flex;
+  /* display: grid; */
+  flex-direction: row;
+  gap: 1rem;
+  width: auto;
+  height: 80vh;
+}
+
+.tableFields{
+  margin: 0 0.5em 0 0.5em;
 }
