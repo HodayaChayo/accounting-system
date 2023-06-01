@@ -19,8 +19,9 @@ router.post('/', (req, res) => {
   req.on('end', () => {
     try {
       const obj = JSON.parse(body);
-      const name = obj.name;
-      const pass = obj.pass;
+      // console.log(obj);
+      const name = obj.userName;
+      const pass = obj.password;
       // console.log(name);
       // console.log(pass);
 
