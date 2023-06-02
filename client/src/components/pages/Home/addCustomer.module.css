@@ -1,6 +1,6 @@
 .addPopup{
   background-color: #f8b7b7;
-  width: 420px;
+  max-width: 60%;
   padding: 30px 40px;
   position: absolute;
   transform: translate(-50%,-50%);
@@ -9,4 +9,40 @@
   border-radius: 8px;
   display: 1;
   font-family: “Poppins”,sans-serif;
+  display: grid;
+  text-align: center;
+  /* grid-template-columns: repeat(2, 1fr); */
+  /* flex-direction: row; */
+}
+
+.topForm{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  /* max-width: 60%; */
+
+}
+
+.downForm{
+  display: flex;
+  flex-direction: column;
+}
+
+/* .topForm p{
+  max-width: 30vw;
+  color: aqua;
+
+} */
+
+
+.buttons{
+  display: flex;
+}
+select{
+  /* border: solid blue 3px; */
+  padding: 0 0.5em 0 0.5em;
+}
+
+.buttons :nth-of-type(1){
+  margin-left: auto;
 }
