@@ -4,9 +4,8 @@ export default class Button extends Component {
   handleClick = e => {
     e.preventDefault();
     console.log('The link was clicked.');
-    
-      this.props.fun();
-    
+
+    this.props.fun();
   };
 
   render() {
