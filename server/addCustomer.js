@@ -26,12 +26,13 @@ async function isUserExist(userName) {
 }
 
 function insertCustomer(cusObj) {
-  const insertSql =
-    'INSERT INTO users(user_name, password) VALUES (?,?); INSERT INTO customers(user_name, id_vat_num, name, phone, business_type, vat_frequency, tax_income_frequency, tax_income_percent, note) VALUES (?,?,?,?,?,?,?,?,?)';
+  const insertUser = 'INSERT INTO users(user_name, password) VALUES (?,?)';
 
-  const values = [
-    cusObj.userName,
-    cusObj.password,
+  const insertCus =
+    'INSERT INTO customers(user_name, id_vat_num, name, phone, business_type, vat_frequency, tax_income_frequency, tax_income_percent, note) VALUES (?,?,?,?,?,?,?,?,?)';
+
+  const userValues = [cusObj.userName, cusObj.password];
+  const cusValues = [
     cusObj.userName,
     cusObj.idVAT,
     cusObj.cusName,
@@ -39,15 +40,25 @@ function insertCustomer(cusObj) {
     cusObj.type,
     cusObj.VATFrequency,
     cusObj.taxFrequency,
-    Number(cusObj.taxPercent) ,
-    cusObj.note
+    Number(cusObj.taxPercent),
+    cusObj.note,
   ];
 
-  con.query(insertSql, values, (err, rows) =>{
-    if(err) throw err
+  let countRows = 0;
+  con.query(insertUser, userValues, (err, rows) => {
+    if (err) throw err;
     console.log('Row inserted = ' + rows.affectedRows);
-    return rows.affectedRows
-  })
+    countRows += rows.affectedRows;
+  });
+
+  con.query(insertCus, cusValues, (err, rows) => {
+    if (err) throw err;
+    console.log('Row inserted = ' + rows.affectedRows);
+    countRows += rows.affectedRows;
+  });
+
+  console.log('my rows: ', countRows);
+  return countRows;
 }
 
 // async function checkUser(userName) {
@@ -76,7 +87,8 @@ router.post('/', (req, res) => {
       const userExists = await isUserExist(obj.userName);
       // console.log('User exists:', userExists);
       if (!userExists) {
-        insertCustomer(obj)
+        insertCustomer(obj);
+        res.end(JSON.stringify({ isAdd: true, message: 'משתמש נוסף בהצלחה' }));
       } else {
         console.log('not added');
         res.end(

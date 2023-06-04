@@ -22,7 +22,6 @@ export default function Login() {
       setErrUser('שם משתמש לא תקין');
     }
     return false;
-    // return /\S+@\S+\.\S+/.test(tmpUserName);
   };
 
   // if password hes minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character

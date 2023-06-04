@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import css from './addCustomer.module.css';
 import Button from '../../Button/Button';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddCustomer(props) {
   const [userName, setUserName] = useState('');
@@ -14,6 +16,7 @@ export default function AddCustomer(props) {
   const [taxPercent, setTaxPercent] = useState('');
   const [manager, setManager] = useState('');
   const [note, setNote] = useState('');
+  const [isCreated, setIsCreated] = useState(1);
 
   const checkCusName = cusName => {
     if (cusName.length() > 0 && cusName.length() <= 30) {
@@ -34,13 +37,13 @@ export default function AddCustomer(props) {
     console.log(phone);
   };
 
-  const checkPhoneNumber = phone => {
-    if (phone.match('[0-9]{10}')) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+  // const checkPhoneNumber = phone => {
+  //   if (phone.match('[0-9]{10}')) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
   // console.log(checkPhoneNumber('787'));
 
@@ -72,9 +75,17 @@ export default function AddCustomer(props) {
         console.log(res);
         if (res.isAdd) {
           console.log('add!');
+          console.log(res.message);
+          setIsCreated(2);
+          toast.success('Success Notification !', {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
         } else {
           console.log('not add');
           console.log(res.message);
+          toast.error(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
         }
       })
       .catch(err => {
@@ -86,6 +97,7 @@ export default function AddCustomer(props) {
     <div className={css.addPopup}>
       <h2>פתיחת לקוח חדש</h2>
       <h3>פרטי לקוח</h3>
+      <ToastContainer />
       <div className={css.topForm}>
         <p>
           *שם משתמש:
@@ -187,7 +199,12 @@ export default function AddCustomer(props) {
 
         <p>
           הערות ללקוח:
-          <textarea name='note' cols='30' rows='5' onChange={e => setNote(e.target.value)}></textarea>
+          <textarea
+            name='note'
+            cols='30'
+            rows='5'
+            onChange={e => setNote(e.target.value)}
+          ></textarea>
         </p>
       </div>
 
@@ -195,8 +212,9 @@ export default function AddCustomer(props) {
         <Button
           text='צור לקוח'
           fun={() => {
-            props.display(false);
-            createNewCustomer()
+            createNewCustomer();
+            console.log('is created: ', isCreated);
+              props.display(false);
           }}
         />
         <Button
