@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className='body'>
       <Header title='דף הבית' />
-
+      <ToastContainer />
       <main>
         <Button
           text='הוספת לקוח'
@@ -22,7 +22,7 @@ export default function Home() {
             setDisplayAdd(true);
           }}
         />
-        {displayAdd && <AddCustomer display={setDisplayAdd} />}
+        {displayAdd && <AddCustomer display={setDisplayAdd}/>}
         <Table
           fieldsArr={['עוסק', 'מספר עוסק', 'סוג', 'פעיל', 'מסמכים לקליטה']}
         />

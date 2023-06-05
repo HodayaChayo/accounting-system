@@ -88,11 +88,11 @@ router.post('/', (req, res) => {
       // console.log('User exists:', userExists);
       if (!userExists) {
         insertCustomer(obj);
-        res.end(JSON.stringify({ isAdd: true, message: 'משתמש נוסף בהצלחה' }));
+        res.end(JSON.stringify({ isAdd: true, message: 'הלקוח נוצר בהצלחה' }));
       } else {
         console.log('not added');
         res.end(
-          JSON.stringify({ isAdd: false, message: 'שם משתמש קיים במערכת!' })
+          JSON.stringify({ isAdd: false, message: 'לקוח לא נוצר, שם משתמש כבר קיים במערכת!' })
         );
       }
     } catch (error) {

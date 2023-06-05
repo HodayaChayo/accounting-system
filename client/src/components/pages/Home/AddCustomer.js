@@ -16,7 +16,7 @@ export default function AddCustomer(props) {
   const [taxPercent, setTaxPercent] = useState('');
   const [manager, setManager] = useState('');
   const [note, setNote] = useState('');
-  const [isCreated, setIsCreated] = useState(1);
+  const [isCreated, setIsCreated] = useState(false);
 
   const checkCusName = cusName => {
     if (cusName.length() > 0 && cusName.length() <= 30) {
@@ -47,7 +47,8 @@ export default function AddCustomer(props) {
 
   // console.log(checkPhoneNumber('787'));
 
-  const createNewCustomer = () => {
+
+  const createNewCustomer = async() => {
     console.log('in create');
     const addCus = {
       userName,
@@ -70,14 +71,14 @@ export default function AddCustomer(props) {
       },
       body: JSON.stringify(addCus),
     })
-      .then(res => res.json())
-      .then(res => {
+      .then(async res => res.json())
+      .then(async res => {
         console.log(res);
         if (res.isAdd) {
           console.log('add!');
           console.log(res.message);
-          setIsCreated(2);
-          toast.success('Success Notification !', {
+          await setIsCreated(true);
+          toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
         } else {
@@ -97,7 +98,7 @@ export default function AddCustomer(props) {
     <div className={css.addPopup}>
       <h2>פתיחת לקוח חדש</h2>
       <h3>פרטי לקוח</h3>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className={css.topForm}>
         <p>
           *שם משתמש:
@@ -213,8 +214,11 @@ export default function AddCustomer(props) {
           text='צור לקוח'
           fun={() => {
             createNewCustomer();
+            // if (isCreated) {
+            //   props.display(false);
+            // }
+            props.display(false);
             console.log('is created: ', isCreated);
-              props.display(false);
           }}
         />
         <Button
