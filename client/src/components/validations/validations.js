@@ -17,4 +17,20 @@ const checkPassword = tmpPassword => {
   return false;
 };
 
+// check if customer name is not empty and contain at least one letter and max length is 30
+const checkCusName = cusName => {
+  if(cusName.length > 0 && cusName.length <31 && /[a-zA-Z]+$/.test(cusName)){
+    return true
+  }
+  return false
+}
+
+// check if phone number is not empty and contain numbers only
+const checkPhone = phone =>{
+  if(phone != '' && /^[0-9]*$/.test(phone)){
+    return true
+  }
+  return false
+}
+
 export default {checkUserName, checkPassword};
