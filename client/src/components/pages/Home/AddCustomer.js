@@ -3,6 +3,13 @@ import css from './addCustomer.module.css';
 import Button from '../../Button/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {
+  checkUserName,
+  checkPassword,
+  checkCusName,
+  checkPhone,
+  checkVatId,
+} from '../../validations/validations';
 
 export default function AddCustomer(props) {
   const [userName, setUserName] = useState('');
@@ -18,38 +25,8 @@ export default function AddCustomer(props) {
   const [note, setNote] = useState('');
   const [isCreated, setIsCreated] = useState(false);
 
-  const checkCusName = cusName => {
-    if (cusName.length() > 0 && cusName.length() <= 30) {
-      setCusName(cusName);
-    }
-  };
-
-  const tryPhone = e => {
-    const re = /^[0-9\b]+$/;
-
-    setPhone(e.target.value.replace(/[^A-Za-z\d]/gi, ''));
-
-    // if value is not blank, then test the regex
-
-    // if (e.target.value === '' || re.test(e.target.value)) {
-    //   setPhone(e.target.value);
-    // }
-    console.log(phone);
-  };
-
-  // const checkPhoneNumber = phone => {
-  //   if (phone.match('[0-9]{10}')) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // };
-
-  // console.log(checkPhoneNumber('787'));
-
-
-  const createNewCustomer = async() => {
-    console.log('in create');
+  // send the new customer data to server, and return a message if customer created or not.
+  const createNewCustomer = async () => {
     const addCus = {
       userName,
       password,
@@ -73,17 +50,16 @@ export default function AddCustomer(props) {
     })
       .then(async res => res.json())
       .then(async res => {
-        console.log(res);
+        // console.log(res);
         if (res.isAdd) {
-          console.log('add!');
-          console.log(res.message);
-          await setIsCreated(true);
+          // console.log('add!');
+          // console.log(res.message);
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
         } else {
-          console.log('not add');
-          console.log(res.message);
+          // console.log('not add');
+          // console.log(res.message);
           toast.error(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
@@ -105,7 +81,7 @@ export default function AddCustomer(props) {
           <input
             type='email'
             name='userName'
-            placeholder='שם משתמש'
+            placeholder='מייל: xxx@yyy.zzz'
             maxLength={35}
             onChange={e => setUserName(e.target.value)}
           ></input>
@@ -135,7 +111,7 @@ export default function AddCustomer(props) {
           <input
             type='text'
             name='phone'
-            placeholder='טלפון נייד'
+            placeholder='ללא סימני -'
             minLength={10}
             maxLength={10}
             onChange={e => setPhone(e.target.value)}
@@ -146,7 +122,7 @@ export default function AddCustomer(props) {
           <input
             type='text'
             name='vatNum'
-            placeholder='מספר עוסק / ח.פ'
+            placeholder='9 ספרות'
             minLength={9}
             maxLength={9}
             pattern='[0-9]'
@@ -166,7 +142,11 @@ export default function AddCustomer(props) {
         </p>
         <p>
           תדירות מע"מ:
-          <select name='VAT' onChange={e => setVATFrequency(e.target.value)}>
+          <select
+            name='VAT'
+            onChange={e => setVATFrequency(e.target.value)}
+            disabled={type === 'noVAT'}
+          >
             <option label='חד חודשי' value='1'></option>
             <option label='דו חודשי' value='2'></option>
           </select>
@@ -208,18 +188,30 @@ export default function AddCustomer(props) {
           ></textarea>
         </p>
       </div>
-
+      {(!checkUserName(userName) ||
+        !checkPassword(password) ||
+        !checkCusName(cusName) ||
+        !checkPhone(phone) ||
+        !checkVatId) && <div>נא לוודא שהשדות חובה מלאים כראוי</div>}
+      {(userName === '' ||
+        password === '' ||
+        cusName === '' ||
+        phone === '' ||
+        idVAT === '') && <div>נא לוודא שכל השדות חובה מלאים</div>}
       <div className={css.buttons}>
         <Button
           text='צור לקוח'
           fun={() => {
             createNewCustomer();
-            // if (isCreated) {
-            //   props.display(false);
-            // }
             props.display(false);
-            console.log('is created: ', isCreated);
           }}
+          isDisable={
+            !checkUserName(userName) ||
+            !checkPassword(password) ||
+            !checkCusName(cusName) ||
+            !checkPhone(phone) ||
+            !checkVatId
+          }
         />
         <Button
           text='ביטול'

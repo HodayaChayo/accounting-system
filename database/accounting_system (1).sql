@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 03, 2023 at 05:53 PM
+-- Generation Time: Jun 08, 2023 at 08:46 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -152,6 +152,14 @@ CREATE TABLE `users` (
   `user_name` varchar(35) NOT NULL,
   `password` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_name`, `password`) VALUES
+('ezrachayu94@gmail.com', 'Ee@22121994'),
+('hodayachayo@gmail.com', 'Hh@150600');
 
 -- --------------------------------------------------------
 

@@ -1,8 +1,8 @@
-'use strict';
+// 'use strict';
 
 // Function that checking if the mail is correct.
 const checkUserName = tmpUserName => {
-  if (tmpUserName != '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(tmpUserName)) {
+  if (tmpUserName !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(tmpUserName)) {
     return true;
   }
   return false;
@@ -11,7 +11,7 @@ const checkUserName = tmpUserName => {
 // if password hes minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
 const checkPassword = tmpPassword => {
   const passPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  if (tmpPassword != '' && passPattern.test(tmpPassword)) {
+  if (tmpPassword !== '' && passPattern.test(tmpPassword)) {
     return true;
   }
   return false;
@@ -19,18 +19,25 @@ const checkPassword = tmpPassword => {
 
 // check if customer name is not empty and contain at least one letter and max length is 30
 const checkCusName = cusName => {
-  if(cusName.length > 0 && cusName.length <31 && /[a-zA-Z]+$/.test(cusName)){
-    return true
+  if (cusName !== '' && /[א-תa-zA-Z]+$/.test(cusName)) {
+    return true;
   }
-  return false
-}
+  return false;
+};
 
 // check if phone number is not empty and contain numbers only
-const checkPhone = phone =>{
-  if(phone != '' && /^[0-9]*$/.test(phone)){
+const checkPhone = phone => {
+  if (phone !== '' && /\d{10}$/.test(phone)) {
+    return true;
+  }
+  return false;
+};
+
+const checkVatId = vatId =>{
+  if(vatId !== '' && /\d{9}$/.test(vatId)){
     return true
   }
   return false
 }
 
-export default {checkUserName, checkPassword};
+export { checkUserName, checkPassword, checkCusName, checkPhone, checkVatId};
