@@ -33,11 +33,21 @@ const checkPhone = phone => {
   return false;
 };
 
-const checkVatId = vatId =>{
-  if(vatId !== '' && /\d{9}$/.test(vatId)){
-    return true
+const checkVatId = vatId => {
+  if (vatId !== '' && /\d{9}$/.test(vatId)) {
+    return true;
   }
-  return false
-}
+  return false;
+};
 
-export { checkUserName, checkPassword, checkCusName, checkPhone, checkVatId};
+const checkTaxPercent = taxPercent => {
+  if (
+    taxPercent !== '' &&
+    /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/.test(taxPercent)
+  ) {
+    return true;
+  }
+  return false;
+};
+
+export { checkUserName, checkPassword, checkCusName, checkPhone, checkVatId, checkTaxPercent};

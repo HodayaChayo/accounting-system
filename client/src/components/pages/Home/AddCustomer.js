@@ -9,6 +9,7 @@ import {
   checkCusName,
   checkPhone,
   checkVatId,
+  checkTaxPercent,
 } from '../../validations/validations';
 
 export default function AddCustomer(props) {
@@ -23,7 +24,6 @@ export default function AddCustomer(props) {
   const [taxPercent, setTaxPercent] = useState('');
   const [manager, setManager] = useState('');
   const [note, setNote] = useState('');
-  const [isCreated, setIsCreated] = useState(false);
 
   // send the new customer data to server, and return a message if customer created or not.
   const createNewCustomer = async () => {
@@ -162,7 +162,7 @@ export default function AddCustomer(props) {
           </select>
         </p>
         <p>
-          אחוז מקדמות:
+          *אחוז מקדמות:
           <input
             type='text'
             name='taxPercent'
@@ -192,12 +192,13 @@ export default function AddCustomer(props) {
         !checkPassword(password) ||
         !checkCusName(cusName) ||
         !checkPhone(phone) ||
-        !checkVatId) && <div>נא לוודא שהשדות חובה מלאים כראוי</div>}
+        !checkVatId ||
+        !checkTaxPercent(taxPercent)) && <div className={css.errors}>נא לוודא שהשדות חובה מלאים כראוי</div>}
       {(userName === '' ||
         password === '' ||
         cusName === '' ||
         phone === '' ||
-        idVAT === '') && <div>נא לוודא שכל השדות חובה מלאים</div>}
+        idVAT === '') && <div className={css.errors}>נא לוודא שכל השדות חובה מלאים</div>}
       <div className={css.buttons}>
         <Button
           text='צור לקוח'
@@ -210,7 +211,8 @@ export default function AddCustomer(props) {
             !checkPassword(password) ||
             !checkCusName(cusName) ||
             !checkPhone(phone) ||
-            !checkVatId
+            !checkVatId ||
+            !checkTaxPercent(taxPercent)
           }
         />
         <Button
