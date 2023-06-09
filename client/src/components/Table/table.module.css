@@ -1,7 +1,7 @@
-.tableDiv {
+/* .tableDiv {
   border: solid red 2px;
   display: flex;
-  /* display: grid; */
+  display: grid;
   flex-direction: row;
   gap: 1rem;
   width: auto;
@@ -10,4 +10,32 @@
 
 .tableFields{
   margin: 0 0.5em 0 0.5em;
+} */
+
+.container {
+  display: flex;
+  align-items: center;
+  margin: 3rem 0;
+  flex-direction: column;
+}
+
+table {
+  border-spacing: 0;
+  border: 1px solid black;
+}
+
+tr:last-child > td {
+  border-bottom: 0;
+}
+
+th,
+td {
+  margin: 0;
+  padding: 0.5rem;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+}
+th:last-child ,
+td:last-child {
+  border-right: 0;
 }
