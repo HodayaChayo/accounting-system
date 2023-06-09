@@ -24,6 +24,23 @@ export default function Home() {
     fetchData();
   }, []);
 
+
+  // fetch('cusTable', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(),
+  // })
+  //   .then(async res => res.json())
+  //   .then(async res => {
+  //     console.log(res);
+      
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
+
   return (
     <div className='body'>
       <Header title='דף הבית' />

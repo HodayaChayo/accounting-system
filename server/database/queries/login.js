@@ -1,16 +1,10 @@
 'use strict';
+const con = require('../dbConnection');
 
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql');
-const con = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: '',
-  database: 'accounting_system',
-});
 
-// verification userName and password, connect if correct 
+// verification userName and password, connect if correct
 router.post('/', (req, res) => {
   const body = [];
   req.on('data', chunk => {

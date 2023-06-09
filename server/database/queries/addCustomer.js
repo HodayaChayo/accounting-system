@@ -2,13 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql');
-const con = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: '',
-  database: 'accounting_system',
-});
+const con = require('../dbConnection');
 
 async function isUserExist(userName) {
   const selectUser = 'SELECT * FROM users WHERE user_name = ?';
@@ -60,20 +54,6 @@ function insertCustomer(cusObj) {
   console.log('my rows: ', countRows);
   return countRows;
 }
-
-// async function checkUser(userName) {
-//   try {
-//     const userExists = await isUserExist(userName);
-//     console.log('User exists:', userExists);
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// }
-
-// // Call the function
-// checkUser('hodayachayo@gmail.com');
-
-// console.log('is return',isUserExist('hodayachayo@gmail.com'));
 
 router.post('/', (req, res) => {
   const body = [];
