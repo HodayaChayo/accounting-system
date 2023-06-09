@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');
+const { json } = require('body-parser');
 
 router.post('/', (req, res) => {
   const body = [];
@@ -11,6 +12,12 @@ router.post('/', (req, res) => {
   });
   req.on('end', async () => {
     try {
+      const sql = 'SELECT `name`,`id_vat_num`, `business_type`,`user_name` FROM `customers` WHERE 1;'
+      con.query(sql, (err, rows) =>{
+        if(err) throw err
+        console.log(rows);
+        res.end(JSON.stringify(rows))
+      })
     } catch (error) {
       console.error(error.message);
     }

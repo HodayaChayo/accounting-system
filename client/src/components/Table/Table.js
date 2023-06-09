@@ -5,42 +5,10 @@ import css from './table.module.css';
 import { v4 as uuid } from 'uuid';
 import { format } from 'date-fns';
 
-export default function CustomersTable({ mockData }) {
-  const COLUMNS = [
-    {
-      Header: 'id',
-      accessor: 'id',
-      disableFilters: true,
-    },
-    {
-      Header: 'First Name',
-      accessor: 'first_name',
-    },
-    {
-      Header: 'Last Name',
-      accessor: 'last_name',
-    },
-    {
-      Header: 'Email',
-      accessor: 'email',
-    },
-    {
-      Header: 'DOB',
-      accessor: 'date_of_birth',
-      Cell: ({ value }) => {
-        return format(new Date(value), 'dd/MM/yyyy');
-      },
-      disableFilters: true,
-    },
-    {
-      Header: 'Age',
-      accessor: 'age',
-      disableFilters: true,
-    },
-  ];
+export default function CustomersTable({ myData, myColumns }) {
 
-  const columns = useMemo(() => COLUMNS, []); // memoize before adding to useTable hook
-  const data = useMemo(() => [...mockData], [mockData]);
+  const columns = useMemo(() => myColumns, []); // memoize before adding to useTable hook
+  const data = useMemo(() => [...myData], [myData]);
 
   const defaultColumn = useMemo(() => {
     return {
