@@ -1,10 +1,10 @@
 import React from 'react';
-import HamburgerMenu from '../Menu/HamburgerMenu';
+import Navbar from '../Menu/Navbar';
 export default function Header(props) {
   return (
     <div>
       <h1>{props.title}</h1>
-      <HamburgerMenu />
+      <Navbar />
     </div>
   );
 }
