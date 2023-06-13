@@ -35,7 +35,3 @@ td {
   border-bottom: 1px solid black;
   border-right: 1px solid black;
 }
-th:last-child ,
-td:last-child {
-  border-right: 0;
-}

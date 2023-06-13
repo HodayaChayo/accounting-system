@@ -3,15 +3,15 @@ export default function ColumnFilter({column}) {
   const { filterValue, setFilter } = column;
   return (
     <span>
-      Search:{' '}
+      {/* Search:{' '} */}
       <input
         value={filterValue || ''}
         onChange={e => {
           setFilter(e.target.value);
         }}
-        placeholder={`Search records...`}
+        placeholder={`חיפוש`}
         style={{
-          fontSize: '1.1rem',
+          // fontSize: '1em',
           margin: '1rem 0',
         }}
       />

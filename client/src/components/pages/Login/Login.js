@@ -58,6 +58,7 @@ export default function Login() {
         .then(res => {
           console.log(res);
           if (res.isConnect) {
+            localStorage.setItem('ConnectedUser', userName)
             window.location.href = '/home';
           } else {
             console.log('not connected');

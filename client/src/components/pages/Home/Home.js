@@ -13,19 +13,10 @@ import axios from 'axios';
 export default function Home() {
   const [displayAdd, setDisplayAdd] = useState(false);
   const [data, setData] = useState([]);
+  const [dataIsChanged, setDataIsChanged] = useState(0);
 
-  // const fetchData = async () => {
-  //   const { data } = await axios(
-  //     'https://giftea.github.io/proj-data/mock.json'
-  //   ).catch(err => console.log(err));
-  //   setData(data);
-  // };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  const askCustomerData = () => {
+  useEffect(() => {
     fetch('cusTable', {
       method: 'POST',
       headers: {
@@ -41,7 +32,8 @@ export default function Home() {
       .catch(err => {
         console.log(err);
       });
-  };
+  },[dataIsChanged])
+
 
   return (
     <div className='body'>
@@ -54,8 +46,7 @@ export default function Home() {
             setDisplayAdd(true);
           }}
         />
-        {displayAdd && <AddCustomer display={setDisplayAdd} />}
-        {/* {askCustomerData()} */}
+        {displayAdd && <AddCustomer display={setDisplayAdd} dataChange={setDataIsChanged}/>}
         <Table myData={data} myColumns={cusColumns} />
       </main>
       <Footer />

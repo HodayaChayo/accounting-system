@@ -18,7 +18,7 @@ export default function AddCustomer(props) {
   const [cusName, setCusName] = useState('');
   const [phone, setPhone] = useState('');
   const [idVAT, setIdVAT] = useState('');
-  const [type, setType] = useState('dealer');
+  const [type, setType] = useState('מורשה');
   const [VATFrequency, setVATFrequency] = useState('1');
   const [taxFrequency, setTaxFrequency] = useState('1');
   const [taxPercent, setTaxPercent] = useState('');
@@ -54,6 +54,7 @@ export default function AddCustomer(props) {
         if (res.isAdd) {
           // console.log('add!');
           // console.log(res.message);
+          props.dataChange((prevValue) => prevValue + 1)
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
@@ -135,9 +136,9 @@ export default function AddCustomer(props) {
         <p>
           סוג עוסק:
           <select name='type' onChange={e => setType(e.target.value)}>
-            <option label='עוסק מורשה' value='dealer'></option>
-            <option label='חברה' value='company'></option>
-            <option label='עוסק פטור' value='noVAT'></option>
+            <option label='עוסק מורשה' value='מורשה'></option>
+            <option label='חברה' value='חברה'></option>
+            <option label='עוסק פטור' value='פטור'></option>
           </select>
         </p>
         <p>
@@ -145,7 +146,7 @@ export default function AddCustomer(props) {
           <select
             name='VAT'
             onChange={e => setVATFrequency(e.target.value)}
-            disabled={type === 'noVAT'}
+            disabled={type === 'פטור'}
           >
             <option label='חד חודשי' value='1'></option>
             <option label='דו חודשי' value='2'></option>
