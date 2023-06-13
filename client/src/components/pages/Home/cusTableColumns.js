@@ -1,11 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 export const cusColumns = [
   {
     Header: 'שם עוסק',
     accessor: 'name',
     Cell: ({ row }) => (
-      <Link to={`/details/${row.original.id}`}>{row.original.name}</Link>
+      <a
+        onClick={() => {
+          localStorage.setItem('SelectedCus', row.original.user_name);
+        }}
+        href={`/cusIndex`}
+      >
+        {row.original.name}
+      </a>
     ),
   },
   {
