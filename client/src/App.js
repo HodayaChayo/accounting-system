@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import  Login  from './components/pages/Login/Login.js';
 import Home from './components/pages/Home/Home.js';
 import CusIndex from './components/pages/CusIndex/CusIndex.js';
+import SortCodes from './components/pages/SortCodes/SortCodes.js';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route path='/' element={<Login />}></Route>
           <Route path='/home' element={<Home />}></Route>
           <Route path='/cusIndex' element={<CusIndex/>}></Route>
+          <Route path='/sortCodes' element={<SortCodes/>}></Route>
         </Routes>
       </BrowserRouter>
     </div>

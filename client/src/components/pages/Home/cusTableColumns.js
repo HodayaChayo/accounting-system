@@ -1,4 +1,6 @@
 import React from 'react';
+import ButtonIcon from '../../Button/ButtonIcon';
+import editIcon from '../../../images/edit_icon.png'
 export const cusColumns = [
   {
     Header: 'שם עוסק',
@@ -7,6 +9,7 @@ export const cusColumns = [
       <a
         onClick={() => {
           localStorage.setItem('SelectedCus', row.original.user_name);
+          localStorage.setItem('CusVAT_Id', row.original.id_vat_num)
         }}
         href={`/cusIndex`}
       >
@@ -25,5 +28,13 @@ export const cusColumns = [
   {
     Header: 'שם משתמש',
     accessor: 'user_name',
+  },
+  {
+    Header: '',
+    accessor: 'none',
+    disableFilters: true,
+    Cell: ({row}) =>(
+      <ButtonIcon src={editIcon} cus={row.original.user_name}/>
+    )
   },
 ];

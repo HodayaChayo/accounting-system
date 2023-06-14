@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 08, 2023 at 08:46 AM
+-- Generation Time: Jun 14, 2023 at 06:43 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -116,6 +116,24 @@ CREATE TABLE `customers` (
   `note` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`user_name`, `id_vat_num`, `name`, `phone`, `business_type`, `vat_frequency`, `tax_income_frequency`, `tax_income_percent`, `note`) VALUES
+('aharongoren@gmail.com', '308864756', 'גורן אהרון', '0524569870', 'מורשה', '1', '1', '2.00', ''),
+('arielShahar@gmail.com', '208653427', 'אריאל שחר', '0536246429', 'מורשה', '2', '2', '5.00', 'לקוח חדש שהוספתי'),
+('aviAzulay@gmail.com', '209447355', 'אזולאי אבי', '0524993810', 'פטור', '1', '2', '3.00', 'טיולי גיפים'),
+('dadonyossi@gmail.com', '330284627', 'דדון יוסי', '0536246429', 'מורשה', '1', '1', '0.30', 'לקוח שפתחתי'),
+('korenyehuda@gmail.com', '290847635', 'קורן יהודה', '0537668261', 'מורשה', '2', '1', '4.00', 'אין הערות'),
+('lidarTalya@gmail.com', '204883936', 'לידר טליה', '0522319748', 'מורשה', '1', '1', '12.00', ''),
+('menasheEran@gmail.com', '328766404', 'מנשה ערן', '0558395526', 'מורשה', '1', '1', '0.00', ''),
+('moshekadosh@gmail.com', '308563246', 'קדוש משה', '0536246429', 'מורשה', '2', '1', '4.00', 'הערת לקוח'),
+('shayhanin@gmail.com', '309784555', 'חנין שי', '0527463888', 'מורשה', '1', '2', '10.00', 'פתיחת לקוח'),
+('shirasabag@gmail.com', '308746363', 'סבג שירה', '0508636758', 'פטור', '1', '1', '3.00', 'לקוחה חדשה'),
+('talcohen@gmail.com', '333958787', 'כהן טל', '0584110527', 'מורשה', '1', '1', '4.00', ''),
+('tamirElad@gmail.com', '303877116', 'טמיר אלעד', '0547268337', 'מורשה', '2', '2', '15.00', '');
+
 -- --------------------------------------------------------
 
 --
@@ -158,8 +176,20 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_name`, `password`) VALUES
+('aharongoren@gmail.com', 'Ag@123456'),
+('arielShahar@gmail.com', 'As@123456'),
+('aviAzulay@gmail.com', 'Aa@123456'),
+('dadonyossi@gmail.com', 'Dy@123456'),
 ('ezrachayu94@gmail.com', 'Ee@22121994'),
-('hodayachayo@gmail.com', 'Hh@150600');
+('hodayachayo@gmail.com', 'Hh@150600'),
+('korenyehuda@gmail.com', 'Ky@123456'),
+('lidarTalya@gmail.com', 'Lt@123456'),
+('menasheEran@gmail.com', 'Me@12345'),
+('moshekadosh@gmail.com', 'Mk@123456'),
+('shayhanin@gmail.com', 'Sh@123456'),
+('shirasabag@gmail.com', 'Ss@123456'),
+('talcohen@gmail.com', 'Tc@123456'),
+('tamirElad@gmail.com', 'Te@123456');
 
 -- --------------------------------------------------------
 

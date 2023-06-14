@@ -50,4 +50,20 @@ const checkTaxPercent = taxPercent => {
   return false;
 };
 
-export { checkUserName, checkPassword, checkCusName, checkPhone, checkVatId, checkTaxPercent};
+// check if contain numbers only
+const numbersOnly = number => {
+  if (number !== '' && /^[0-9]*$/.test(number)) {
+    return true;
+  }
+  return false;
+};
+
+export {
+  checkUserName,
+  checkPassword,
+  checkCusName,
+  checkPhone,
+  checkVatId,
+  checkTaxPercent,
+  numbersOnly,
+};

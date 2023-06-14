@@ -48,8 +48,8 @@ export default function AddCustomer(props) {
       },
       body: JSON.stringify(addCus),
     })
-      .then(async res => res.json())
-      .then(async res => {
+      .then(res => res.json())
+      .then(res => {
         // console.log(res);
         if (res.isAdd) {
           // console.log('add!');
