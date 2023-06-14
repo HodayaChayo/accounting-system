@@ -20,7 +20,7 @@ import {
 } from 'react-pro-sidebar';
 function Sidebars() {
   //const { collapseSidebar } = useProSidebar();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   const [toggled, setToggled] = useState(false);
 
