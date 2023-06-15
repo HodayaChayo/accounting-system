@@ -5,6 +5,7 @@ import Button from '../../Button/Button';
 import ButtonIcon from '../../Button/ButtonIcon';
 import Table from '../../Table/Table'
 import css from './sortCodes.module.css'
+import Sidebars from '../../Sidebars/Sidebars';
 import { FiEdit, FiSave } from 'react-icons/fi';
 
 // import { sortCodeColumn } from './sortCodeTableColumns';
@@ -85,6 +86,7 @@ export default function SortCodes() {
 
   return (
     <div className='body'>
+      <Sidebars/>
       <Header title='הגדרת קודי מיון' />
       <ToastContainer />
       <main>

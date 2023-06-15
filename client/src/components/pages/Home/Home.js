@@ -37,7 +37,7 @@ export default function Home() {
 
   return (
     <div className='body'>
-      <Header title='דף הבית' />
+      <Header title='בחירת לקוח' />
       <ToastContainer />
       <main>
         <Button

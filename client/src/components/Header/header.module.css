@@ -1,0 +1,8 @@
+.headerTitle{
+  display: flex;
+
+}
+
+.headerTitle > h2{
+  margin-right: auto;
+}

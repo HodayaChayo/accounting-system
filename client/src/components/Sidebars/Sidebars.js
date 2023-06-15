@@ -93,12 +93,20 @@ function Sidebars() {
               window.location.href = 'http://localhost:3000/home';
             }}
             icon={<RiHome4Line />}
-          >{localStorage.getItem
-          ('CusName')}</MenuItem>
+          >
+            {localStorage.getItem('CusName')}
+          </MenuItem>
 
           <SubMenu defaultClose label={'הגדרות'} icon={<AiFillSetting />}>
             <MenuItem icon={<GrUserSettings />}>הגדרות עוסק </MenuItem>
-            <MenuItem icon={<GrCode />}>קודי מיון</MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.location.href = 'http://localhost:3000/sortCodes';
+              }}
+              icon={<GrCode />}
+            >
+              קודי מיון
+            </MenuItem>
             <MenuItem icon={<BsFillPostcardFill />}>חשבונות</MenuItem>
             <MenuItem icon={<FaUsersCog />}>הגדרת עובדים</MenuItem>
             <MenuItem icon={<BsBriefcaseFill />}>ניהול תיקי לקוחות</MenuItem>
