@@ -12,7 +12,7 @@ export default function ColumnFilter({column}) {
         placeholder={`חיפוש`}
         style={{
           // fontSize: '1em',
-          margin: '1rem 0',
+          margin: '0.3rem 0',
         }}
       />
     </span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import ButtonIcon from '../../Button/ButtonIcon';
-import editIcon from '../../../images/edit_icon.png'
+import { FiEdit } from 'react-icons/fi';
 export const cusColumns = [
   {
     Header: 'שם עוסק',
@@ -9,7 +9,8 @@ export const cusColumns = [
       <a
         onClick={() => {
           localStorage.setItem('SelectedCus', row.original.user_name);
-          localStorage.setItem('CusVAT_Id', row.original.id_vat_num)
+          localStorage.setItem('CusVAT_Id', row.original.id_vat_num);
+          localStorage.setItem('CusName', row.original.name)
         }}
         href={`/cusIndex`}
       >
@@ -33,8 +34,8 @@ export const cusColumns = [
     Header: '',
     accessor: 'none',
     disableFilters: true,
-    Cell: ({row}) =>(
-      <ButtonIcon src={editIcon} cus={row.original.user_name}/>
-    )
+    Cell: ({ row }) => (
+      <ButtonIcon src={<FiEdit/>} cus={row.original.user_name} />
+    ),
   },
 ];

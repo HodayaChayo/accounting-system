@@ -8,7 +8,7 @@ import { cusColumns } from './cusTableColumns';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
+
 
 export default function Home() {
   const [displayAdd, setDisplayAdd] = useState(false);

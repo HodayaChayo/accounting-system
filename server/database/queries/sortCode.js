@@ -3,9 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');
-const { resolve } = require('path');
-const { rejects } = require('assert');
-const { error } = require('console');
 
 // check if the sort code is already exist for this user
 async function isCodeExist(sortCodeData) {
@@ -40,7 +37,8 @@ async function insertSortCode(sortCodeData) {
   });
 }
 
-router.post('/', (req, res) => {
+// add sort cod to database and send a message if succeeded or not
+router.post('/add', (req, res) => {
   const body = [];
   req.on('data', chunk => {
     body.push(chunk);
@@ -67,6 +65,29 @@ router.post('/', (req, res) => {
     } catch (error) {
       console.error(error.message);
     }
+  });
+});
+
+// get all sort code data for a customer and send it to client
+router.post('/getTableData', (req, res) => {
+  const getSortCode =
+    'SELECT `number`,`name` FROM `sort_code` WHERE `id_vat_num`=?';
+
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    return new Promise((resolve, reject) => {
+      con.query(getSortCode, [obj.thisVatId], (err, rows)=>{
+        if(err){
+          reject(err)
+        }
+        res.end(JSON.stringify(rows))
+        resolve()
+      });
+    });
   });
 });
 
