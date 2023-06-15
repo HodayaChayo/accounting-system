@@ -3,7 +3,12 @@ import css from './button.module.css';
 export default function ButtonIcon(props) {
   const clickFunction = () => {
     console.log('in click');
+    props.fun()
   };
 
-  return <img className={css.icon} onClick={clickFunction} src={props.src}></img>;
+  return (
+    <div className={css.icon} onClick={clickFunction}>
+      {props.src}
+    </div>
+  );
 }

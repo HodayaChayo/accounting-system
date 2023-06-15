@@ -1,10 +1,12 @@
 // import React from 'react';
 import React, { Fragment } from 'react';
 import Sidebars from '../Sidebars/Sidebars';
+import css from './header.module.css'
 export default function Header(props) {
   return (
-    <div>
-      <h1>{props.title}</h1>
+    <div className={css.headerTitle}>
+      <div>{localStorage.getItem('CusName')}-{localStorage.getItem('CusVAT_Id')}</div>
+      <h2>{props.title}</h2>
       <Fragment>
         <Sidebars />
       </Fragment>
