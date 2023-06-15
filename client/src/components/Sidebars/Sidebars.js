@@ -1,5 +1,6 @@
 import './styles.css';
 import React, { useState } from 'react';
+
 import {
   RiHome4Line,
   RiFolder2Line,
@@ -22,6 +23,7 @@ import {
   FaFileUpload,
   FaFolderPlus,
   FaHandHoldingMedical,
+  FaUsers,
 } from 'react-icons/fa';
 import { MdAssignmentAdd } from 'react-icons/md';
 import { HiDocumentReport } from 'react-icons/hi';
@@ -79,7 +81,7 @@ function Sidebars() {
                   letterSpacing: '1px',
                 }}
               >
-                YOUR LOGO!..
+                הנהלת חשבונות
               </div>
             </MenuItem>
           )}
@@ -92,9 +94,19 @@ function Sidebars() {
             onClick={() => {
               window.location.href = 'http://localhost:3000/home';
             }}
+            icon={<FaUsers />}
+          >
+            רשימת לקוחות
+          </MenuItem>
+          <MenuItem
+            className='link'
+            onClick={() => {
+              window.location.href = 'http://localhost:3000/cusIndex';
+            }}
             icon={<RiHome4Line />}
-          >{localStorage.getItem
-          ('CusName')}</MenuItem>
+          >
+            {localStorage.getItem('CusName')}
+          </MenuItem>
 
           <SubMenu defaultClose label={'הגדרות'} icon={<AiFillSetting />}>
             <MenuItem icon={<GrUserSettings />}>הגדרות עוסק </MenuItem>
