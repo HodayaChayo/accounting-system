@@ -2,14 +2,32 @@ import './styles.css';
 import React, { useState } from 'react';
 import {
   RiHome4Line,
-  RiTeamLine,
-  RiCalendar2Line,
   RiFolder2Line,
-  RiUserFollowLine,
   RiPlantLine,
   RiStackLine,
-  RiUserUnfollowLine,
+  RiStackFill,
 } from 'react-icons/ri';
+import { AiFillSetting } from 'react-icons/ai';
+import { GrUserSettings, GrCode, GrUserWorker } from 'react-icons/gr';
+import {
+  BsFillPostcardFill,
+  BsBriefcaseFill,
+  BsBroadcast,
+  BsBank2,
+  BsFolderFill,
+  BsFillArchiveFill,
+} from 'react-icons/bs';
+import {
+  FaUsersCog,
+  FaFileUpload,
+  FaFolderPlus,
+  FaHandHoldingMedical,
+} from 'react-icons/fa';
+import { MdAssignmentAdd } from 'react-icons/md';
+import { HiDocumentReport } from 'react-icons/hi';
+import { IoIosListBox, IoArchiveSharp } from 'react-icons/io';
+import { TbReceiptTax } from 'react-icons/tb';
+import { VscGraphLine, VscGraphLeft } from 'react-icons/vsc';
 import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi/';
 import {
   Sidebar,
@@ -20,7 +38,7 @@ import {
 } from 'react-pro-sidebar';
 function Sidebars() {
   //const { collapseSidebar } = useProSidebar();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   const [toggled, setToggled] = useState(false);
 
@@ -69,15 +87,40 @@ function Sidebars() {
         </Menu>
 
         <Menu>
-          <MenuItem icon={<RiHome4Line />}>Dashboard</MenuItem>
-          <SubMenu defaultOpen label={'Professors'} icon={<RiTeamLine />}>
-            <MenuItem icon={<RiUserFollowLine />}>Active </MenuItem>
-            <MenuItem icon={<RiUserUnfollowLine />}>Ex Professors</MenuItem>
-            <MenuItem icon={<RiCalendar2Line />}>Probation Period</MenuItem>
+          <MenuItem
+            className='link'
+            onClick={() => {
+              window.location.href = 'http://localhost:3000/home';
+            }}
+            icon={<RiHome4Line />}
+          >{localStorage.getItem
+          ('CusName')}</MenuItem>
+
+          <SubMenu defaultClose label={'הגדרות'} icon={<AiFillSetting />}>
+            <MenuItem icon={<GrUserSettings />}>הגדרות עוסק </MenuItem>
+            <MenuItem icon={<GrCode />}>קודי מיון</MenuItem>
+            <MenuItem icon={<BsFillPostcardFill />}>חשבונות</MenuItem>
+            <MenuItem icon={<FaUsersCog />}>הגדרת עובדים</MenuItem>
+            <MenuItem icon={<BsBriefcaseFill />}>ניהול תיקי לקוחות</MenuItem>
+            <MenuItem icon={<GrUserWorker />}>דוחות עובדים</MenuItem>
           </SubMenu>
-          <SubMenu defaultOpen label={'Records'} icon={<RiFolder2Line />}>
-            <MenuItem icon={<RiStackLine />}>Senior Students</MenuItem>
-            <MenuItem icon={<RiPlantLine />}>Junior Students</MenuItem>
+          <SubMenu defaultClose label={'קליטה'} icon={<MdAssignmentAdd />}>
+            <MenuItem icon={<FaFileUpload />}>העלאת מסמכים</MenuItem>
+            <MenuItem icon={<RiStackFill />}>קליטת מסמכים</MenuItem>
+            <MenuItem icon={<FaHandHoldingMedical />}>פקודות ידניות</MenuItem>
+          </SubMenu>
+          <SubMenu defaultClose label={'דוחות'} icon={<HiDocumentReport />}>
+            <MenuItem icon={<VscGraphLine />}>רווח והפסד</MenuItem>
+            <MenuItem icon={<VscGraphLeft />}>דוח מאזן</MenuItem>
+            <MenuItem icon={<IoIosListBox />}>כרטסת</MenuItem>
+          </SubMenu>
+          <SubMenu defaultClose label={'דיווחים'} icon={<BsBroadcast />}>
+            <MenuItem icon={<BsBank2 />}>מע"מ</MenuItem>
+            <MenuItem icon={<TbReceiptTax />}>מס הכנסה</MenuItem>
+          </SubMenu>
+          <SubMenu defaultClose label={'תיקיות'} icon={<BsFolderFill />}>
+            <MenuItem icon={<BsFillArchiveFill />}>ארכיון</MenuItem>
+            <MenuItem icon={<FaFolderPlus />}>חומרים לדוח שנתי</MenuItem>
           </SubMenu>
         </Menu>
       </Sidebar>

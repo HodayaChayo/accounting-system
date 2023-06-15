@@ -50,3 +50,7 @@ select{
 .errors{
   color: red;
 }
+
+a{
+  text-decoration: none;
+}

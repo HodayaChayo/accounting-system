@@ -11,6 +11,7 @@
   top: 0;
   right: 0;
   height: 100vh;
+  max-width: 400px;
   background-color: #72e9a8;
 }
 
@@ -39,3 +40,9 @@ hr {
 .ps-menu-button {
   background-color: #72e9a8 !important;
 }
+
+.link {
+  text-decoration: none;
+}
+
+
