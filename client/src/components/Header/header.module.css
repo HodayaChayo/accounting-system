@@ -1,8 +1,9 @@
 .headerTitle{
   display: flex;
-
+  /* min-width: 100vw; */
+  /* min-width: 100%; */
 }
 
-.headerTitle > h2{
-  margin-right: auto;
-}
+/* .headerTitle  :nth-of-type(1){
+  margin-left: auto;
+} */

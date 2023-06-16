@@ -118,7 +118,14 @@ function Sidebars() {
             >
               קודי מיון
             </MenuItem>
-            <MenuItem icon={<BsFillPostcardFill />}>חשבונות</MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.location.href = 'http://localhost:3000/accounts';
+              }}
+              icon={<BsFillPostcardFill />}
+            >
+              חשבונות
+            </MenuItem>
             <MenuItem icon={<FaUsersCog />}>הגדרת עובדים</MenuItem>
             <MenuItem icon={<BsBriefcaseFill />}>ניהול תיקי לקוחות</MenuItem>
             <MenuItem icon={<GrUserWorker />}>דוחות עובדים</MenuItem>

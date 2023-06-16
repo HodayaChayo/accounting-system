@@ -7,7 +7,7 @@ export default function Header(props) {
       <h2>{props.title}</h2>
       {window.location.href !== 'http://localhost:3000/' &&
         window.location.href !== 'http://localhost:3000/home' && (
-          <div>
+          <div className={css.cusName}>
             {localStorage.getItem('CusName')}-
             {localStorage.getItem('CusVAT_Id')}
           </div>

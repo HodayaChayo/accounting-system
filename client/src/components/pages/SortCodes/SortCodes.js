@@ -15,7 +15,7 @@ import { checkCusName, numbersOnly } from '../../validations/validations';
 export default function SortCodes() {
   const [codeNum, setCodeNum] = useState('');
   const [codeName, setCodeName] = useState('');
-  const [dataIsChanged, setDataIsChanged] = useState(0);
+  const [dataIsChanged, setDataIsChanged] = useState(true);
   const [dataTable, setDataTable] = useState([])
   const refName = useRef(null);
   const refNum = useRef(null);
@@ -76,6 +76,7 @@ export default function SortCodes() {
           });
           refName.current.value = '';
           refNum.current.value = '';
+          setDataIsChanged(!dataIsChanged)
         } else {
           toast.error(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
