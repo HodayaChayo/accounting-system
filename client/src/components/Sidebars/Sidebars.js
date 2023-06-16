@@ -3,9 +3,6 @@ import React, { useState } from 'react';
 
 import {
   RiHome4Line,
-  RiFolder2Line,
-  RiPlantLine,
-  RiStackLine,
   RiStackFill,
 } from 'react-icons/ri';
 import { AiFillSetting } from 'react-icons/ai';
@@ -27,7 +24,7 @@ import {
 } from 'react-icons/fa';
 import { MdAssignmentAdd } from 'react-icons/md';
 import { HiDocumentReport } from 'react-icons/hi';
-import { IoIosListBox, IoArchiveSharp } from 'react-icons/io';
+import { IoIosListBox } from 'react-icons/io';
 import { TbReceiptTax } from 'react-icons/tb';
 import { VscGraphLine, VscGraphLeft } from 'react-icons/vsc';
 import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi/';
@@ -108,8 +105,19 @@ function Sidebars() {
             {localStorage.getItem('CusName')}
           </MenuItem>
 
-          <SubMenu defaultClose label={'הגדרות'} icon={<AiFillSetting />}>
-            <MenuItem icon={<GrUserSettings />}>הגדרות עוסק </MenuItem>
+          <SubMenu
+            defaultclose='true'
+            label={'הגדרות'}
+            icon={<AiFillSetting />}
+          >
+            <MenuItem
+              onClick={() => {
+                window.location.href = 'http://localhost:3000/UserSettings';
+              }}
+              icon={<GrUserSettings />}
+            >
+              הגדרות עוסק{' '}
+            </MenuItem>
             <MenuItem
               onClick={() => {
                 window.location.href = 'http://localhost:3000/sortCodes';
@@ -123,21 +131,29 @@ function Sidebars() {
             <MenuItem icon={<BsBriefcaseFill />}>ניהול תיקי לקוחות</MenuItem>
             <MenuItem icon={<GrUserWorker />}>דוחות עובדים</MenuItem>
           </SubMenu>
-          <SubMenu defaultClose label={'קליטה'} icon={<MdAssignmentAdd />}>
+          <SubMenu
+            defaultclose='true'
+            label={'קליטה'}
+            icon={<MdAssignmentAdd />}
+          >
             <MenuItem icon={<FaFileUpload />}>העלאת מסמכים</MenuItem>
             <MenuItem icon={<RiStackFill />}>קליטת מסמכים</MenuItem>
             <MenuItem icon={<FaHandHoldingMedical />}>פקודות ידניות</MenuItem>
           </SubMenu>
-          <SubMenu defaultClose label={'דוחות'} icon={<HiDocumentReport />}>
+          <SubMenu
+            defaultclose='true'
+            label={'דוחות'}
+            icon={<HiDocumentReport />}
+          >
             <MenuItem icon={<VscGraphLine />}>רווח והפסד</MenuItem>
             <MenuItem icon={<VscGraphLeft />}>דוח מאזן</MenuItem>
             <MenuItem icon={<IoIosListBox />}>כרטסת</MenuItem>
           </SubMenu>
-          <SubMenu defaultClose label={'דיווחים'} icon={<BsBroadcast />}>
+          <SubMenu defaultclose='true' label={'דיווחים'} icon={<BsBroadcast />}>
             <MenuItem icon={<BsBank2 />}>מע"מ</MenuItem>
             <MenuItem icon={<TbReceiptTax />}>מס הכנסה</MenuItem>
           </SubMenu>
-          <SubMenu defaultClose label={'תיקיות'} icon={<BsFolderFill />}>
+          <SubMenu defaultclose='true' label={'תיקיות'} icon={<BsFolderFill />}>
             <MenuItem icon={<BsFillArchiveFill />}>ארכיון</MenuItem>
             <MenuItem icon={<FaFolderPlus />}>חומרים לדוח שנתי</MenuItem>
           </SubMenu>

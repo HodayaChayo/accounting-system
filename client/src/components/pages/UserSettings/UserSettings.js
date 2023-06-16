@@ -1,14 +1,88 @@
-'use strict';
+import React, { useState, useEffect } from 'react';
+import Sidebars from '../../Sidebars/Sidebars';
+
 export default function UserSettings(props) {
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [cusName, setCusName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [idVAT, setIdVAT] = useState('');
+  const [type, setType] = useState('מורשה');
+  const [VATFrequency, setVATFrequency] = useState('1');
+  const [taxFrequency, setTaxFrequency] = useState('1');
+  const [taxPercent, setTaxPercent] = useState('');
+  const [manager, setManager] = useState('');
+
+  const thisVatId = localStorage.getItem('CusVAT_Id');
+
+  const updateCustomer = async () => {
+    const updateCus = {
+      userName,
+      password,
+      cusName,
+      phone,
+      idVAT,
+      type,
+      VATFrequency,
+      taxFrequency,
+      taxPercent,
+      manager,
+    };
+
+  };
+  useEffect(() => {
+    fetch('/getUserSettings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ thisVatId }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        // console.log(res);
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
+
   return (
-    <div>
+    <div className='body'>
+      <Sidebars />
       <h1>הגדרות עוסק</h1>
       <h2>פרטי לקוח</h2>
-      <input type='email' name='userName' placeholder='(מייל)שם משתמש'></input>
-      <input type='text' name='userName' placeholder='סיסמה'></input>
-      <input type='text' name='userName' placeholder='שם לקוח/חברה'></input>
-      <input type='text' name='userName' placeholder='טלפון נייד'></input>
-      <input type='text' name='userName' placeholder='מספר עוסק ח.פ'></input>
+      <input
+        type='email'
+        name='userName'
+        placeholder='מייל: xxx@yyy.zzz'
+        onChange={e => setUserName(e.target.value)}
+      ></input>
+      <input
+        type='text'
+        name='password'
+        placeholder='סיסמה'
+        onChange={e => setPassword(e.target.value)}
+      ></input>
+      <input
+        type='text'
+        name='cusName'
+        placeholder='שם לקוח/חברה'
+        onChange={e => setCusName(e.target.value)}
+      ></input>
+      <input
+        type='text'
+        name='phone'
+        placeholder='טלפון נייד'
+        onChange={e => setPhone(e.target.value)}
+      ></input>
+      <input
+        type='text'
+        name='vatNum'
+        placeholder='מספר עוסק ח.פ'
+        onChange={e => setIdVAT(e.target.value)}
+      ></input>
       <h2>נתוני רשויות</h2>
       <p>
         סוג עוסק:
