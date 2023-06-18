@@ -37,7 +37,7 @@ async function insertSortCode(sortCodeData) {
   });
 }
 
-// add sort cod to database and send a message if succeeded or not
+// add sort code to database and send a message if succeeded or not
 router.post('/add', (req, res) => {
   const body = [];
   req.on('data', chunk => {
@@ -93,7 +93,7 @@ router.post('/getTableData', (req, res) => {
 
 // send sort code to select bar - when opening a new account
 router.post('/getSelectData', (req, res) => {
-  const selectData = 'SELECT `number` AS value, CONCAT(`number`,"-", `name`) AS lable FROM `sort_code` WHERE `id_vat_num`=?'
+  const selectData = 'SELECT `number` AS value, CONCAT(`number`,"-", `name`) AS label FROM `sort_code` WHERE `id_vat_num`=?'
 
   const body = [];
   req.on('data', chunk => {
