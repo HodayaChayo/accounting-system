@@ -34,12 +34,9 @@ export default function AccountPopup(props) {
 
       await fetch('/sortCode/getSelectData', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({thisVatId}),
-      })
-        .then(res => res.json())
+      body: JSON.stringify({ thisVatId }),
+    })
+      .then(res => res.json())
         .then(async res => {
           // console.log('get data');
           console.log(res);
