@@ -16,7 +16,6 @@ function App() {
         <Routes>
           <Route path='/' element={<Login />}></Route>
           <Route path='/home' element={<Home />}></Route>
-
           <Route path='/cusIndex' element={<CusIndex />}></Route>
           <Route path='/sortCodes' element={<SortCodes />}></Route>
           <Route path='/accounts' element={<Accounts />}></Route>
