@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Sidebars from '../../Sidebars/Sidebars';
-import ButtonIcon from '../../Button/ButtonIcon';
+import css from '../../pages/Home/addCustomer.module.css';
+import Button from '../../Button/Button';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {
+  checkUserName,
+  checkPassword,
+  checkCusName,
+  checkPhone,
+  checkVatId,
+  checkTaxPercent,
+} from '../../validations/validations';
 
 export default function UserSettings(props) {
   const [userName, setUserName] = useState('');
@@ -15,8 +26,8 @@ export default function UserSettings(props) {
   const [manager, setManager] = useState('');
   const [note, setNote] = useState('');
 
-  const thisVatId = localStorage.getItem('CusVAT_Id');
   const thisMail = localStorage.getItem('SelectedCus');
+  const thisVatId = localStorage.getItem('CusVAT_Id');
 
   const updateCustomer = async () => {
     const updateCus = {
@@ -30,10 +41,39 @@ export default function UserSettings(props) {
       taxFrequency,
       taxPercent,
       manager,
+      thisMail,
+      thisVatId,
     };
+
+    fetch('userSettings/updateCus', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateCus),
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if (res.isUpDate) {
+          toast.success(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          localStorage.setItem('SelectedCus',userName);
+          localStorage.setItem('CusVAT_Id',idVAT);
+        }else{
+          toast.error(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
+
   useEffect(() => {
-    fetch('/getUserSettings', {
+    fetch('/userSettings/getUserData', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,6 +101,7 @@ export default function UserSettings(props) {
 
   return (
     <div className='body'>
+      <ToastContainer />
       <Sidebars />
       <h1>הגדרות עוסק</h1>
       <h2>פרטי לקוח</h2>
@@ -177,13 +218,35 @@ export default function UserSettings(props) {
           onChange={e => setNote(e.target.value)}
         ></textarea>
       </p>
-      <button
-        onClick={() => {
-          console.log(userName);
+      {(!checkUserName(userName) ||
+        !checkPassword(password) ||
+        !checkCusName(cusName) ||
+        !checkPhone(phone) ||
+        !checkVatId ||
+        !checkTaxPercent(taxPercent)) && (
+        <div className={css.errors}>נא לוודא שהשדות חובה מלאים כראוי</div>
+      )}
+      {(userName === '' ||
+        password === '' ||
+        cusName === '' ||
+        phone === '' ||
+        idVAT === '') && (
+        <div className={css.errors}>נא לוודא שכל השדות חובה מלאים</div>
+      )}
+      <Button
+        text='שמור'
+        fun={() => {
+          updateCustomer();
         }}
-      >
-        שמור
-      </button>
+        isDisable={
+          !checkUserName(userName) ||
+          !checkPassword(password) ||
+          !checkCusName(cusName) ||
+          !checkPhone(phone) ||
+          !checkVatId(idVAT) ||
+          !checkTaxPercent(taxPercent)
+        }
+      ></Button>
     </div>
   );
 }

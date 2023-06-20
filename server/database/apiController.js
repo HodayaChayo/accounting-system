@@ -14,7 +14,7 @@ module.exports = function (app) {
   app.use('/addCus', addCustomer);
   app.use('/cusTable', customerTable);
   app.use('/sortCode', sortCode);
-  app.use('/getUserSettings', userSettings);
+  app.use('/userSettings', userSettings);
   app.use('/accounts', accounts);
   app.all('*', (req, res) => {
     res.status(404).send('resource not found');
