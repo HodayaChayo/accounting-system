@@ -10,7 +10,7 @@ import {
   checkVatId,
 } from '../../validations/validations';
 
-export default function AccountPopup(props) {
+export default function AddAccountPopup(props) {
   const thisVatId = localStorage.getItem('CusVAT_Id');
   const [selectSortCode, setSelectSortCode] = useState([]);
   const [accountNumber, setAccountNumber] = useState('');
@@ -163,7 +163,7 @@ export default function AccountPopup(props) {
           }}
         />
         <p>
-          *מספר עוסק / ח.פ:
+          מספר עוסק / ח.פ:
           <input
             type='number'
             placeholder='עבור ספקים/לקוחות/עובדים'

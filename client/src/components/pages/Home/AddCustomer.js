@@ -212,7 +212,7 @@ export default function AddCustomer(props) {
             !checkPassword(password) ||
             !checkCusName(cusName) ||
             !checkPhone(phone) ||
-            !checkVatId ||
+            !checkVatId(idVAT) ||
             !checkTaxPercent(taxPercent)
           }
         />

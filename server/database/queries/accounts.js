@@ -79,7 +79,31 @@ router.post('/createAccount', (req, res) => {
 
 // send account table data to client
 router.post('/getAccountsTable', (req, res) => {
-  const getAccounts = 'SELECT `sort_code`, `number`, `name` FROM `accounts` WHERE `id_vat_num`=?'
+  const getAccounts =
+    'SELECT `sort_code`, `number`, `name` FROM `accounts` WHERE `id_vat_num`=?';
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    // console.log(obj);
+    return new Promise((resolve, reject) => {
+      con.query(getAccounts, [obj], (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        res.end(JSON.stringify(rows));
+        resolve();
+      });
+    });
+  });
+});
+
+router.post('/selectedAccountData', (req, res) => {
+  const selectedData =
+    'SELECT * FROM accounts WHERE id_vat_num= ? AND number=?';
+
   const body = [];
   req.on('data', chunk => {
     body.push(chunk);
@@ -87,15 +111,16 @@ router.post('/getAccountsTable', (req, res) => {
   req.on('end', async () => {
     const obj = JSON.parse(body);
     console.log(obj);
-    return new Promise((resolve, reject)=>{
-      con.query(getAccounts, [obj], (err, rows)=>{
-        if(err){
-          reject(err)
+    return new Promise((resolve, reject) => {
+      con.query(selectedData, [obj.thisVatId, obj.selectedNum], (err, rows) => {
+        if (err) {
+          reject(err);
         }
-        res.end(JSON.stringify(rows))
+        console.log('result--',rows);
+        res.end(JSON.stringify(rows[0]))
         resolve()
-      })
-    })
+      });
+    });
   });
 });
 

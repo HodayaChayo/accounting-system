@@ -101,13 +101,13 @@ router.post('/getSelectData', (req, res) => {
   });
   req.on('end', async () => {
     const obj = JSON.parse(body);
-    console.log(obj.thisVatId);
+    // console.log(obj.thisVatId);
     return new Promise((resolve, reject) => {
       con.query(selectData, [obj.thisVatId], (err, rows) => {
         if (err) {
           reject(err);
         }
-        console.log(rows);
+        // console.log(rows);
         res.end(JSON.stringify(rows));
         resolve();
       });
