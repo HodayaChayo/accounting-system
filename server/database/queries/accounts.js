@@ -102,7 +102,7 @@ router.post('/getAccountsTable', (req, res) => {
 
 router.post('/selectedAccountData', (req, res) => {
   const selectedData =
-    'SELECT * FROM accounts WHERE id_vat_num= ? AND number=?';
+    'SELECT accounts.number, accounts.id_vat_num, accounts.name, accounts.sort_code, CONCAT(sort_code.number,"-", sort_code.name) AS sort_codeName, accounts.type, accounts.vat_number FROM `accounts`, `sort_code` WHERE accounts.id_vat_num=? AND accounts.number=? and sort_code.id_vat_num=? AND sort_code.number=?';
 
   const body = [];
   req.on('data', chunk => {
@@ -112,7 +112,7 @@ router.post('/selectedAccountData', (req, res) => {
     const obj = JSON.parse(body);
     console.log(obj);
     return new Promise((resolve, reject) => {
-      con.query(selectedData, [obj.thisVatId, obj.selectedNum], (err, rows) => {
+      con.query(selectedData, [obj.thisVatId, obj.selectedNum, obj.thisVatId, obj.selectedSort], (err, rows) => {
         if (err) {
           reject(err);
         }

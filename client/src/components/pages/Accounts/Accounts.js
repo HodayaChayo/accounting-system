@@ -19,6 +19,7 @@ export default function Accounts() {
   const [addPopup, setAddPopup] = useState(false);
   const [editPopup, setAditPopup] = useState(false);
   const [selectedRow, setSelectedRow] = useState();
+  
 
   const [columns, setColumns] = useState([
     ...accountsColumns,
@@ -30,7 +31,7 @@ export default function Accounts() {
         <ButtonIcon
           src={<FiEdit />}
           fun={() => {
-            setSelectedRow(row.original.number);
+            setSelectedRow(row.original);
             setAditPopup(true);
           }}
         />
