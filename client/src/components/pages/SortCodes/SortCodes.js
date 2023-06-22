@@ -3,12 +3,12 @@ import Header from '../../Header/Header';
 import Footer from '../../Footer/Footer';
 import Button from '../../Button/Button';
 import ButtonIcon from '../../Button/ButtonIcon';
-import Table from '../../Table/Table'
-import css from './sortCodes.module.css'
+import Table from '../../Table/Table';
+import EditSortCodePopup from './EditSortCodePopup';
+import css from './sortCodes.module.css';
 import Sidebars from '../../Sidebars/Sidebars';
 import { FiEdit, FiSave } from 'react-icons/fi';
-
-// import { sortCodeColumn } from './sortCodeTableColumns';
+import { sortCodeColumn } from './sortCodeTableColumns';
 import { ToastContainer, toast } from 'react-toastify';
 import { checkCusName, numbersOnly } from '../../validations/validations';
 
@@ -16,29 +16,29 @@ export default function SortCodes() {
   const [codeNum, setCodeNum] = useState('');
   const [codeName, setCodeName] = useState('');
   const [dataIsChanged, setDataIsChanged] = useState(true);
-  const [dataTable, setDataTable] = useState([])
+  const [dataTable, setDataTable] = useState([]);
+  const [editPopup, setAditPopup] = useState(false);
+  const [selectedRow, setSelectedRow] = useState();
   const refName = useRef(null);
   const refNum = useRef(null);
   const thisVatId = localStorage.getItem('CusVAT_Id');
-
-  const sortCodeColumn = [ 
-    {
-      Header: 'מספר קוד',
-      accessor: 'number',
-    },
-    {
-      Header: 'שם קוד',
-      accessor: 'name',
-    },
+  const [addColumn, setAddColumn] = useState([
+    ...sortCodeColumn,
     {
       Header: '',
       accessor: 'icon',
       disableFilters: true,
       Cell: ({ row }) => (
-        <ButtonIcon src={<FiEdit/>} fun={()=>{}} />
+        <ButtonIcon
+          src={<FiEdit />}
+          fun={() => {
+            setAditPopup(true);
+            setSelectedRow(row.original);
+          }}
+        />
       ),
     },
-  ];
+  ]);
 
   // get the sort code table data from server
   useEffect(() => {
@@ -47,13 +47,13 @@ export default function SortCodes() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({thisVatId}),
+      body: JSON.stringify({ thisVatId }),
     })
       .then(res => res.json())
       .then(res => {
-        console.log('get data');
-        console.log(res);
-        setDataTable(res)
+        // console.log('get data');
+        // console.log(res);
+        setDataTable(res);
       });
   }, [dataIsChanged]);
 
@@ -76,7 +76,7 @@ export default function SortCodes() {
           });
           refName.current.value = '';
           refNum.current.value = '';
-          setDataIsChanged(!dataIsChanged)
+          setDataIsChanged(!dataIsChanged);
         } else {
           toast.error(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
@@ -87,7 +87,7 @@ export default function SortCodes() {
 
   return (
     <div className='body'>
-      <Sidebars/>
+      <Sidebars />
       <Header title='הגדרת קודי מיון' />
       <ToastContainer />
       <main>
@@ -120,7 +120,8 @@ export default function SortCodes() {
             />
           </form>
         </div>
-        <Table myData={dataTable} myColumns={sortCodeColumn} />
+        {editPopup && <EditSortCodePopup setDisplay={setAditPopup} selectedRow={selectedRow} dataChange={setDataIsChanged}/>}
+        <Table myData={dataTable} myColumns={addColumn} />
       </main>
       <Footer />
     </div>

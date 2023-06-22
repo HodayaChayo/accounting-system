@@ -21,6 +21,7 @@ async function isCodeExist(sortCodeData) {
   });
 }
 
+// insert sort code to database
 async function insertSortCode(sortCodeData) {
   const insert =
     'INSERT INTO `sort_code`(`id_vat_num`, `number`, `name`) VALUES (?,?,?)';
@@ -36,6 +37,25 @@ async function insertSortCode(sortCodeData) {
     });
   });
 }
+
+// update sort code in database
+const updateSortCode = async obj => {
+  const update =
+    'UPDATE `sort_code` SET `number`=?,`name`=? WHERE `id_vat_num`=? AND `number`=?';
+  console.log(obj);
+  return new Promise((resolve, reject) => {
+    con.query(
+      update,
+      [obj.codeNumber, obj.codeName, obj.thisVatId, obj.selectedCode],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      }
+    );
+  });
+};
 
 // add sort code to database and send a message if succeeded or not
 router.post('/add', (req, res) => {
@@ -93,7 +113,8 @@ router.post('/getTableData', (req, res) => {
 
 // send sort code to select bar - when opening a new account
 router.post('/getSelectData', (req, res) => {
-  const selectData = 'SELECT `number` AS value, CONCAT(`number`,"-", `name`) AS label FROM `sort_code` WHERE `id_vat_num`=?'
+  const selectData =
+    'SELECT `number` AS value, CONCAT(`number`,"-", `name`) AS label FROM `sort_code` WHERE `id_vat_num`=?';
 
   const body = [];
   req.on('data', chunk => {
@@ -113,8 +134,47 @@ router.post('/getSelectData', (req, res) => {
       });
     });
   });
+});
 
-  
+// handel the request to update sort code
+router.post('/updateSortCode', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    // console.log(obj);
+    try {
+      if (obj.codeNumber !== obj.selectedCode) {
+        const exist = await isCodeExist([obj.thisVatId, obj.codeNumber]);
+        if (exist) {
+          res.end(
+            JSON.stringify({
+              isUpdate: false,
+              message: 'לא ניתן לעדכן לקוד מיון שכבר קיים',
+            })
+          );
+        } else {
+          await updateSortCode(obj);
+          res.end(
+            JSON.stringify({
+              isUpdate: true,
+              message: 'קוד מיון עודכן בהצלחה',
+            })
+          );
+        }
+      }
+    } catch (error) {
+      console.error(error.message);
+      res.end(
+        JSON.stringify({
+          isUpdate: false,
+          message: 'שגיאה משרת',
+        })
+      );
+    }
+  });
 });
 
 module.exports = router;

@@ -29,12 +29,12 @@ export const sortCodeColumn = [
     Header: 'שם קוד',
     accessor: 'name',
   },
-  {
-    Header: '',
-    accessor: 'icon',
-    disableFilters: true,
-    Cell: ({ row }) => (
-      <ButtonIcon src={icon} fun={onClickIcon} />
-    ),
-  },
+  // {
+  //   Header: '',
+  //   accessor: 'icon',
+  //   disableFilters: true,
+  //   Cell: ({ row }) => (
+  //     <ButtonIcon src={icon} fun={onClickIcon} />
+  //   ),
+  // },
 ];
