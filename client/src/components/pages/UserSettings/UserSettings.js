@@ -29,6 +29,7 @@ export default function UserSettings(props) {
   const thisMail = localStorage.getItem('SelectedCus');
   const thisVatId = localStorage.getItem('CusVAT_Id');
 
+  // A function that receives the new data and updates the new values in the database
   const updateCustomer = async () => {
     const updateCus = {
       userName,
@@ -43,6 +44,7 @@ export default function UserSettings(props) {
       manager,
       thisMail,
       thisVatId,
+      note,
     };
 
     fetch('userSettings/updateCus', {
@@ -122,15 +124,17 @@ export default function UserSettings(props) {
           type='text'
           name='password'
           placeholder='סיסמה'
+          maxLength={20}
           onChange={e => setPassword(e.target.value)}
         ></input>
       </p>
       <p>
-        שם לקוח/חברה
+        שם לקוח/חברה:
         <input
           value={cusName}
           type='text'
           name='cusName'
+          maxLength={30}
           placeholder='שם לקוח/חברה'
           onChange={e => setCusName(e.target.value)}
         ></input>
@@ -141,6 +145,7 @@ export default function UserSettings(props) {
           value={phone}
           type='text'
           name='phone'
+          maxLength={10}
           placeholder='טלפון נייד'
           onChange={e => setPhone(e.target.value)}
         ></input>
@@ -151,6 +156,7 @@ export default function UserSettings(props) {
           value={idVAT}
           type='text'
           name='vatNum'
+          maxLength={9}
           placeholder='מספר עוסק ח.פ'
           onChange={e => setIdVAT(e.target.value)}
         ></input>
