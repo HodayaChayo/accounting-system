@@ -57,6 +57,35 @@ const updateSortCode = async obj => {
   });
 };
 
+// use to check if sort code have accounts before deleting
+const isCodeHaveAccounts = (obj) => {
+  const check = 'SELECT * FROM `accounts` WHERE `id_vat_num`=? AND `sort_code`=?'
+  return new Promise((resolve, reject) => {
+    con.query(
+      check,
+      [obj.thisVatId, obj.number],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(rows.length != 0);
+      }
+    );
+  });
+};
+
+// delete sort code from database
+const deleteSortCode = async obj => {
+  const deleteCode =
+    'DELETE FROM `sort_code` WHERE `id_vat_num`=? AND `number`=?';
+
+  con.query(deleteCode, [obj.thisVatId, obj.number], (err, rows) => {
+    if (err) {
+      throw err;
+    }
+  });
+};
+
 // add sort code to database and send a message if succeeded or not
 router.post('/add', (req, res) => {
   const body = [];
@@ -170,6 +199,45 @@ router.post('/updateSortCode', (req, res) => {
       res.end(
         JSON.stringify({
           isUpdate: false,
+          message: 'שגיאה משרת',
+        })
+      );
+    }
+  });
+});
+
+// handel request to delete sort code
+router.post('/delete', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    // console.log(obj);
+    try {
+      const haveAccounts = await isCodeHaveAccounts(obj)
+      if(!haveAccounts){
+        await deleteSortCode(obj);
+        res.end(
+          JSON.stringify({
+            isDelete: true,
+            message: 'קוד מיון נמחק בהצלחה',
+          })
+        );
+      }else{
+        res.end(
+          JSON.stringify({
+            isDelete: false,
+            message: 'לא ניתן למחוק קוד מיון שמשוייכים אליו חשבונות',
+          })
+        );
+      }
+    } catch (error) {
+      console.error(error.message);
+      res.end(
+        JSON.stringify({
+          isDelete: false,
           message: 'שגיאה משרת',
         })
       );

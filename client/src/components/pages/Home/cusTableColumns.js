@@ -30,12 +30,4 @@ export const cusColumns = [
     Header: 'שם משתמש',
     accessor: 'user_name',
   },
-  {
-    Header: '',
-    accessor: 'none',
-    disableFilters: true,
-    Cell: ({ row }) => (
-      <ButtonIcon src={<FiEdit/>} cus={row.original.user_name} />
-    ),
-  },
 ];

@@ -26,3 +26,9 @@
 .buttons :nth-of-type(1){
   margin-left: auto;
 }
+.e-dialog{
+  color: red;
+  font-size: 10px;
+  font-weight: normal;
+  line-height: normal;
+}

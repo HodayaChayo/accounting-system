@@ -1,16 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Header from '../../Header/Header';
 import Footer from '../../Footer/Footer';
-import Button from '../../Button/Button';
+import MyButton from '../../Button/Button';
 import ButtonIcon from '../../Button/ButtonIcon';
 import Table from '../../Table/Table';
 import EditSortCodePopup from './EditSortCodePopup';
 import css from './sortCodes.module.css';
 import Sidebars from '../../Sidebars/Sidebars';
-import { FiEdit, FiSave } from 'react-icons/fi';
+import { FiEdit } from 'react-icons/fi';
+import { MdOutlineDeleteForever } from 'react-icons/md';
 import { sortCodeColumn } from './sortCodeTableColumns';
 import { ToastContainer, toast } from 'react-toastify';
 import { checkCusName, numbersOnly } from '../../validations/validations';
+// imports for react alert dialog
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export default function SortCodes() {
   const [codeNum, setCodeNum] = useState('');
@@ -19,6 +27,7 @@ export default function SortCodes() {
   const [dataTable, setDataTable] = useState([]);
   const [editPopup, setAditPopup] = useState(false);
   const [selectedRow, setSelectedRow] = useState();
+  const [deleteDialog, setDeleteDialog] = useState(false);
   const refName = useRef(null);
   const refNum = useRef(null);
   const thisVatId = localStorage.getItem('CusVAT_Id');
@@ -26,7 +35,7 @@ export default function SortCodes() {
     ...sortCodeColumn,
     {
       Header: '',
-      accessor: 'icon',
+      accessor: 'update',
       disableFilters: true,
       Cell: ({ row }) => (
         <ButtonIcon
@@ -38,7 +47,25 @@ export default function SortCodes() {
         />
       ),
     },
+    {
+      Header: '',
+      accessor: 'delete',
+      disableFilters: true,
+      Cell: ({ row }) => (
+        <ButtonIcon
+          src={<MdOutlineDeleteForever />}
+          fun={() => {
+            setSelectedRow(row.original);
+            setDeleteDialog(true);
+          }}
+        />
+      ),
+    },
   ]);
+
+  const handleClose = () => {
+    setDeleteDialog(false);
+  };
 
   // get the sort code table data from server
   useEffect(() => {
@@ -85,6 +112,33 @@ export default function SortCodes() {
       });
   };
 
+  // delete sort code 
+  const deleteSortCode = () => {
+    const number = Number(selectedRow.number)
+    fetch('/sortCode/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ thisVatId, number}),
+    })
+      .then(res => res.json())
+      .then(res => {
+        // console.log(res);
+        if(res.isDelete){
+          toast.success(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          handleClose()
+          setDataIsChanged(!dataIsChanged);
+        }else{
+          toast.error(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+        }
+      });
+  };
+
   return (
     <div className='body'>
       <Sidebars />
@@ -113,16 +167,35 @@ export default function SortCodes() {
               }}
               ref={refName}
             />
-            <Button
+            <MyButton
               text='הוספה'
               isDisable={!checkCusName(codeName) || !numbersOnly(codeNum)}
               fun={addSortCode}
             />
           </form>
         </div>
-        {editPopup && <EditSortCodePopup setDisplay={setAditPopup} selectedRow={selectedRow} dataChange={setDataIsChanged}/>}
+        {editPopup && (
+          <EditSortCodePopup
+            setDisplay={setAditPopup}
+            selectedRow={selectedRow}
+            dataChange={setDataIsChanged}
+          />
+        )}
         <Table myData={dataTable} myColumns={addColumn} />
       </main>
+      {/* delete alert dialog */}
+      <Dialog open={deleteDialog} keepMounted onClose={handleClose}>
+        <DialogTitle>{'מחיקת קוד מיון'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            האם למחוק את קוד מיון זה? לתשומת ליבך לא ניתן למחוק קוד מיון אם משוייכים אליו חשבונות.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={deleteSortCode}>מחק</Button>
+          <Button onClick={handleClose}>ביטול</Button>
+        </DialogActions>
+      </Dialog>
       <Footer />
     </div>
   );
