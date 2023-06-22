@@ -143,7 +143,15 @@ function Sidebars() {
             label={'קליטה'}
             icon={<MdAssignmentAdd />}
           >
-            <MenuItem icon={<FaFileUpload />}>העלאת מסמכים</MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.location.href =
+                  'http://localhost:3000/UploadingDocuments';
+              }}
+              icon={<FaFileUpload />}
+            >
+              העלאת מסמכים
+            </MenuItem>
             <MenuItem icon={<RiStackFill />}>קליטת מסמכים</MenuItem>
             <MenuItem icon={<FaHandHoldingMedical />}>פקודות ידניות</MenuItem>
           </SubMenu>
