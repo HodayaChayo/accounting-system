@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 14, 2023 at 06:43 PM
+-- Generation Time: Jun 22, 2023 at 06:20 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -35,6 +35,14 @@ CREATE TABLE `accounts` (
   `type` varchar(35) NOT NULL,
   `vat_number` varchar(9) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `accounts`
+--
+
+INSERT INTO `accounts` (`number`, `id_vat_num`, `name`, `sort_code`, `type`, `vat_number`) VALUES
+(100, '208653427', 'בנקים', 100, 'בנקים', ''),
+(2200, '208653427', 'ספקים שונים', 220, 'ספקים', '');
 
 -- --------------------------------------------------------
 
@@ -159,6 +167,26 @@ CREATE TABLE `sort_code` (
   `number` int(11) NOT NULL,
   `name` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `sort_code`
+--
+
+INSERT INTO `sort_code` (`id_vat_num`, `number`, `name`) VALUES
+('208653427', 100, 'בנקים'),
+('208653427', 150, 'בעלי מניות'),
+('208653427', 220, 'ספקים'),
+('208653427', 230, 'עובדים'),
+('208653427', 240, 'מוסדות'),
+('208653427', 250, 'הלוואות'),
+('208653427', 500, 'משכורות'),
+('303877116', 100, 'בנקים'),
+('303877116', 220, 'לקוחות'),
+('328766404', 100, 'בנקים'),
+('328766404', 220, 'ספקים'),
+('328766404', 230, 'עובדים'),
+('330284627', 100, 'בנקים'),
+('330284627', 230, 'עובדים');
 
 -- --------------------------------------------------------
 
