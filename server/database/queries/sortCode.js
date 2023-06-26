@@ -173,7 +173,7 @@ router.post('/updateSortCode', (req, res) => {
   });
   req.on('end', async () => {
     const obj = JSON.parse(body);
-    // console.log(obj);
+    console.log(obj);
     try {
       if (obj.codeNumber !== obj.selectedCode) {
         const exist = await isCodeExist([obj.thisVatId, obj.codeNumber]);
@@ -184,16 +184,15 @@ router.post('/updateSortCode', (req, res) => {
               message: 'לא ניתן לעדכן לקוד מיון שכבר קיים',
             })
           );
-        } else {
-          await updateSortCode(obj);
-          res.end(
-            JSON.stringify({
-              isUpdate: true,
-              message: 'קוד מיון עודכן בהצלחה',
-            })
-          );
         }
       }
+      await updateSortCode(obj);
+      res.end(
+        JSON.stringify({
+          isUpdate: true,
+          message: 'קוד מיון עודכן בהצלחה',
+        })
+      );
     } catch (error) {
       console.error(error.message);
       res.end(

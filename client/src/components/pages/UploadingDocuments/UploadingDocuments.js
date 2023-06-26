@@ -7,30 +7,25 @@ import { ToastContainer, toast } from 'react-toastify';
 export default function UploadingDocuments() {
   const [files, setFiles] = useState([]);
 
-  function filesToUp(event) {
-    console.log(event);
-    setFiles(event.target.files);
-    console.log(event.target.files); 
-  }
-
   checkNumLoadFiles(files)
 
   function checkNumLoadFiles(arrFiles = []) {
     console.log(arrFiles);
-    if (arrFiles.length <= 20){
-
+    let res = []
+    const except =/(\.pdf|\.png|\.jpeg)$/ 
+    for(let i=0; i< arrFiles.length; i++){
+      console.log(arrFiles[i].name);
+      if(except.test(arrFiles[i].name)){
+        res.push(arrFiles[i])
+      }
     }
-    else {
-      toast.success('לא ניתן לטעון יותר מ - 20 קבצים!', {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
-      return files
-    }
+    console.log(res);
   }
 
   return (
     <div className={css.btn}>
       <Sidebar />
+      <ToastContainer/>
       <form>
         <div>
           <input
@@ -38,7 +33,7 @@ export default function UploadingDocuments() {
             type='file'
             name='uploaded-file'
             multiple
-            onChange={filesToUp}
+            onChange={(e)=>{setFiles(e.target.files)}}
             accept='.pdf,.png,.jpeg'
           />
         </div>

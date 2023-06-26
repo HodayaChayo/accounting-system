@@ -62,7 +62,9 @@ export default function EditAccountPopup(props) {
   }, []);
 
   const refSortCode = () => {
-    return show.current ? [show.current] : null;
+    // return show.current ? [show.current] : null;
+    console.log(show.current ? show.current : null);
+    return show.current ? show.current : null
   };
 
   // close list of options for select type
@@ -168,8 +170,11 @@ export default function EditAccountPopup(props) {
             }}
           />
         </p>
-        <p>*קוד מיון:</p>
+        <p>*קוד מיון:
+
+        </p>
         <Select
+        
           // valueContainer={sortCode}
           // defaultInputValue={selectSortCode[3]}
           // ref={show}

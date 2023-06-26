@@ -124,7 +124,6 @@ export default function SortCodes() {
     })
       .then(res => res.json())
       .then(res => {
-        // console.log(res);
         if(res.isDelete){
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
