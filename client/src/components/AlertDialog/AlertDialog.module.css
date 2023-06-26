@@ -14,3 +14,10 @@
   /* grid-template-columns: repeat(2, 1fr); */
   /* flex-direction: row; */
 }
+.buttons{
+  display: flex;
+}
+
+.buttons :nth-of-type(1){
+  margin-left: auto;
+}

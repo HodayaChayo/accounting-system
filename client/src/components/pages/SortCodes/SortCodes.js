@@ -7,18 +7,13 @@ import Table from '../../Table/Table';
 import EditSortCodePopup from './EditSortCodePopup';
 import css from './sortCodes.module.css';
 import Sidebars from '../../Sidebars/Sidebars';
+import AlertDialog from '../../AlertDialog/AlertDialog';
 import { FiEdit } from 'react-icons/fi';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { sortCodeColumn } from './sortCodeTableColumns';
 import { ToastContainer, toast } from 'react-toastify';
 import { checkCusName, numbersOnly } from '../../validations/validations';
-// imports for react alert dialog
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+
 
 export default function SortCodes() {
   const [codeNum, setCodeNum] = useState('');
@@ -63,6 +58,7 @@ export default function SortCodes() {
     },
   ]);
 
+  // used to clos delete sort code popup
   const handleClose = () => {
     setDeleteDialog(false);
   };
@@ -112,25 +108,25 @@ export default function SortCodes() {
       });
   };
 
-  // delete sort code 
+  // delete sort code
   const deleteSortCode = () => {
-    const number = Number(selectedRow.number)
+    const number = Number(selectedRow.number);
     fetch('/sortCode/delete', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ thisVatId, number}),
+      body: JSON.stringify({ thisVatId, number }),
     })
       .then(res => res.json())
       .then(res => {
-        if(res.isDelete){
+        if (res.isDelete) {
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
-          handleClose()
+          handleClose();
           setDataIsChanged(!dataIsChanged);
-        }else{
+        } else {
           toast.error(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
@@ -180,22 +176,18 @@ export default function SortCodes() {
             dataChange={setDataIsChanged}
           />
         )}
+        {deleteDialog && (
+          <AlertDialog
+            title='מחיקת קוד מיון'
+            text={`האם למחוק קוד מיון: ${selectedRow.number} - ${selectedRow.name}?
+            לתשומת ליבך לא ניתן למחוק קוד מיון אם משוייכים אליו חשבונות`}
+            setDisplay={setDeleteDialog}
+            btnText='מחק'
+            fun={deleteSortCode}
+          />
+        )}
         <Table myData={dataTable} myColumns={addColumn} />
       </main>
-      {/* delete alert dialog */}
-      <Dialog open={deleteDialog} keepMounted onClose={handleClose}>
-        <DialogTitle>{'מחיקת קוד מיון'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            האם למחוק את קוד מיון זה? לתשומת ליבך לא ניתן למחוק קוד מיון אם משוייכים אליו חשבונות.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={deleteSortCode}>מחק</Button>
-          <Button onClick={handleClose}>ביטול</Button>
-        </DialogActions>
-      </Dialog>
-      <Footer />
     </div>
   );
 }

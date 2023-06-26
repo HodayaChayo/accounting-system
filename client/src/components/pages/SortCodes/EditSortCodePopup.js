@@ -10,6 +10,7 @@ export default function EditSortCodePopup(props) {
   const [codeNum, setCodeNum] = useState(props.selectedRow.number);
   const [codeName, setCodeName] = useState(props.selectedRow.name);
 
+  
   const updateSortCode = () => {
     const selectedCode = props.selectedRow.number;
     const codeNumber = Number(codeNum);
@@ -36,6 +37,7 @@ export default function EditSortCodePopup(props) {
 
   return (
     <div className={css.popup}>
+      
       <h2>עדכון קוד מיון</h2>
       <form action=''>
         <p>
