@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Button from '../../Button/Button';
 import css from './accounts.module.css';
-import Select from 'react-select';
+import { v4 as uuid } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -15,12 +15,10 @@ export default function EditAccountPopup(props) {
   const [selectSortCode, setSelectSortCode] = useState([]);
   const [accountNumber, setAccountNumber] = useState('');
   const [sortCodeValue, setSortCodeValue] = useState('');
-  const [sortCodeObj, setSortCodeObj] = useState('');
   const [accountName, setAccountName] = useState('');
   const [accountType, setAccountType] = useState('');
   const [vatId, setVatId] = useState('');
-  const [allData, setAllData] = useState();
-  const show = useRef();
+
   // get sort code list for select from the database
   useEffect(() => {
     fetch('/sortCode/getSelectData', {
@@ -29,43 +27,29 @@ export default function EditAccountPopup(props) {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res);
         setSelectSortCode(res);
       });
   }, []);
 
-  const getData = async () => {
+  // get selected account data from database
+  useEffect(() => {
     const selectedNum = props.selectedRow.number;
     const selectedSort = props.selectedRow.sort_code;
-    await fetch('/accounts/selectedAccountData', {
+    fetch('/accounts/selectedAccountData', {
       method: 'POST',
       body: JSON.stringify({ thisVatId, selectedNum, selectedSort }),
     })
       .then(async res => await res.json())
       .then(async res => {
-        console.log(res);
-        setAllData(res);
-        show.current = { value: res.sort_code, label: res.sort_codeName };
-        setSortCodeObj({ value: res.sort_code, label: res.sort_codeName });
-        console.log(show.current);
         setAccountNumber(res.number);
+        setSortCodeValue(res.sort_code)
         setAccountName(res.name);
         setAccountType(res.type);
         setSortCodeValue(res.sort_code);
         setVatId(res.vat_number);
       });
-  };
-
-  // get selected account data from database
-  useEffect(() => {
-    getData();
   }, []);
 
-  const refSortCode = () => {
-    // return show.current ? [show.current] : null;
-    console.log(show.current ? show.current : null);
-    return show.current ? show.current : null
-  };
 
   // close list of options for select type
   const typeList = [
@@ -90,36 +74,6 @@ export default function EditAccountPopup(props) {
     { value: 'הון ועודפים', label: 'הון ועודפים' },
   ];
 
-  // select style:
-  const selectStyle = {
-    control: (provided, state) => ({
-      ...provided,
-      background: '#fff',
-      borderColor: '#9e9e9e',
-      minHeight: '25px',
-      height: '25px',
-      // maxWidth: '180px',
-      boxShadow: state.isFocused ? null : null,
-    }),
-
-    valueContainer: (provided, state) => ({
-      ...provided,
-      height: '25px',
-      padding: '0 4px',
-    }),
-
-    input: (provided, state) => ({
-      ...provided,
-      margin: '0px',
-    }),
-    indicatorSeparator: state => ({
-      display: 'none',
-    }),
-    indicatorsContainer: (provided, state) => ({
-      ...provided,
-      height: '25px',
-    }),
-  };
 
   // send data to server to save changes
   const createNewAccount = () => {
@@ -132,7 +86,7 @@ export default function EditAccountPopup(props) {
       vatId,
     };
 
-    fetch('/accounts/createAccount', {
+    fetch('/accounts/updateAccount', {
       method: 'POST',
       body: JSON.stringify(accountObj),
     })
@@ -153,8 +107,6 @@ export default function EditAccountPopup(props) {
       });
   };
 
-  // console.log(sortCode);
-
   return (
     <div className={css.popup}>
       <h2>עדכון חשבון</h2>
@@ -170,25 +122,21 @@ export default function EditAccountPopup(props) {
             }}
           />
         </p>
-        <p>*קוד מיון:
-
-        </p>
-        <Select
-        
-          // valueContainer={sortCode}
-          // defaultInputValue={selectSortCode[3]}
-          // ref={show}
-          defaultValue={refSortCode()}
-          // defaultValue={{value: allData.sort_code, label: allData.sort_codeName}}
-          // value={selectSortCode[3]}
-          // label={sortCode}
-          options={selectSortCode}
-          styles={selectStyle}
-          placeholder='בחר קוד מיון'
+        <p>*קוד מיון:</p>
+        <select
+          name='sortCode'
+          value={sortCodeValue}
           onChange={e => {
-            setSortCodeValue(e.value);
+            setSortCodeValue(e.target.value);
           }}
-        />
+        >
+          {selectSortCode.map(el => {
+            return (
+              <option key={uuid()} label={el.label} value={el.value}></option>
+            );
+          })}
+          
+        </select>
         <p>
           *שם חשבון:{' '}
           <input
@@ -202,15 +150,19 @@ export default function EditAccountPopup(props) {
           />
         </p>
         <p>*סוג חשבון: </p>
-        <Select
-          // value={{value: {accountType}, label: {accountType}}}
-          options={typeList}
-          styles={selectStyle}
-          placeholder='בחר סוג חשבון'
+        <select
+          name='type'
+          value={accountType}
           onChange={e => {
-            setAccountType(e.value);
+            setAccountType(e.target.value);
           }}
-        />
+        >
+          {typeList.map(el => {
+            return (
+              <option key={uuid()} label={el.label} value={el.value}></option>
+            );
+          })}
+        </select>
         <p>
           מספר עוסק / ח.פ:
           <input
@@ -238,8 +190,6 @@ export default function EditAccountPopup(props) {
           text='ביטול'
           fun={() => {
             props.setDisplay(false);
-            // console.log(sortCodeObj);
-            console.log(refSortCode());
           }}
         />
       </div>
