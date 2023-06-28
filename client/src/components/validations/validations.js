@@ -27,14 +27,14 @@ const checkCusName = cusName => {
 
 // check if phone number is not empty and contain numbers only
 const checkPhone = phone => {
-  if (phone !== '' && /\d{10}$/.test(phone)) {
+  if (phone !== '' && /^\d{10}$/.test(phone)) {
     return true;
   }
   return false;
 };
 
 const checkVatId = vatId => {
-  if (vatId !== '' && /\d{9}$/.test(vatId)) {
+  if (vatId !== '' && /^\d{9}$/.test(vatId)) {
     return true;
   }
   return false;

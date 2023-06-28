@@ -76,12 +76,15 @@ export default function EditAccountPopup(props) {
 
 
   // send data to server to save changes
-  const createNewAccount = () => {
+  const updateAccount = () => {
+    const sortCode = Number(sortCodeValue)
+    const selectedNum = props.selectedRow.number;
     const accountObj = {
       accountNumber,
       thisVatId,
+      selectedNum,
       accountName,
-      sortCodeValue,
+      sortCode,
       accountType,
       vatId,
     };
@@ -93,7 +96,7 @@ export default function EditAccountPopup(props) {
       .then(res => res.json())
       .then(res => {
         console.log(res);
-        if (res.isAdd) {
+        if (res.isUpdate) {
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
@@ -168,9 +171,10 @@ export default function EditAccountPopup(props) {
           <input
             value={vatId}
             type='number'
+            maxLength={9}
             placeholder='עבור ספקים/לקוחות/עובדים'
             onChange={e => {
-              setAccountType(e.target.value);
+              setVatId(e.target.value);
             }}
           />
         </p>
@@ -182,9 +186,10 @@ export default function EditAccountPopup(props) {
             !numbersOnly(accountNumber) ||
             sortCodeValue === '' ||
             !checkCusName(accountName) ||
-            accountType === ''
+            accountType === ''||
+            (vatId !== '' && !checkVatId(vatId))
           }
-          fun={createNewAccount}
+          fun={updateAccount}
         />
         <Button
           text='ביטול'

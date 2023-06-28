@@ -7,6 +7,7 @@ import Button from '../../Button/Button';
 import ButtonIcon from '../../Button/ButtonIcon';
 import AddAccountPopup from './AddAccountPopup';
 import EditAccountPopup from './EditAccountPopup';
+import AlertDialog from '../../AlertDialog/AlertDialog';
 import { FiEdit } from 'react-icons/fi';
 import { MdOutlineDeleteForever } from 'react-icons/md';
 import { ToastContainer, toast } from 'react-toastify';
@@ -18,8 +19,8 @@ export default function Accounts() {
   const [dataChanged, setDataChanged] = useState(0);
   const [addPopup, setAddPopup] = useState(false);
   const [editPopup, setAditPopup] = useState(false);
+  const [deletePopup, setDeletePopup] = useState(false);
   const [selectedRow, setSelectedRow] = useState();
-  
 
   const [columns, setColumns] = useState([
     ...accountsColumns,
@@ -41,7 +42,15 @@ export default function Accounts() {
       Header: '',
       accessor: 'delete',
       disableFilters: true,
-      Cell: ({ row }) => <ButtonIcon src={<MdOutlineDeleteForever />} />,
+      Cell: ({ row }) => (
+        <ButtonIcon
+          src={<MdOutlineDeleteForever />}
+          fun={() => {
+            setSelectedRow(row.original);
+            setDeletePopup(true);
+          }}
+        />
+      ),
     },
   ]);
 
@@ -57,6 +66,31 @@ export default function Accounts() {
         setDataTable(res);
       });
   }, [dataChanged]);
+
+  const deleteAccount = () => {
+    const number = selectedRow.number
+    fetch('/accounts/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ thisVatId,  number}),
+    })
+      .then(res => res.json())
+      .then(res => {
+        if(res.isDeleted){
+          toast.success(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          setDeletePopup(false)
+          setDataChanged(prevValue => prevValue + 1)
+        }else {
+          toast.error(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+        }
+      });
+  };
 
   return (
     <div className='body'>
@@ -76,6 +110,16 @@ export default function Accounts() {
           setDisplay={setAditPopup}
           dataChange={setDataChanged}
           selectedRow={selectedRow}
+        />
+      )}
+      {deletePopup && (
+        <AlertDialog
+          title='מחיקת חשבון'
+          text={`האם למחוק את חשבון: ${selectedRow.number} - ${selectedRow.name}? 
+          לתשומת ליבך לא ניתן למחוק חשבון אם הוא מכיל פקודות.`}
+          setDisplay={setDeletePopup}
+          btnText='מחק'
+          fun={deleteAccount}
         />
       )}
       <ToastContainer />
