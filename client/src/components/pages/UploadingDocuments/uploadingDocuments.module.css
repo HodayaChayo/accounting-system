@@ -5,3 +5,10 @@
   justify-content: center;
 
 }
+
+.errFile{
+  color: red;
+}
+.ToUp{
+  color: green;
+}
