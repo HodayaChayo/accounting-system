@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '../../Button/Button';
 import css from './accounts.module.css';
-import Select from 'react-select';
+import { v4 as uuid } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -55,37 +55,6 @@ export default function AddAccountPopup(props) {
     { value: 'הון ועודפים', label: 'הון ועודפים' },
   ];
 
-  // select style:
-  const selectStyle = {
-    control: (provided, state) => ({
-      ...provided,
-      background: '#fff',
-      borderColor: '#9e9e9e',
-      minHeight: '25px',
-      height: '25px',
-      // maxWidth: '180px',
-      boxShadow: state.isFocused ? null : null,
-    }),
-
-    valueContainer: (provided, state) => ({
-      ...provided,
-      height: '25px',
-      padding: '0 4px',
-    }),
-
-    input: (provided, state) => ({
-      ...provided,
-      margin: '0px',
-    }),
-    indicatorSeparator: state => ({
-      display: 'none',
-    }),
-    indicatorsContainer: (provided, state) => ({
-      ...provided,
-      height: '25px',
-    }),
-  };
-
   // send data to server to create new account
   const createNewAccount = () => {
     const accountObj = {
@@ -102,20 +71,19 @@ export default function AddAccountPopup(props) {
       body: JSON.stringify(accountObj),
     })
       .then(res => res.json())
-      .then(res =>{
+      .then(res => {
         console.log(res);
-        if(res.isAdd){
+        if (res.isAdd) {
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
-          props.dataChange((prevValue) => prevValue + 1)
+          props.dataChange(prevValue => prevValue + 1);
           props.setDisplay(false);
-        }else{
+        } else {
           toast.error(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
         }
-
       });
   };
 
@@ -134,14 +102,19 @@ export default function AddAccountPopup(props) {
           />
         </p>
         <p>*קוד מיון:</p>
-        <Select
-          options={selectSortCode}
-          styles={selectStyle}
-          placeholder='בחר קוד מיון'
+        <select
+          name='sortCode'
           onChange={e => {
-            setSortCode(e.value);
+            setSortCode(e.target.value);
           }}
-        />
+        >
+          {selectSortCode.map(el => {
+            return (
+              <option key={uuid()} label={el.label} value={el.value}></option>
+            );
+          })}
+          <option label='בחר קוד מיון' value=''></option>
+        </select>
         <p>
           *שם חשבון:{' '}
           <input
@@ -154,14 +127,19 @@ export default function AddAccountPopup(props) {
           />
         </p>
         <p>*סוג חשבון: </p>
-        <Select
-          options={typeList}
-          styles={selectStyle}
-          placeholder='בחר סוג חשבון'
+        <select
+          name='type'
           onChange={e => {
-            setAccountType(e.value);
+            setAccountType(e.target.value);
           }}
-        />
+        >
+          {typeList.map(el => {
+            return (
+              <option key={uuid()} label={el.label} value={el.value}></option>
+            );
+          })}
+          <option label='בחר סוג חשבון' value=''></option>
+        </select>
         <p>
           מספר עוסק / ח.פ:
           <input

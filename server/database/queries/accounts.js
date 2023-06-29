@@ -110,13 +110,13 @@ router.post('/selectedAccountData', (req, res) => {
   });
   req.on('end', async () => {
     const obj = JSON.parse(body);
-    console.log(obj);
+    // console.log(obj);
     return new Promise((resolve, reject) => {
       con.query(selectedData, [obj.thisVatId, obj.selectedNum, obj.thisVatId, obj.selectedSort], (err, rows) => {
         if (err) {
           reject(err);
         }
-        console.log('result--',rows);
+        // console.log('result--',rows);
         res.end(JSON.stringify(rows[0]))
         resolve()
       });
