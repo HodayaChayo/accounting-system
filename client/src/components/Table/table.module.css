@@ -22,6 +22,7 @@
 table {
   border-spacing: 0;
   border: 1px solid black;
+  border-radius: 10px;
 }
 
 tr:last-child > td {
@@ -34,4 +35,8 @@ td {
   padding: 0.5rem;
   border-bottom: 1px solid black;
   border-right: 1px solid black;
+}
+
+tr:hover{
+  background: rgba(71, 148, 215, 0.3);
 }

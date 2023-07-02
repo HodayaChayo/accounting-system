@@ -27,7 +27,7 @@ import { HiDocumentReport } from 'react-icons/hi';
 import { IoIosListBox } from 'react-icons/io';
 import { TbReceiptTax } from 'react-icons/tb';
 import { VscGraphLine, VscGraphLeft } from 'react-icons/vsc';
-import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi/';
+import { FiChevronsLeft, FiChevronsRight, FiPower } from 'react-icons/fi/';
 import {
   Sidebar,
   SubMenu,
@@ -172,6 +172,15 @@ function Sidebars() {
             <MenuItem icon={<BsFillArchiveFill />}>ארכיון</MenuItem>
             <MenuItem icon={<FaFolderPlus />}>חומרים לדוח שנתי</MenuItem>
           </SubMenu>
+          <MenuItem
+            className='link'
+            onClick={() => {
+              window.location.href = 'http://localhost:3000';
+            }}
+            icon={<FiPower />}
+          >
+            התנתק
+          </MenuItem>
         </Menu>
       </Sidebar>
     </div>

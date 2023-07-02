@@ -12,7 +12,7 @@
   right: 0;
   height: 100vh;
   max-width: 400px;
-  background-color: #72e9a8;
+  background-color: #C6CFDE;
 }
 
 a:hover {
@@ -38,7 +38,7 @@ hr {
 }
 
 .ps-menu-button {
-  background-color: #72e9a8 !important;
+  background-color: #C6CFDE !important;
 }
 
 .link {
