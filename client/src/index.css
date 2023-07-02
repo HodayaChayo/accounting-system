@@ -23,8 +23,9 @@
   background-repeat: no-repeat;
   width: 100vw;
   height: 100vh;
-  /* min-width: calc(100vw - 400px); */
-  /* margin-right: auto; */
+  /* without the sidebar */
+  max-width: calc(100vw - 80px);
+  margin-right: auto;
 }
 
 main{
