@@ -1,0 +1,16 @@
+.userDetails{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* width: 70%; */
+  border: solid rgb(38, 255, 0) 10px;
+}
+
+.p{
+  width: 33%;
+  border: solid red 2px;
+}
+
+.errors{
+  color: red;
+}
