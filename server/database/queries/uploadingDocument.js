@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');
 
-
-
 router.post('/uploadingDocument', (req, res) => {
   const insertDoc =
     'INSERT INTO `photos`(`name`, `upload_date`,`user_name`) VALUES ([?],[?],[?])';
@@ -16,7 +14,7 @@ router.post('/uploadingDocument', (req, res) => {
     const obj = JSON.parse(body);
 
     return new Promise((resolve, reject) => {
-      con.query(insertDoc,  (err, rows) => {
+      con.query(insertDoc, (err, rows) => {
         if (err) {
           reject(err);
         }
@@ -27,3 +25,4 @@ router.post('/uploadingDocument', (req, res) => {
     });
   });
 });
+module.exports = router;
