@@ -54,7 +54,7 @@ export default function AddCustomer(props) {
         if (res.isAdd) {
           // console.log('add!');
           // console.log(res.message);
-          props.dataChange((prevValue) => prevValue + 1)
+          props.dataChange(prevValue => prevValue + 1);
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
@@ -72,156 +72,162 @@ export default function AddCustomer(props) {
   };
 
   return (
-    <div className={css.addPopup}>
-      <h2>פתיחת לקוח חדש</h2>
-      <h3>פרטי לקוח</h3>
-      {/* <ToastContainer /> */}
-      <div className={css.topForm}>
-        <p>
-          *שם משתמש:
-          <input
-            type='email'
-            name='userName'
-            placeholder='מייל: xxx@yyy.zzz'
-            maxLength={35}
-            onChange={e => setUserName(e.target.value)}
-          ></input>
-        </p>
-        <p>
-          *סיסמה:
-          <input
-            type='text'
-            name='password'
-            placeholder='סיסמה'
-            maxLength={20}
-            onChange={e => setPassword(e.target.value)}
-          ></input>
-        </p>
-        <p>
-          *שם עוסק:
-          <input
-            type='text'
-            name='cusName'
-            placeholder='שם עוסק'
-            maxLength={30}
-            onChange={e => setCusName(e.target.value)}
-          ></input>
-        </p>
-        <p>
-          *טלפון נייד:
-          <input
-            type='text'
-            name='phone'
-            placeholder='ללא סימני -'
-            minLength={10}
-            maxLength={10}
-            onChange={e => setPhone(e.target.value)}
-          ></input>
-        </p>
-        <p>
-          *מספר עוסק / ח.פ:
-          <input
-            type='text'
-            name='vatNum'
-            placeholder='9 ספרות'
-            minLength={9}
-            maxLength={9}
-            pattern='[0-9]'
-            onChange={e => setIdVAT(e.target.value)}
-          ></input>
-        </p>
-      </div>
-      <h3>נתוני רשויות</h3>
-      <div className={css.downForm}>
-        <p>
-          סוג עוסק:
-          <select name='type' onChange={e => setType(e.target.value)}>
-            <option label='עוסק מורשה' value='מורשה'></option>
-            <option label='חברה' value='חברה'></option>
-            <option label='עוסק פטור' value='פטור'></option>
-          </select>
-        </p>
-        <p>
-          תדירות מע"מ:
-          <select
-            name='VAT'
-            onChange={e => setVATFrequency(e.target.value)}
-            disabled={type === 'פטור'}
-          >
-            <option label='חד חודשי' value='1'></option>
-            <option label='דו חודשי' value='2'></option>
-          </select>
-        </p>
-        <p>
-          תדירות מ.ה:
-          <select
-            name='incomeTax'
-            onChange={e => setTaxFrequency(e.target.value)}
-          >
-            <option label='חד חודשי' value='1'></option>
-            <option label='דו חודשי' value='2'></option>
-          </select>
-        </p>
-        <p>
-          *אחוז מקדמות:
-          <input
-            type='text'
-            name='taxPercent'
-            placeholder='אחוז מקדמות מ.ה'
-            onChange={e => setTaxPercent(e.target.value)}
-          ></input>
-        </p>
+    <div className={css.screen}>
+      <div className={css.addPopup}>
+        <h2>פתיחת לקוח חדש</h2>
+        <h3>פרטי לקוח</h3>
+        {/* <ToastContainer /> */}
+        <div className={css.topForm}>
+          <p>
+            *שם משתמש:
+            <input
+              type='email'
+              name='userName'
+              placeholder='מייל: xxx@yyy.zzz'
+              maxLength={35}
+              onChange={e => setUserName(e.target.value)}
+            ></input>
+          </p>
+          <p>
+            *סיסמה:
+            <input
+              type='text'
+              name='password'
+              placeholder='סיסמה'
+              maxLength={20}
+              onChange={e => setPassword(e.target.value)}
+            ></input>
+          </p>
+          <p>
+            *שם עוסק:
+            <input
+              type='text'
+              name='cusName'
+              placeholder='שם עוסק'
+              maxLength={30}
+              onChange={e => setCusName(e.target.value)}
+            ></input>
+          </p>
+          <p>
+            *טלפון נייד:
+            <input
+              type='text'
+              name='phone'
+              placeholder='ללא סימני -'
+              minLength={10}
+              maxLength={10}
+              onChange={e => setPhone(e.target.value)}
+            ></input>
+          </p>
+          <p>
+            *מספר עוסק / ח.פ:
+            <input
+              type='text'
+              name='vatNum'
+              placeholder='9 ספרות'
+              minLength={9}
+              maxLength={9}
+              pattern='[0-9]'
+              onChange={e => setIdVAT(e.target.value)}
+            ></input>
+          </p>
+        </div>
+        <h3>נתוני רשויות</h3>
+        <div className={css.downForm}>
+          <p>
+            סוג עוסק:
+            <select name='type' onChange={e => setType(e.target.value)}>
+              <option label='עוסק מורשה' value='מורשה'></option>
+              <option label='חברה' value='חברה'></option>
+              <option label='עוסק פטור' value='פטור'></option>
+            </select>
+          </p>
+          <p>
+            תדירות מע"מ:
+            <select
+              name='VAT'
+              onChange={e => setVATFrequency(e.target.value)}
+              disabled={type === 'פטור'}
+            >
+              <option label='חד חודשי' value='1'></option>
+              <option label='דו חודשי' value='2'></option>
+            </select>
+          </p>
+          <p>
+            תדירות מ.ה:
+            <select
+              name='incomeTax'
+              onChange={e => setTaxFrequency(e.target.value)}
+            >
+              <option label='חד חודשי' value='1'></option>
+              <option label='דו חודשי' value='2'></option>
+            </select>
+          </p>
+          <p>
+            *אחוז מקדמות:
+            <input
+              type='text'
+              name='taxPercent'
+              placeholder='אחוז מקדמות מ.ה'
+              onChange={e => setTaxPercent(e.target.value)}
+            ></input>
+          </p>
 
-        <p>
-          עובד מטפל:
-          <select name='manager' onChange={e => setManager(e.target.value)}>
-            <option label='עובד מטפל - לא פעיל'></option>
-          </select>
-        </p>
+          <p>
+            עובד מטפל:
+            <select name='manager' onChange={e => setManager(e.target.value)}>
+              <option label='עובד מטפל - לא פעיל'></option>
+            </select>
+          </p>
 
-        <p>
-          הערות ללקוח:
-          <textarea
-            name='note'
-            cols='30'
-            rows='5'
-            onChange={e => setNote(e.target.value)}
-          ></textarea>
-        </p>
-      </div>
-      {(!checkUserName(userName) ||
-        !checkPassword(password) ||
-        !checkCusName(cusName) ||
-        !checkPhone(phone) ||
-        !checkVatId ||
-        !checkTaxPercent(taxPercent)) && <div className={css.errors}>נא לוודא שהשדות חובה מלאים כראוי</div>}
-      {(userName === '' ||
-        password === '' ||
-        cusName === '' ||
-        phone === '' ||
-        idVAT === '') && <div className={css.errors}>נא לוודא שכל השדות חובה מלאים</div>}
-      <div className={css.buttons}>
-        <Button
-          text='צור לקוח'
-          fun={() => {
-            createNewCustomer();
-            props.display(false);
-          }}
-          isDisable={
-            !checkUserName(userName) ||
-            !checkPassword(password) ||
-            !checkCusName(cusName) ||
-            !checkPhone(phone) ||
-            !checkVatId(idVAT) ||
-            !checkTaxPercent(taxPercent)
-          }
-        />
-        <Button
-          text='ביטול'
-          fun={() => {
-            props.display(false);
-          }}
-        />
+          <p>
+            הערות ללקוח:
+            <textarea
+              name='note'
+              cols='30'
+              rows='5'
+              onChange={e => setNote(e.target.value)}
+            ></textarea>
+          </p>
+        </div>
+        {(!checkUserName(userName) ||
+          !checkPassword(password) ||
+          !checkCusName(cusName) ||
+          !checkPhone(phone) ||
+          !checkVatId ||
+          !checkTaxPercent(taxPercent)) && (
+          <div className={css.errors}>נא לוודא שהשדות חובה מלאים כראוי</div>
+        )}
+        {(userName === '' ||
+          password === '' ||
+          cusName === '' ||
+          phone === '' ||
+          idVAT === '') && (
+          <div className={css.errors}>נא לוודא שכל השדות חובה מלאים</div>
+        )}
+        <div className={css.buttons}>
+          <Button
+            text='צור לקוח'
+            fun={() => {
+              createNewCustomer();
+              props.display(false);
+            }}
+            isDisable={
+              !checkUserName(userName) ||
+              !checkPassword(password) ||
+              !checkCusName(cusName) ||
+              !checkPhone(phone) ||
+              !checkVatId(idVAT) ||
+              !checkTaxPercent(taxPercent)
+            }
+          />
+          <Button
+            text='ביטול'
+            fun={() => {
+              props.display(false);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
