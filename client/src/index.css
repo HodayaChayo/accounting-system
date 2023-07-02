@@ -22,11 +22,18 @@
   background-size: cover;
   background-repeat: no-repeat;
   width: 100vw;
-  height: 100vh;
+  /* height: 100vh; */
   /* without the sidebar */
   max-width: calc(100vw - 80px);
   margin-right: auto;
 }
+
+/* login and home don't have sidebar */
+.noSidebar{
+  min-width: 100%;
+  /* margin: 0; */
+}
+
 
 main{
   flex-grow: 1;

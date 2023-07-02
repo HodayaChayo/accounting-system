@@ -72,8 +72,8 @@ export default function Login() {
   };
 
   return (
-    <div className='body'>
-      <Header title='מערכת הנהלת חשבונות' />
+    <div className={`body noSidebar`}>
+      <div><Header title='מערכת הנהלת חשבונות' /></div>
       <main className={css.main}>
         <form className={css.login}>
           <input

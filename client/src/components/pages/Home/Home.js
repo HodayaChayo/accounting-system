@@ -36,7 +36,7 @@ export default function Home() {
 
 
   return (
-    <div className='body'>
+    <div className={`body noSidebar`}>
       <Header title='בחירת לקוח' />
       <ToastContainer />
       <main>
