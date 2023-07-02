@@ -12,7 +12,7 @@ import UploadingDocuments from './components/pages/UploadingDocuments/UploadingD
 
 function App() {
   return (
-    <div className='App'>
+    <div className='App'> 
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Login />}></Route>

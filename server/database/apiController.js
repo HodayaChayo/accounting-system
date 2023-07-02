@@ -7,6 +7,7 @@ const {
   sortCode,
   userSettings,
   accounts,
+  documents,
 } = require('./allQueries');
 
 module.exports = function (app) {
@@ -16,6 +17,7 @@ module.exports = function (app) {
   app.use('/sortCode', sortCode);
   app.use('/userSettings', userSettings);
   app.use('/accounts', accounts);
+  app.use('/documents');
   app.all('*', (req, res) => {
     res.status(404).send('resource not found');
   });

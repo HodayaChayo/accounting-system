@@ -4,6 +4,7 @@ const customerTable = require('./queries/customerTable');
 const sortCode = require('./queries/sortCode');
 const userSettings = require('./queries/userSettings');
 const accounts = require('./queries/accounts');
+const documents = require('./queries/uploadingDocument');
 
 module.exports = {
   login,
@@ -12,4 +13,5 @@ module.exports = {
   sortCode,
   userSettings,
   accounts,
+  documents
 };
