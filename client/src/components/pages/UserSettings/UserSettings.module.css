@@ -1,16 +1,41 @@
-.userDetails{
+.userDetails {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  /* width: 70%; */
-  border: solid rgb(38, 255, 0) 10px;
+margin-bottom: 2em;
+  width: 80%;
+  /* border: solid black 1.5px; */
 }
 
-.p{
-  width: 33%;
-  border: solid red 2px;
+h2{
+  text-decoration: underline;
 }
 
-.errors{
+.p {
+  /* border: solid black 1px; */
+  text-align: center;
+  width: 45%;
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
+.errors {
   color: red;
+}
+
+.AuthorityData {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  /* width: 80%; */
+  /* border: solid black 1.5px; */
+}
+
+.p1 {
+  /* border: solid black 1px; */
+  text-align: center;
+  width: 30%;
+  margin: 0.5em;
+  padding: 0.5em;
 }
