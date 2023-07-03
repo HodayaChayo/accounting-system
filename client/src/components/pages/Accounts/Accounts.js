@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../Header/Header';
+import Footer from '../../Footer/Footer';
 import Sidebars from '../../Sidebars/Sidebars';
 import { accountsColumns } from './accountsTableColumns';
 import Table from '../../Table/Table';
@@ -124,6 +125,8 @@ export default function Accounts() {
       )}
       <ToastContainer />
       <Table myData={dataTable} myColumns={columns} />
+      <main></main>
+      <Footer/>
     </div>
   );
 }

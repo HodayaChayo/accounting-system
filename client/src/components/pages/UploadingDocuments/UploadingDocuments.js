@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Button from '../../Button/Button';
 import css from './uploadingDocuments.module.css';
+import Footer from '../../Footer/Footer';
 import Sidebar from '../../Sidebars/Sidebars';
 import { v4 as uuid } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
@@ -74,48 +75,51 @@ export default function UploadingDocuments(props) {
     <div className='body'>
       <Sidebar />
       <ToastContainer />
-      <form>
-        <div>
-          <input
-            id='file'
-            type='file'
-            name='uploaded-file'
-            multiple
-            onChange={e => {
-              setFiles(e.target.files);
-            }}
-            accept='.pdf,.png,.jpeg'
-          />
-        </div>
-      </form>
-      <Button
-        text='שלח'
-        isDisable={files.length === 0}
-        fun={() => {
-          checkNumLoadFiles(files);
-        }}
-      ></Button>
-      {message !== '' && (
-        <div>
-          <p>{message}</p>
-          <p>להלן הקבצים שהועלו בהצלחה:</p>
-          {filesToUp.map(el => {
-            return (
-              <p key={uuid()} className={css.ToUp}>
-                {el.name}
-              </p>
-            );
-          })}
-          <p>להלן הקבצים שלא הועלו:</p>
-          {errorFiles.map(el => {
-            return (
-              <p key={uuid()} className={css.errFile}>
-                {el.name}
-              </p>
-            );
-          })}
-        </div>
-      )}
+      <main>
+        <form>
+          <div>
+            <input
+              id='file'
+              type='file'
+              name='uploaded-file'
+              multiple
+              onChange={e => {
+                setFiles(e.target.files);
+              }}
+              accept='.pdf,.png,.jpeg'
+            />
+          </div>
+        </form>
+        <Button
+          text='שלח'
+          isDisable={files.length === 0}
+          fun={() => {
+            checkNumLoadFiles(files);
+          }}
+        ></Button>
+        {message !== '' && (
+          <div>
+            <p>{message}</p>
+            <p>להלן הקבצים שהועלו בהצלחה:</p>
+            {filesToUp.map(el => {
+              return (
+                <p key={uuid()} className={css.ToUp}>
+                  {el.name}
+                </p>
+              );
+            })}
+            <p>להלן הקבצים שלא הועלו:</p>
+            {errorFiles.map(el => {
+              return (
+                <p key={uuid()} className={css.errFile}>
+                  {el.name}
+                </p>
+              );
+            })}
+          </div>
+        )}
+      </main>
+      <Footer />
     </div>
   );
 }
