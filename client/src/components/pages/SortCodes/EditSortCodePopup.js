@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import css from './sortCodes.module.css';
+import cssPopup from '../../AlertDialog/popupGeneral.module.css'
 import Button from '../../Button/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -36,49 +37,51 @@ export default function EditSortCodePopup(props) {
   };
 
   return (
-    <div className={css.popup}>
-      
-      <h2>עדכון קוד מיון</h2>
-      <form action=''>
-        <p>
-          מספר:{' '}
-          <input
-            value={codeNum}
-            type='number'
-            placeholder='מספר קוד מיון'
-            onChange={e => {
-              setCodeNum(e.target.value);
-            }}
-          />
-        </p>
-        <p>
-          שם:{' '}
-          <input
-            value={codeName}
-            type='text'
-            maxLength={20}
-            placeholder='שם קוד מיון'
-            onChange={e => {
-              setCodeName(e.target.value);
-            }}
-          />
-        </p>
-        <div className={css.buttons}>
-          <Button
-            text='שמור'
-            isDisable={!checkCusName(codeName) || !numbersOnly(codeNum)}
-            fun={() => {
-              updateSortCode();
-            }}
-          />
-          <Button
-            text='ביטול'
-            fun={() => {
-              props.setDisplay(false);
-            }}
-          />
-        </div>
-      </form>
-    </div>
+<div className={cssPopup.screen}>
+      <div className={cssPopup.popup}>
+        
+        <h2>עדכון קוד מיון</h2>
+        <form action=''>
+          <p>
+            מספר:{' '}
+            <input
+              value={codeNum}
+              type='number'
+              placeholder='מספר קוד מיון'
+              onChange={e => {
+                setCodeNum(e.target.value);
+              }}
+            />
+          </p>
+          <p>
+            שם:{' '}
+            <input
+              value={codeName}
+              type='text'
+              maxLength={20}
+              placeholder='שם קוד מיון'
+              onChange={e => {
+                setCodeName(e.target.value);
+              }}
+            />
+          </p>
+          <div className={css.buttons}>
+            <Button
+              text='שמור'
+              isDisable={!checkCusName(codeName) || !numbersOnly(codeNum)}
+              fun={() => {
+                updateSortCode();
+              }}
+            />
+            <Button
+              text='ביטול'
+              fun={() => {
+                props.setDisplay(false);
+              }}
+            />
+          </div>
+        </form>
+      </div>
+</div>
   );
 }

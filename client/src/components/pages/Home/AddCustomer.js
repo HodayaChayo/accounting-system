@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import css from './addCustomer.module.css';
+import cssPopup from '../../AlertDialog/popupGeneral.module.css'
 import Button from '../../Button/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -72,8 +73,8 @@ export default function AddCustomer(props) {
   };
 
   return (
-    <div className={css.screen}>
-      <div className={css.addPopup}>
+    <div className={cssPopup.screen}>
+      <div className={cssPopup.popup}>
         <h2>פתיחת לקוח חדש</h2>
         <h3>פרטי לקוח</h3>
         {/* <ToastContainer /> */}

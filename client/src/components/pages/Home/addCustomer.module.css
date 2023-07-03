@@ -1,35 +1,3 @@
-.screen{
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-.addPopup {
-  /* background-color: rgb(255, 255, 255, 1); */
-  background-image: url(../../../images/background.jpg);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  max-width: 60%;
-  padding: 30px 40px;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%;
-  border-radius: 8px;
-  display: 1;
-  font-family: “Poppins”, sans-serif;
-  display: grid;
-  text-align: center;
-  /* grid-template-columns: repeat(2, 1fr); */
-  /* flex-direction: row; */
-}
-
 .topForm {
   display: flex;
   flex-direction: column;
@@ -41,12 +9,6 @@
   display: flex;
   flex-direction: column;
 }
-
-/* .topForm p{
-  max-width: 30vw;
-  color: aqua;
-
-} */
 
 .buttons {
   display: flex;

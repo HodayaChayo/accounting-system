@@ -11,8 +11,6 @@
   font-family: “Poppins”,sans-serif;
   display: grid;
   text-align: center;
-  /* grid-template-columns: repeat(2, 1fr); */
-  /* flex-direction: row; */
 }
 .buttons{
   display: flex;

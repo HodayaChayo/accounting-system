@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Button from '../../Button/Button';
 import css from './accounts.module.css';
+import cssPopup from '../../AlertDialog/popupGeneral.module.css';
 import { v4 as uuid } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -42,14 +43,13 @@ export default function EditAccountPopup(props) {
       .then(async res => await res.json())
       .then(async res => {
         setAccountNumber(res.number);
-        setSortCodeValue(res.sort_code)
+        setSortCodeValue(res.sort_code);
         setAccountName(res.name);
         setAccountType(res.type);
         setSortCodeValue(res.sort_code);
         setVatId(res.vat_number);
       });
   }, []);
-
 
   // close list of options for select type
   const typeList = [
@@ -74,10 +74,9 @@ export default function EditAccountPopup(props) {
     { value: 'הון ועודפים', label: 'הון ועודפים' },
   ];
 
-
   // send data to server to save changes
   const updateAccount = () => {
-    const sortCode = Number(sortCodeValue)
+    const sortCode = Number(sortCodeValue);
     const selectedNum = props.selectedRow.number;
     const accountObj = {
       accountNumber,
@@ -111,92 +110,105 @@ export default function EditAccountPopup(props) {
   };
 
   return (
-    <div className={css.popup}>
-      <h2>עדכון חשבון</h2>
-      <div>
-        <p>
-          *מספר חשבון:{' '}
-          <input
-            value={accountNumber}
-            type='number'
-            placeholder='מספר חשבון'
-            onChange={e => {
-              setAccountNumber(e.target.value);
+    <div className={cssPopup.screen}>
+      <div className={cssPopup.popup}>
+        <h2>עדכון חשבון</h2>
+        <div>
+          <p>
+            *מספר חשבון:{' '}
+            <input
+              value={accountNumber}
+              type='number'
+              placeholder='מספר חשבון'
+              onChange={e => {
+                setAccountNumber(e.target.value);
+              }}
+            />
+          </p>
+          <p>
+            *קוד מיון:
+            <select
+              name='sortCode'
+              value={sortCodeValue}
+              onChange={e => {
+                setSortCodeValue(e.target.value);
+              }}
+            >
+              {selectSortCode.map(el => {
+                return (
+                  <option
+                    key={uuid()}
+                    label={el.label}
+                    value={el.value}
+                  ></option>
+                );
+              })}
+            </select>
+          </p>
+          <p>
+            *שם חשבון:{' '}
+            <input
+              value={accountName}
+              type='text'
+              placeholder='שם חשבון'
+              maxLength={35}
+              onChange={e => {
+                setAccountName(e.target.value);
+              }}
+            />
+          </p>
+          <p>
+            *סוג חשבון:
+            <select
+              name='type'
+              value={accountType}
+              onChange={e => {
+                setAccountType(e.target.value);
+              }}
+            >
+              {typeList.map(el => {
+                return (
+                  <option
+                    key={uuid()}
+                    label={el.label}
+                    value={el.value}
+                  ></option>
+                );
+              })}
+            </select>
+          </p>
+          <p>
+            מספר עוסק / ח.פ:
+            <input
+              value={vatId}
+              type='number'
+              maxLength={9}
+              placeholder='עבור ספקים/לקוחות/עובדים'
+              onChange={e => {
+                setVatId(e.target.value);
+              }}
+            />
+          </p>
+        </div>
+        <div className={css.buttons}>
+          <Button
+            text='שמור'
+            isDisable={
+              !numbersOnly(accountNumber) ||
+              sortCodeValue === '' ||
+              !checkCusName(accountName) ||
+              accountType === '' ||
+              (vatId !== '' && !checkVatId(vatId))
+            }
+            fun={updateAccount}
+          />
+          <Button
+            text='ביטול'
+            fun={() => {
+              props.setDisplay(false);
             }}
           />
-        </p>
-        <p>*קוד מיון:</p>
-        <select
-          name='sortCode'
-          value={sortCodeValue}
-          onChange={e => {
-            setSortCodeValue(e.target.value);
-          }}
-        >
-          {selectSortCode.map(el => {
-            return (
-              <option key={uuid()} label={el.label} value={el.value}></option>
-            );
-          })}
-          
-        </select>
-        <p>
-          *שם חשבון:{' '}
-          <input
-            value={accountName}
-            type='text'
-            placeholder='שם חשבון'
-            maxLength={35}
-            onChange={e => {
-              setAccountName(e.target.value);
-            }}
-          />
-        </p>
-        <p>*סוג חשבון: </p>
-        <select
-          name='type'
-          value={accountType}
-          onChange={e => {
-            setAccountType(e.target.value);
-          }}
-        >
-          {typeList.map(el => {
-            return (
-              <option key={uuid()} label={el.label} value={el.value}></option>
-            );
-          })}
-        </select>
-        <p>
-          מספר עוסק / ח.פ:
-          <input
-            value={vatId}
-            type='number'
-            maxLength={9}
-            placeholder='עבור ספקים/לקוחות/עובדים'
-            onChange={e => {
-              setVatId(e.target.value);
-            }}
-          />
-        </p>
-      </div>
-      <div className={css.buttons}>
-        <Button
-          text='שמור'
-          isDisable={
-            !numbersOnly(accountNumber) ||
-            sortCodeValue === '' ||
-            !checkCusName(accountName) ||
-            accountType === ''||
-            (vatId !== '' && !checkVatId(vatId))
-          }
-          fun={updateAccount}
-        />
-        <Button
-          text='ביטול'
-          fun={() => {
-            props.setDisplay(false);
-          }}
-        />
+        </div>
       </div>
     </div>
   );

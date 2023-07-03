@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '../../Button/Button';
 import css from './accounts.module.css';
+import cssPopup from '../../AlertDialog/popupGeneral.module.css';
 import { v4 as uuid } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -88,86 +89,100 @@ export default function AddAccountPopup(props) {
   };
 
   return (
-    <div className={css.popup}>
-      <h2>הוספת חשבון</h2>
-      <div>
-        <p>
-          *מספר חשבון:{' '}
-          <input
-            type='number'
-            placeholder='מספר חשבון'
-            onChange={e => {
-              setAccountNumber(e.target.value);
+    <div className={cssPopup.screen}>
+      <div className={cssPopup.popup}>
+        <h2>הוספת חשבון</h2>
+        <div>
+          <p>
+            *מספר חשבון:{' '}
+            <input
+              type='number'
+              placeholder='מספר חשבון'
+              onChange={e => {
+                setAccountNumber(e.target.value);
+              }}
+            />
+          </p>
+          <p>
+            *קוד מיון:
+            <select
+              name='sortCode'
+              onChange={e => {
+                setSortCode(e.target.value);
+              }}
+            >
+              {selectSortCode.map(el => {
+                return (
+                  <option
+                    key={uuid()}
+                    label={el.label}
+                    value={el.value}
+                  ></option>
+                );
+              })}
+              <option label='בחר קוד מיון' value=''></option>
+            </select>
+          </p>
+          <p>
+            *שם חשבון:{' '}
+            <input
+              type='text'
+              placeholder='שם חשבון'
+              maxLength={35}
+              onChange={e => {
+                setAccountName(e.target.value);
+              }}
+            />
+          </p>
+          <p>
+            *סוג חשבון:
+            <select
+              name='type'
+              onChange={e => {
+                setAccountType(e.target.value);
+              }}
+            >
+              {typeList.map(el => {
+                return (
+                  <option
+                    key={uuid()}
+                    label={el.label}
+                    value={el.value}
+                  ></option>
+                );
+              })}
+              <option label='בחר סוג חשבון' value=''></option>
+            </select>
+          </p>
+          <p>
+            מספר עוסק / ח.פ:
+            <input
+              type='number'
+              placeholder='עבור ספקים/לקוחות/עובדים'
+              onChange={e => {
+                setAccountType(e.target.value);
+              }}
+            />
+          </p>
+        </div>
+        <div className={css.buttons}>
+          <Button
+            text='הוספה'
+            isDisable={
+              !numbersOnly(accountNumber) ||
+              sortCode === '' ||
+              !checkCusName(accountName) ||
+              accountType === ''
+            }
+            fun={createNewAccount}
+          />
+          <Button
+            text='ביטול'
+            fun={() => {
+              props.setDisplay(false);
             }}
           />
-        </p>
-        <p>*קוד מיון:</p>
-        <select
-          name='sortCode'
-          onChange={e => {
-            setSortCode(e.target.value);
-          }}
-        >
-          {selectSortCode.map(el => {
-            return (
-              <option key={uuid()} label={el.label} value={el.value}></option>
-            );
-          })}
-          <option label='בחר קוד מיון' value=''></option>
-        </select>
-        <p>
-          *שם חשבון:{' '}
-          <input
-            type='text'
-            placeholder='שם חשבון'
-            maxLength={35}
-            onChange={e => {
-              setAccountName(e.target.value);
-            }}
-          />
-        </p>
-        <p>*סוג חשבון: </p>
-        <select
-          name='type'
-          onChange={e => {
-            setAccountType(e.target.value);
-          }}
-        >
-          {typeList.map(el => {
-            return (
-              <option key={uuid()} label={el.label} value={el.value}></option>
-            );
-          })}
-          <option label='בחר סוג חשבון' value=''></option>
-        </select>
-        <p>
-          מספר עוסק / ח.פ:
-          <input
-            type='number'
-            placeholder='עבור ספקים/לקוחות/עובדים'
-            onChange={e => {
-              setAccountType(e.target.value);
-            }}
-          />
-        </p>
-      </div>
-      <div className={css.buttons}>
-        <Button
-          text='הוספה'
-          isDisable={
-            !numbersOnly(accountNumber) ||
-            sortCode === '' ||
-            !checkCusName(accountName) ||
-            accountType === ''
-          }
-          fun={createNewAccount}
-        />
-        <Button
-          text='ביטול'
-          fun={() => {
-            props.setDisplay(false);
-          }}
-        />
+        </div>
       </div>
     </div>
   );

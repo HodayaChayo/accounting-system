@@ -14,7 +14,6 @@ import { sortCodeColumn } from './sortCodeTableColumns';
 import { ToastContainer, toast } from 'react-toastify';
 import { checkCusName, numbersOnly } from '../../validations/validations';
 
-
 export default function SortCodes() {
   const [codeNum, setCodeNum] = useState('');
   const [codeName, setCodeName] = useState('');
@@ -139,55 +138,54 @@ export default function SortCodes() {
       <Sidebars />
       <Header title='הגדרת קודי מיון' />
       <ToastContainer />
-      <main>
-        <div className={css.addContainer}>
-          <h4>הוספת קוד מיון:</h4>
-          <form action=''>
-            מספר:{' '}
-            <input
-              type='number'
-              placeholder='מספר קוד מיון'
-              onChange={e => {
-                setCodeNum(e.target.value);
-              }}
-              ref={refNum}
-            />
-            שם:{' '}
-            <input
-              type='text'
-              maxLength={20}
-              placeholder='שם קוד מיון'
-              onChange={e => {
-                setCodeName(e.target.value);
-              }}
-              ref={refName}
-            />
-            <MyButton
-              text='הוספה'
-              isDisable={!checkCusName(codeName) || !numbersOnly(codeNum)}
-              fun={addSortCode}
-            />
-          </form>
-        </div>
-        {editPopup && (
-          <EditSortCodePopup
-            setDisplay={setAditPopup}
-            selectedRow={selectedRow}
-            dataChange={setDataIsChanged}
+
+      <div className={css.addContainer}>
+        <h4>הוספת קוד מיון:</h4>
+        <form action=''>
+          מספר:{' '}
+          <input
+            type='number'
+            placeholder='מספר קוד מיון'
+            onChange={e => {
+              setCodeNum(e.target.value);
+            }}
+            ref={refNum}
           />
-        )}
-        {deleteDialog && (
-          <AlertDialog
-            title='מחיקת קוד מיון'
-            text={`האם למחוק קוד מיון: ${selectedRow.number} - ${selectedRow.name}?
+          שם:{' '}
+          <input
+            type='text'
+            maxLength={20}
+            placeholder='שם קוד מיון'
+            onChange={e => {
+              setCodeName(e.target.value);
+            }}
+            ref={refName}
+          />
+          <MyButton
+            text='הוספה'
+            isDisable={!checkCusName(codeName) || !numbersOnly(codeNum)}
+            fun={addSortCode}
+          />
+        </form>
+      </div>
+      {editPopup && (
+        <EditSortCodePopup
+          setDisplay={setAditPopup}
+          selectedRow={selectedRow}
+          dataChange={setDataIsChanged}
+        />
+      )}
+      {deleteDialog && (
+        <AlertDialog
+          title='מחיקת קוד מיון'
+          text={`האם למחוק קוד מיון: ${selectedRow.number} - ${selectedRow.name}?
             לתשומת ליבך לא ניתן למחוק קוד מיון אם משוייכים אליו חשבונות`}
-            setDisplay={setDeleteDialog}
-            btnText='מחק'
-            fun={deleteSortCode}
-          />
-        )}
-        <Table myData={dataTable} myColumns={addColumn} />
-      </main>
+          setDisplay={setDeleteDialog}
+          btnText='מחק'
+          fun={deleteSortCode}
+        />
+      )}
+      <Table myData={dataTable} myColumns={addColumn} />
     </div>
   );
 }

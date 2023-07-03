@@ -1,32 +1,21 @@
-.addContainer{
-  margin: 1em;
+.addContainer form {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
-.popup{
-  background-color: #b7edf8;
-  max-width: 60%;
-  padding: 30px 40px;
-  position: absolute;
-  transform: translate(-50%,-50%);
-  left: 50%;
-  top: 50%;
-  border-radius: 8px;
-  display: 1;
-  font-family: “Poppins”,sans-serif;
-  display: grid;
-  text-align: center;
-  /* grid-template-columns: repeat(2, 1fr); */
-  /* flex-direction: row; */
-}
-
-.buttons{
+.buttons {
   display: flex;
 }
 
-.buttons :nth-of-type(1){
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.buttons :nth-of-type(1) {
   margin-left: auto;
 }
-.e-dialog{
+.e-dialog {
   color: red;
   font-size: 10px;
   font-weight: normal;
