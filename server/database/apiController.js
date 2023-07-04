@@ -17,7 +17,7 @@ module.exports = function (app) {
   app.use('/sortCode', sortCode);
   app.use('/userSettings', userSettings);
   app.use('/accounts', accounts);
-  app.use('/documents', documents);
+  app.use('/uploadingDocument', documents);
   app.all('*', (req, res) => {
     res.status(404).send('resource not found');
   });

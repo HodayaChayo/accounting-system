@@ -12,24 +12,23 @@ export default function UploadingDocuments(props) {
   const [errorFiles, setErrorFiles] = useState([]);
   const [filesToUp, setFilesToUp] = useState([]);
 
-  function checkNumLoadFiles(arrFiles = []) {
+  function checkNumLoadFiles(arrFiles) {
     console.log(arrFiles);
-    setFilesToUp(arrFiles);
     if (arrFiles.length <= 20) {
-      let res = [];
+      let goodFiles = [];
       let errorFiles = [];
       const except = /(\.pdf|\.png|\.jpeg|\.PNG|\.PDF|\.JPEG)$/;
       for (let i = 0; i < arrFiles.length; i++) {
         console.log(arrFiles[i].name);
 
         if (except.test(arrFiles[i].name)) {
-          res.push(arrFiles[i]);
+          goodFiles.push(arrFiles[i]);
         } else {
           errorFiles.push(arrFiles[i]);
         }
       }
-
-      console.log(res);
+      setFilesToUp(goodFiles)
+      console.log(goodFiles);
       console.log(errorFiles);
 
       if (errorFiles.length != 0) {
@@ -41,10 +40,13 @@ export default function UploadingDocuments(props) {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }
+    
+
   }
 
-  function sendFilesToDB() {
-    fetch('uploadingDocument', {
+  const sendFiles=()=>{
+    console.log(filesToUp);
+    fetch('/uploadingDocument', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,22 +56,13 @@ export default function UploadingDocuments(props) {
       .then(res => res.json())
       .then(res => {
         console.log(res);
-        // if (res.isUpDate) {
-        //   toast.success(res.message, {
-        //     position: toast.POSITION.BOTTOM_CENTER,
-        //   });
-        //   localStorage.setItem('SelectedCus', userName);
-        //   localStorage.setItem('CusVAT_Id', idVAT);
-        // } else {
-        //   toast.error(res.message, {
-        //     position: toast.POSITION.BOTTOM_CENTER,
-        //   });
-        // }
+
       })
       .catch(err => {
         console.log(err);
       });
   }
+
 
   return (
     <div className='body'>
@@ -84,7 +77,7 @@ export default function UploadingDocuments(props) {
               name='uploaded-file'
               multiple
               onChange={e => {
-                setFiles(e.target.files);
+                checkNumLoadFiles(e.target.files);
               }}
               accept='.pdf,.png,.jpeg'
             />
@@ -92,9 +85,9 @@ export default function UploadingDocuments(props) {
         </form>
         <Button
           text='שלח'
-          isDisable={files.length === 0}
+          isDisable={filesToUp.length === 0}
           fun={() => {
-            checkNumLoadFiles(files);
+            sendFiles();
           }}
         ></Button>
         {message !== '' && (
