@@ -2,9 +2,27 @@ const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');
 
-router.post('/', (req, res) => {
+const multer = require('multer');
+
+// const upload = multer({ dest: 'uploads/' });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../documents');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.post('/', upload.array('/uploadingDocument'),(req, res) => {
   const insertDoc =
     'INSERT INTO `photos`(`name`, `upload_date`,`user_name`) VALUES ([?],[?],[?])';
+
+    
+    console.log(req.files);
+   
 
   const body = [];
   req.on('data', chunk => {
