@@ -8,8 +8,7 @@
   /* border: solid black 1.5px; */
 }
 
-<<<<<<< HEAD
-.userDetails :nth-of-type(5){
+.userDetails :nth-of-type(5) {
   /* border: solid red 3px; */
   /* flex-grow: 1; */
   margin-left: 38%;
@@ -18,11 +17,8 @@
 h2 {
   text-decoration: underline;
 }
-=======
->>>>>>> 87d8ded1be43e313530a15a04f9a23a95c123278
 
 .p {
-  
   /* border: solid black 1px; */
   text-align: center;
   width: 45%;
@@ -50,6 +46,3 @@ h2 {
   margin: 0.5em;
   padding: 0.5em;
 }
-
-
-
