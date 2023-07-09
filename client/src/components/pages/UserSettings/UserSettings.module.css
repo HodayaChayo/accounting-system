@@ -8,6 +8,7 @@
   /* border: solid black 1.5px; */
 }
 
+<<<<<<< HEAD
 .userDetails :nth-of-type(5){
   /* border: solid red 3px; */
   /* flex-grow: 1; */
@@ -17,6 +18,8 @@
 h2 {
   text-decoration: underline;
 }
+=======
+>>>>>>> 87d8ded1be43e313530a15a04f9a23a95c123278
 
 .p {
   
