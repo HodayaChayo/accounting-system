@@ -27,7 +27,7 @@ import { HiDocumentReport } from 'react-icons/hi';
 import { IoIosListBox } from 'react-icons/io';
 import { TbReceiptTax } from 'react-icons/tb';
 import { VscGraphLine, VscGraphLeft } from 'react-icons/vsc';
-import { FiChevronsLeft, FiChevronsRight, FiPower } from 'react-icons/fi/';
+import { FiChevronsLeft, FiChevronsRight, FiPower,FiDivideSquare } from 'react-icons/fi/';
 import {
   Sidebar,
   SubMenu,
@@ -117,6 +117,14 @@ function Sidebars() {
               icon={<GrUserSettings />}
             >
               הגדרות עוסק{' '}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.location.href = 'http://localhost:3000/commandType';
+              }}
+              icon={<FiDivideSquare />}
+            >
+              סוגיי פקודה{' '}
             </MenuItem>
             <MenuItem
               onClick={() => {
