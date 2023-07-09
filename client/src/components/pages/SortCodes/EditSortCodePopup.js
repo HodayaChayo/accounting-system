@@ -41,7 +41,7 @@ export default function EditSortCodePopup(props) {
       <div className={cssPopup.popup}>
         
         <h2>עדכון קוד מיון</h2>
-        <form action=''>
+        <form className={css.form}>
           <p>
             מספר:{' '}
             <input

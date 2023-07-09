@@ -186,6 +186,8 @@ export default function SortCodes() {
         />
       )}
       <Table myData={dataTable} myColumns={addColumn} />
+      <main></main>
+      <Footer/>
     </div>
   );
 }

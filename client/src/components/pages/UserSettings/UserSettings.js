@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebars from '../../Sidebars/Sidebars';
 import css from './UserSettings.module.css';
+import Footer from '../../Footer/Footer';
 import Button from '../../Button/Button';
 import Header from '../../Header/Header';
 import { ToastContainer, toast } from 'react-toastify';
@@ -107,7 +108,6 @@ export default function UserSettings(props) {
       <ToastContainer />
       <Sidebars />
       <Header title='הגדרות עוסק' />
-
       <h2>פרטי לקוח:</h2>
       <div className={css.userDetails}>
         <p className={css.p}>
@@ -259,6 +259,8 @@ export default function UserSettings(props) {
           !checkTaxPercent(taxPercent)
         }
       ></Button>
+      <main></main>
+      <Footer/>
     </div>
   );
 }

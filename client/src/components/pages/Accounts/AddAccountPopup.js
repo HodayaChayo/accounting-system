@@ -107,6 +107,7 @@ export default function AddAccountPopup(props) {
             *קוד מיון:
             <select
               name='sortCode'
+              value={sortCode}
               onChange={e => {
                 setSortCode(e.target.value);
               }}
@@ -138,6 +139,7 @@ export default function AddAccountPopup(props) {
             *סוג חשבון:
             <select
               name='type'
+              value={accountType}
               onChange={e => {
                 setAccountType(e.target.value);
               }}
@@ -158,9 +160,10 @@ export default function AddAccountPopup(props) {
             מספר עוסק / ח.פ:
             <input
               type='number'
+              maxLength={9}
               placeholder='עבור ספקים/לקוחות/עובדים'
               onChange={e => {
-                setAccountType(e.target.value);
+                setVatId(e.target.value);
               }}
             />
           </p>
@@ -172,7 +175,8 @@ export default function AddAccountPopup(props) {
               !numbersOnly(accountNumber) ||
               sortCode === '' ||
               !checkCusName(accountName) ||
-              accountType === ''
+              accountType === '' ||
+              (vatId !== '' && !checkVatId(vatId))
             }
             fun={createNewAccount}
           />
