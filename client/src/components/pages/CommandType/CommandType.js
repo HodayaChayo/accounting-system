@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import Sidebars from '../../Sidebars/Sidebars'
 import Header from '../../Header/Header'
+import AddCommandType from './AddCommandType'
 
 export default function commandType(){
 
@@ -8,9 +9,7 @@ export default function commandType(){
     <div className='body'>
       <Header title='סוגיי פקודה'/>
       <Sidebars/>
-
-      <h3>חובה</h3>
-      <h3>זכות</h3>
+      <AddCommandType/>
 
     </div>
   )

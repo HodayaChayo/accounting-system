@@ -12,7 +12,10 @@ export default function UploadingDocuments(props) {
   const [errorFiles, setErrorFiles] = useState([]);
   const [filesToUp, setFilesToUp] = useState([]);
 
-  function checkNumLoadFiles(arrFiles) {
+  const formData = new FormData();
+
+  async function checkNumLoadFiles(arrFiles) {
+    console.log('hiii');
     console.log(arrFiles);
     if (arrFiles.length <= 20) {
       let goodFiles = [];
@@ -22,16 +25,20 @@ export default function UploadingDocuments(props) {
         console.log(arrFiles[i].name);
 
         if (except.test(arrFiles[i].name)) {
-          goodFiles.push(arrFiles[i]);
+          formData.append('uploaded-file', arrFiles[i]);
         } else {
           errorFiles.push(arrFiles[i]);
         }
       }
-      setFilesToUp(goodFiles)
+      setFilesToUp(formData);
       console.log(goodFiles);
       console.log(errorFiles);
 
-      if (errorFiles.length != 0) {
+      formData.forEach(file => {
+        console.log(file);
+      });
+
+      if (errorFiles.length !== 0) {
         setErrorFiles(errorFiles);
         setMessage('ניתן להעלות רק קבצים מסוג: PDF, PNG, JPEG.');
       }
@@ -40,39 +47,59 @@ export default function UploadingDocuments(props) {
         position: toast.POSITION.BOTTOM_CENTER,
       });
     }
-    
 
+    // -----------------------
+
+    let answer = await fetch('/uploadingDocument/upload-files', {
+      method: 'POST',
+      body: formData,
+    });
+    console.log(answer);
+    answer = await answer.json();
+
+    // .then(res => res.json())
+    // .then(res => {
+    //   console.log(res);
+
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // });
   }
 
-  const sendFiles=()=>{
+  const sendFiles = () => {
+    // formData.append('file', filesToUp);
+    console.log(
+      filesToUp.forEach(file => {
+        console.log(file);
+      })
+    );
     console.log(filesToUp);
-    fetch('/uploadingDocument', {
+    fetch('/uploadingDocument/upload-files', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(filesToUp),
+      body: formData,
     })
       .then(res => res.json())
       .then(res => {
         console.log(res);
-
       })
       .catch(err => {
         console.log(err);
       });
-  }
-
+  };
 
   return (
     <div className='body'>
       <Sidebar />
       <ToastContainer />
       <main>
-        <form>
+        <form encType='multipart/form-data'>
           <div>
             <input
-              id='file'
+              id='uploaded-file'
               type='file'
               name='uploaded-file'
               multiple
@@ -82,14 +109,14 @@ export default function UploadingDocuments(props) {
               accept='.pdf,.png,.jpeg'
             />
           </div>
+          <Button
+            text='שלח'
+            // isDisable={filesToUp.length === 0}
+            fun={() => {
+              sendFiles();
+            }}
+          ></Button>
         </form>
-        <Button
-          text='שלח'
-          isDisable={filesToUp.length === 0}
-          fun={() => {
-            sendFiles();
-          }}
-        ></Button>
         {message !== '' && (
           <div>
             <p>{message}</p>
