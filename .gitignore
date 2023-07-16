@@ -16,6 +16,9 @@
 .env.test.local
 .env.production.local
 
+# uoloaded documents
+/server/database/documents
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
