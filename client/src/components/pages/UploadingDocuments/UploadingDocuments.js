@@ -7,8 +7,8 @@ import { ToastContainer, toast } from 'react-toastify';
 
 export default function UploadingDocuments(props) {
   const [message, setMessage] = useState('');
-  const [errorFiles, setErrorFiles] = useState([]);
-  const [filesToUp, setFilesToUp] = useState([]);
+  const [errorFilesToPrint, setErrorFilesToPrint] = useState([]);
+  const [filesToPrint, setFilesToPrint] = useState([]);
 
   const formData = new FormData();
   const userName = localStorage.getItem('SelectedCus');
@@ -28,8 +28,13 @@ export default function UploadingDocuments(props) {
 
   // sort good file and ron files.
   async function checkNumLoadFiles(arrFiles) {
-    console.log('hiii');
-    
+    setMessage('');
+    filesToPrint.splice(0, filesToPrint.length);
+    setFilesToPrint([...filesToPrint]);
+
+    errorFilesToPrint.splice(0, errorFilesToPrint.length);
+    setErrorFilesToPrint([...errorFilesToPrint]);
+
     console.log(arrFiles);
     if (arrFiles.length <= 20) {
       let errorFiles = [];
@@ -48,68 +53,31 @@ export default function UploadingDocuments(props) {
       console.log(formData);
       console.log(errorFiles);
       formData.forEach(file => {
-        filesToUp.push(file);
+        filesToPrint.push(file);
+        setFilesToPrint([...filesToPrint]);
         console.log(file);
       });
 
       if (errorFiles.length === 0) {
-        setMessage('הקבצים הועלו בהצלחה!');
-        
+        setMessage('להלהן:');
+        toast.success('!הפקודה נוצרה בהצלחה');
       }
 
       if (errorFiles.length !== 0) {
-        setErrorFiles(errorFiles);
+        setErrorFilesToPrint(errorFiles);
         setMessage('ניתן להעלות רק קבצים מסוג: PDF, PNG, JPEG.');
       }
     }
-    if (filesToUp.length > 20) {
-      toast.error('לא ניתן לטעון מעל 20 קבצים!', {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
-    }
 
     // -----------------------
-
+    // sent the files to the server.
     let answer = await fetch('/uploadingDocument/upload-files', {
       method: 'POST',
       body: formData,
     });
     console.log(answer);
     answer = await answer.json();
-
-    // .then(res => res.json())
-    // .then(res => {
-    //   console.log(res);
-
-    // })
-    // .catch(err => {
-    //   console.log(err);
-    // });
   }
-
-  const sendFiles = () => {
-    // formData.append('file', filesToUp);
-    console.log(
-      filesToUp.forEach(file => {
-        console.log(file);
-      })
-    );
-  
-    fetch('/uploadingDocument/upload-files', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: formData,
-    })
-      .then(res => res.json())
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
 
   return (
     <div className='body'>
@@ -133,8 +101,8 @@ export default function UploadingDocuments(props) {
         {message !== '' && (
           <div>
             <p>{message}</p>
-            <p>להלן הקבצים שהועלו בהצלחה:</p>
-            {filesToUp.map(el => {
+            <p> הקבצים שהועלו בהצלחה:</p>
+            {filesToPrint.map(el => {
               return (
                 <p key={uuid()} className={css.ToUp}>
                   {el.name}
@@ -143,19 +111,18 @@ export default function UploadingDocuments(props) {
             })}
           </div>
         )}
-        {message !== '' &&
-          (errorFiles.length !== 0)&&(
-            <div>
-              <p>להלן הקבצים שלא הועלו:</p>
-              {errorFiles.map(el => {
-                return (
-                  <p key={uuid()} className={css.errFile}>
-                    {el.name}
-                  </p>
-                );
-              })}
-            </div>
-          )}
+        {message !== '' && errorFilesToPrint.length !== 0 && (
+          <div>
+            <p>להלן הקבצים שלא הועלו:</p>
+            {errorFilesToPrint.map(el => {
+              return (
+                <p key={uuid()} className={css.errFile}>
+                  {el.name}
+                </p>
+              );
+            })}
+          </div>
+        )}
       </main>
       <Footer />
     </div>
