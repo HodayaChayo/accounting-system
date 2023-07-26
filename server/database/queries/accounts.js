@@ -262,4 +262,26 @@ router.post('/delete', (req, res) => {
   });
 });
 
+router.post('/getSelectData', (req, res) => {
+  const selectData = 'SELECT `number` AS value, CONCAT(`number`, "-", `name`) AS label FROM `accounts` WHERE `id_vat_num`=?'
+
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    return new Promise((resolve, reject)=>{
+      con.query(selectData, [obj.thisVatId], (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        // console.log(rows);
+        res.end(JSON.stringify(rows));
+        resolve();
+      });
+    })
+  });
+});
+
 module.exports = router;
