@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import Button from '../../Button/Button';
+import React, { useState, useEffect } from 'react';
 import css from './uploadingDocuments.module.css';
 import Footer from '../../Footer/Footer';
 import Sidebar from '../../Sidebars/Sidebars';
@@ -7,18 +6,32 @@ import { v4 as uuid } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function UploadingDocuments(props) {
-  const [files, setFiles] = useState([]);
   const [message, setMessage] = useState('');
   const [errorFiles, setErrorFiles] = useState([]);
   const [filesToUp, setFilesToUp] = useState([]);
 
   const formData = new FormData();
+  const userName = localStorage.getItem('SelectedCus');
 
+  // send only the user name for save in server.
+  useEffect(() => {
+    fetch('/uploadingDocument/saveUserName', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: userName }),
+    })
+      .then(res => res.json())
+      .then(res => {});
+  }, []);
+
+  // sort good file and ron files.
   async function checkNumLoadFiles(arrFiles) {
     console.log('hiii');
+    
     console.log(arrFiles);
     if (arrFiles.length <= 20) {
-      let goodFiles = [];
       let errorFiles = [];
       const except = /(\.pdf|\.png|\.jpeg|\.PNG|\.PDF|\.JPEG)$/;
       for (let i = 0; i < arrFiles.length; i++) {
@@ -30,19 +43,26 @@ export default function UploadingDocuments(props) {
           errorFiles.push(arrFiles[i]);
         }
       }
-      setFilesToUp(formData);
-      console.log(goodFiles);
-      console.log(errorFiles);
 
+      // prints for checking.
+      console.log(formData);
+      console.log(errorFiles);
       formData.forEach(file => {
+        filesToUp.push(file);
         console.log(file);
       });
+
+      if (errorFiles.length === 0) {
+        setMessage('הקבצים הועלו בהצלחה!');
+        
+      }
 
       if (errorFiles.length !== 0) {
         setErrorFiles(errorFiles);
         setMessage('ניתן להעלות רק קבצים מסוג: PDF, PNG, JPEG.');
       }
-    } else {
+    }
+    if (filesToUp.length > 20) {
       toast.error('לא ניתן לטעון מעל 20 קבצים!', {
         position: toast.POSITION.BOTTOM_CENTER,
       });
@@ -74,7 +94,7 @@ export default function UploadingDocuments(props) {
         console.log(file);
       })
     );
-    console.log(filesToUp);
+  
     fetch('/uploadingDocument/upload-files', {
       method: 'POST',
       headers: {
@@ -109,13 +129,6 @@ export default function UploadingDocuments(props) {
               accept='.pdf,.png,.jpeg'
             />
           </div>
-          <Button
-            text='שלח'
-            // isDisable={filesToUp.length === 0}
-            fun={() => {
-              sendFiles();
-            }}
-          ></Button>
         </form>
         {message !== '' && (
           <div>
@@ -128,16 +141,21 @@ export default function UploadingDocuments(props) {
                 </p>
               );
             })}
-            <p>להלן הקבצים שלא הועלו:</p>
-            {errorFiles.map(el => {
-              return (
-                <p key={uuid()} className={css.errFile}>
-                  {el.name}
-                </p>
-              );
-            })}
           </div>
         )}
+        {message !== '' &&
+          (errorFiles.length !== 0)&&(
+            <div>
+              <p>להלן הקבצים שלא הועלו:</p>
+              {errorFiles.map(el => {
+                return (
+                  <p key={uuid()} className={css.errFile}>
+                    {el.name}
+                  </p>
+                );
+              })}
+            </div>
+          )}
       </main>
       <Footer />
     </div>
