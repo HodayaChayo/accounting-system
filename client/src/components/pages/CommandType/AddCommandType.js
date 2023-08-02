@@ -17,6 +17,65 @@ export default function AddCommandType() {
     { account: -1, percent: 100, isMain: 'כן', delete: '' },
   ]);
 
+  // check if debits percent equals to credits percent
+  const isPercentEquals = (debit, credit) => {
+    let sumDebit = 0;
+    let sumCredit = 0;
+
+    debit.forEach(el => {
+      sumDebit += Number(el.percent);
+    });
+
+    credit.forEach(el => {
+      sumCredit += Number(el.percent);
+    });
+
+    // console.log('debit: ', sumDebit, 'credit: ', sumCredit);
+    return sumDebit === sumCredit;
+  };
+  
+
+  const haveAccountInNotMain = (debit, credit) => {
+    let flag = true;
+
+    // for (let i = 1; i < debit.length; i++) {
+    //   if (debit[i].account === -1) {
+    //         console.log(debit[i].isMain, '---', debit[i].account);
+    //         flag = false;
+    //   }
+    // }
+
+    // for (let i = 1; i < credit.length; i++) {
+    //   if (credit[i].account === -1) {
+    //         console.log(credit[i].isMain, '---', credit[i].account);
+    //         flag = false;
+    //   }
+    // }
+
+    debit.forEach(el => {
+      if (el.isMain === 'לא' && el.account === -1) {
+        console.log(el.isMain, '---', el.account);
+        // return false;
+        flag = false
+        
+      }
+    });
+
+    credit.forEach(el => {
+      if (el.isMain === 'לא' && el.account === -1) {
+        console.log(el.isMain, '---', el.account);
+        // return false;
+        flag = false
+      }
+    });
+
+    console.log(debit);
+    console.log(credit);
+    console.log(flag);
+    // return true;
+    return flag
+  };
+
   useEffect(() => {
     fetch('/accounts/getSelectData', {
       method: 'POST',
@@ -229,6 +288,16 @@ export default function AddCommandType() {
           ))}
         </tbody>
       </table>
+      <Button
+        text='שמירה'
+        fun={() => {
+          console.log(haveAccountInNotMain(debit, credit));
+        }}
+        // isDisable={
+          // !isPercentEquals(debit, credit) ||
+          // !haveAccountInNotMain(debit, credit)
+        // }
+      />
     </div>
   );
 }
