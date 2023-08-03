@@ -9,9 +9,11 @@ import Accounts from './components/pages/Accounts/Accounts.js';
 import UserSettings from './components/pages/UserSettings/UserSettings.js';
 import UploadingDocuments from './components/pages/UploadingDocuments/UploadingDocuments.js';
 
+import ReceivingDocuments from './components/pages/ReceivingDocuments/ReceivingDocuments.js';
+
 function App() {
   return (
-    <div className='App'> 
+    <div className='App'>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Login />}></Route>
@@ -26,6 +28,10 @@ function App() {
           <Route
             path='/UploadingDocuments'
             element={<UploadingDocuments />}
+          ></Route>
+          <Route
+            path='/ReceivingDocuments'
+            element={<ReceivingDocuments />}
           ></Route>
         </Routes>
       </BrowserRouter>

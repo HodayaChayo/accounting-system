@@ -60,7 +60,6 @@ export default function UploadingDocuments(props) {
 
       if (errorFiles.length === 0) {
         setMessage('להלהן:');
-        toast.success('!הפקודה נוצרה בהצלחה');
       }
 
       if (errorFiles.length !== 0) {

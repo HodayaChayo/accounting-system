@@ -1,10 +1,7 @@
 import './styles.css';
 import React, { useState } from 'react';
 
-import {
-  RiHome4Line,
-  RiStackFill,
-} from 'react-icons/ri';
+import { RiHome4Line, RiStackFill } from 'react-icons/ri';
 import { AiFillSetting } from 'react-icons/ai';
 import { GrUserSettings, GrCode, GrUserWorker } from 'react-icons/gr';
 import {
@@ -27,7 +24,12 @@ import { HiDocumentReport } from 'react-icons/hi';
 import { IoIosListBox } from 'react-icons/io';
 import { TbReceiptTax } from 'react-icons/tb';
 import { VscGraphLine, VscGraphLeft } from 'react-icons/vsc';
-import { FiChevronsLeft, FiChevronsRight, FiPower,FiDivideSquare } from 'react-icons/fi/';
+import {
+  FiChevronsLeft,
+  FiChevronsRight,
+  FiPower,
+  FiDivideSquare,
+} from 'react-icons/fi/';
 import {
   Sidebar,
   SubMenu,
@@ -160,7 +162,15 @@ function Sidebars() {
             >
               העלאת מסמכים
             </MenuItem>
-            <MenuItem icon={<RiStackFill />}>קליטת מסמכים</MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.location.href =
+                  'http://localhost:3000/ReceivingDocuments';
+              }}
+              icon={<RiStackFill />}
+            >
+              קליטת מסמכים
+            </MenuItem>
             <MenuItem icon={<FaHandHoldingMedical />}>פקודות ידניות</MenuItem>
           </SubMenu>
           <SubMenu
