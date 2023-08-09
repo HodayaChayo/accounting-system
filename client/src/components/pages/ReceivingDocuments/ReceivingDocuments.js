@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+
+
+
 import Sidebar from '../../Sidebars/Sidebars';
 import Footer from '../../Footer/Footer';
 import Header from '../../Header/Header';
@@ -32,6 +35,9 @@ export default function ReceivingDocuments(props) {
             maxLength={20}
             // onChange={e => setPassword(e.target.value)}
           ></input>
+        </div>
+        <div>
+          
         </div>
       </main>
       <Footer />
