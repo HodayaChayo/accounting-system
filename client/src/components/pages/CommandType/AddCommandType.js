@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Button from '../../Button/Button';
 import ButtonIcon from '../../Button/ButtonIcon';
+import css from './commandType.module.css'
 import { v4 as uuid } from 'uuid';
 import { MdOutlineDeleteForever } from 'react-icons/md';
-import { checkTaxPercent } from '../../validations/validations';
 
-export default function AddCommandType() {
+export default function AddCommandType(props) {
   const thisVatId = localStorage.getItem('CusVAT_Id');
   const [code, setCode] = useState();
   const [name, setName] = useState('');
@@ -33,47 +33,25 @@ export default function AddCommandType() {
     // console.log('debit: ', sumDebit, 'credit: ', sumCredit);
     return sumDebit === sumCredit;
   };
-  
 
+  // Checks if there is an account for all the non-mains
   const haveAccountInNotMain = (debit, credit) => {
     let flag = true;
 
-    // for (let i = 1; i < debit.length; i++) {
-    //   if (debit[i].account === -1) {
-    //         console.log(debit[i].isMain, '---', debit[i].account);
-    //         flag = false;
-    //   }
-    // }
-
-    // for (let i = 1; i < credit.length; i++) {
-    //   if (credit[i].account === -1) {
-    //         console.log(credit[i].isMain, '---', credit[i].account);
-    //         flag = false;
-    //   }
-    // }
-
     debit.forEach(el => {
-      if (el.isMain === 'לא' && el.account === -1) {
-        console.log(el.isMain, '---', el.account);
-        // return false;
-        flag = false
-        
+      if (el.isMain === 'לא' && Number(el.account) === -1) {
+        flag = false;
       }
     });
 
     credit.forEach(el => {
-      if (el.isMain === 'לא' && el.account === -1) {
-        console.log(el.isMain, '---', el.account);
-        // return false;
-        flag = false
+      // console.log(Number(el.account));
+      if (el.isMain === 'לא' && Number(el.account) === -1) {
+        flag = false;
       }
     });
 
-    console.log(debit);
-    console.log(credit);
-    console.log(flag);
-    // return true;
-    return flag
+    return flag;
   };
 
   useEffect(() => {
@@ -151,6 +129,10 @@ export default function AddCommandType() {
     credit.splice(idx, 1);
     setCredit([...credit]);
   };
+
+  const addToDatabase=()=>{
+    const dataObj = {}
+  }
 
   return (
     <div>
@@ -288,16 +270,21 @@ export default function AddCommandType() {
           ))}
         </tbody>
       </table>
-      <Button
-        text='שמירה'
-        fun={() => {
-          console.log(haveAccountInNotMain(debit, credit));
-        }}
-        // isDisable={
-          // !isPercentEquals(debit, credit) ||
-          // !haveAccountInNotMain(debit, credit)
-        // }
-      />
+      <div className={css.buttons}>
+        <Button
+          text='שמירה'
+          fun={() => {
+            console.log(haveAccountInNotMain(debit, credit));
+          }}
+          isDisable={
+            !isPercentEquals(debit, credit) ||
+            !haveAccountInNotMain(debit, credit) ||
+            code === '' ||
+            name === ''
+          }
+        />
+        <Button text='ביטול' fun={() => {props.display(false)}} />
+      </div>
     </div>
   );
 }

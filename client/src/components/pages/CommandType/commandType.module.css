@@ -1,0 +1,4 @@
+.buttons :nth-of-type(1){
+  margin-left: auto;
+  /* border: solid red 3px; */
+}
