@@ -19,6 +19,7 @@
     "date-fns": "^2.30.0",
     "mdb-react-ui-kit": "^6.1.0",
     "pdfjs-dist": "^3.9.179",
+    "pspdfkit": "^2023.4.0",
     "react": "^18.2.0",
     "react-burger-menu": "^3.0.9",
     "react-dom": "^18.2.0",
