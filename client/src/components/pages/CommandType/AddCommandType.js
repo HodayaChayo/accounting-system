@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Button from '../../Button/Button';
 import ButtonIcon from '../../Button/ButtonIcon';
-import css from './commandType.module.css'
+import css from './commandType.module.css';
 import { v4 as uuid } from 'uuid';
 import { MdOutlineDeleteForever } from 'react-icons/md';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 export default function AddCommandType(props) {
   const thisVatId = localStorage.getItem('CusVAT_Id');
@@ -130,9 +132,35 @@ export default function AddCommandType(props) {
     setCredit([...credit]);
   };
 
-  const addToDatabase=()=>{
-    const dataObj = {}
-  }
+  const addToDatabase = () => {
+    const dataObj = {
+      thisVatId: thisVatId,
+      code: code,
+      name: name,
+      debitArr: debit,
+      creditArr: credit,
+    };
+
+    fetch('/commandType/add', {
+      method: 'POST',
+      body: JSON.stringify(dataObj),
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if (res.isAdd) {
+          toast.success(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          // props.dataChange(prevValue => prevValue + 1);
+          props.display(false);
+        } else {
+          toast.error(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+        }
+      });
+  };
 
   return (
     <div>
@@ -274,7 +302,7 @@ export default function AddCommandType(props) {
         <Button
           text='שמירה'
           fun={() => {
-            console.log(haveAccountInNotMain(debit, credit));
+            addToDatabase()
           }}
           isDisable={
             !isPercentEquals(debit, credit) ||
@@ -283,7 +311,12 @@ export default function AddCommandType(props) {
             name === ''
           }
         />
-        <Button text='ביטול' fun={() => {props.display(false)}} />
+        <Button
+          text='ביטול'
+          fun={() => {
+            props.display(false);
+          }}
+        />
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ const sortCode = require('./queries/sortCode');
 const userSettings = require('./queries/userSettings');
 const accounts = require('./queries/accounts');
 const documents = require('./queries/uploadingDocument');
+const commandType = require('./queries/commandType')
 
 module.exports = {
   login,
@@ -13,5 +14,6 @@ module.exports = {
   sortCode,
   userSettings,
   accounts,
-  documents
+  documents,
+  commandType
 };

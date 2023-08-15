@@ -8,6 +8,7 @@ const {
   userSettings,
   accounts,
   documents,
+  commandType
 } = require('./allQueries');
 
 module.exports = function (app) {
@@ -18,6 +19,7 @@ module.exports = function (app) {
   app.use('/userSettings', userSettings);
   app.use('/accounts', accounts);
   app.use('/uploadingDocument', documents);
+  app.use('/commandType', commandType)
   app.all('*', (req, res) => {
     res.status(404).send('resource not found');
   });
