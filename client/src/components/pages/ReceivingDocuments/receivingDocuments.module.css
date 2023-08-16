@@ -1,0 +1,34 @@
+.allMain {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  /* flex-wrap: wrap; */
+  /* max-width: 45%; */
+  /* border: solid blue 3px; */
+}
+
+.allInput {
+  margin: auto;
+  padding:1.5em;
+  /* gap: 1em; */
+  /* display: flex; */
+  /* flex-direction: row; */
+  /* flex-wrap: wrap; */
+  width: 30%;
+  /* justify-content: center; */
+  /* border: solid red 3px; */
+}
+
+.allInput input{
+  width: 100%;
+}
+.allInput select{
+  width: 100%;
+}
+
+
+.pdf{
+  /* border: solid green 3px; */
+  flex: 1;
+}
+
