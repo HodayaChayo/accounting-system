@@ -36,18 +36,18 @@ const AddCommandType = obj => {
       Number(obj.debitArr[i].account),
       Number(obj.debitArr[i].percent),
       obj.name,
-      obj.debitArr[i].isMain
+      obj.debitArr[i].isMain,
     ];
     console.log(debitData);
 
-    con.query(addDebit, debitData, (err, rows)=>{
-      if(err) throw err
-    })
+    con.query(addDebit, debitData, (err, rows) => {
+      if (err) throw err;
+    });
 
     i++;
   }
 
-  i=0;
+  i = 0;
   while (i < obj.creditArr.length) {
     console.log(obj.creditArr.length);
     let creditData = [
@@ -56,17 +56,16 @@ const AddCommandType = obj => {
       Number(obj.creditArr[i].account),
       Number(obj.creditArr[i].percent),
       obj.name,
-      obj.creditArr[i].isMain
+      obj.creditArr[i].isMain,
     ];
     console.log(creditData);
 
-    con.query(addCredit, creditData, (err, rows)=>{
-      if(err) throw err
-    })
+    con.query(addCredit, creditData, (err, rows) => {
+      if (err) throw err;
+    });
 
     i++;
   }
-
 };
 
 router.post('/add', (req, res) => {
@@ -85,7 +84,7 @@ router.post('/add', (req, res) => {
         res.end(
           JSON.stringify({ isAdd: true, message: 'סוג פקודה נוסף בהצלחה' })
         );
-      }else {
+      } else {
         res.end(
           JSON.stringify({
             isAdd: false,
@@ -96,6 +95,28 @@ router.post('/add', (req, res) => {
     } catch (error) {
       console.error(error.message);
     }
+  });
+});
+
+router.post('/getTableData', (req, res) => {
+  const getSCommandType =
+    'SELECT `code`, `name` FROM `command_type_credit` WHERE `id_vat_num`=? GROUP BY `code`';
+
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    return new Promise((resolve, reject) => {
+      con.query(getSCommandType, [obj.thisVatId], (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        res.end(JSON.stringify(rows));
+        resolve();
+      });
+    });
   });
 });
 

@@ -154,6 +154,7 @@ export default function AddCommandType(props) {
           });
           // props.dataChange(prevValue => prevValue + 1);
           props.display(false);
+          props.dataChange(prevValue => prevValue + 1)
         } else {
           toast.error(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
