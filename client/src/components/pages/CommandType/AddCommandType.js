@@ -56,6 +56,7 @@ export default function AddCommandType(props) {
     return flag;
   };
 
+  // get accounts for select options
   useEffect(() => {
     fetch('/accounts/getSelectData', {
       method: 'POST',
@@ -132,6 +133,7 @@ export default function AddCommandType(props) {
     setCredit([...credit]);
   };
 
+  // adding command type, send data to server
   const addToDatabase = () => {
     const dataObj = {
       thisVatId: thisVatId,

@@ -58,6 +58,27 @@ const numbersOnly = number => {
   return false;
 };
 
+// check if date is not greater then today
+const dateNotGreater = tmpDate => {
+  const currentDate = new Date();
+  const givenDate = new Date(tmpDate);
+
+  // console.log('given: ', givenDate);
+  // console.log('current: ', currentDate);
+  if (givenDate <= currentDate) {
+    return true;
+  }
+  return false;
+};
+
+// check if to amount is decimal or numeric, other return false
+const isAmountDecimalOrNumeric = (amount)=>{
+  if (amount !== '' && /^[1-9]\d*(\.\d+)?$/.test(amount)) {
+    return true;
+  }
+  return false;
+}
+
 export {
   checkUserName,
   checkPassword,
@@ -66,4 +87,6 @@ export {
   checkVatId,
   checkTaxPercent,
   numbersOnly,
+  dateNotGreater,
+  isAmountDecimalOrNumeric,
 };

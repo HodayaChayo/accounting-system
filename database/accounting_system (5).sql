@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 22, 2023 at 06:20 PM
+-- Generation Time: Aug 21, 2023 at 09:17 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -32,7 +32,7 @@ CREATE TABLE `accounts` (
   `id_vat_num` varchar(9) NOT NULL,
   `name` varchar(35) NOT NULL,
   `sort_code` int(11) NOT NULL,
-  `type` varchar(35) NOT NULL,
+  `type` varchar(50) NOT NULL,
   `vat_number` varchar(9) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -42,7 +42,15 @@ CREATE TABLE `accounts` (
 
 INSERT INTO `accounts` (`number`, `id_vat_num`, `name`, `sort_code`, `type`, `vat_number`) VALUES
 (100, '208653427', 'בנקים', 100, 'בנקים', ''),
-(2200, '208653427', 'ספקים שונים', 220, 'ספקים', '');
+(100, '209447355', 'בנק מזרחי', 100, 'בנקים', ''),
+(1301, '209447355', 'משה מימון', 130, 'לקוחות', '302248294'),
+(1501, '208653427', 'מע\"מ עסקאות', 240, 'מע\"מ עסקאות', ''),
+(1502, '208653427', 'מע\"מ תשומות', 240, 'מע\"מ תשומות', ''),
+(2200, '208653427', 'ספקים שונים', 220, 'ספקים', ''),
+(2201, '209447355', 'פז חברת דלק בע\"מ', 220, 'ספקים', ''),
+(2203, '208653427', 'רמי לוי בע\"מ', 220, 'הכנסות חייבות במע\"מ ופטורות ממס הכנ', ''),
+(2203, '209447355', 'מוסך רמי', 220, 'ספקים', '309183994'),
+(2501, '209447355', 'הלוואה מהבנק 25K', 250, 'חו\"ז כללי', '');
 
 -- --------------------------------------------------------
 
@@ -54,11 +62,14 @@ CREATE TABLE `command` (
   `command_index` int(11) NOT NULL,
   `command_type` varchar(10) NOT NULL,
   `reference` varchar(9) NOT NULL,
-  `duty_account` int(11) NOT NULL,
+  `debit_account` int(11) NOT NULL,
   `credit_account` int(11) NOT NULL,
+  `other_account` int(11) DEFAULT NULL,
   `date` date NOT NULL,
   `other_date` date NOT NULL,
-  `amount` decimal(12,2) NOT NULL,
+  `debit_amount` decimal(12,2) NOT NULL,
+  `credit_amount` decimal(12,2) NOT NULL,
+  `other_amount` decimal(12,2) NOT NULL,
   `details` varchar(100) NOT NULL,
   `photo` varchar(50) NOT NULL,
   `input_date` date NOT NULL,
@@ -87,11 +98,22 @@ CREATE TABLE `command_contain_command_type` (
 --
 
 CREATE TABLE `command_type_credit` (
-  `name` varchar(10) NOT NULL,
+  `code` varchar(10) NOT NULL,
   `id_vat_num` varchar(9) NOT NULL,
   `credit_account` int(11) NOT NULL,
-  `percent` decimal(5,2) NOT NULL
+  `percent` decimal(5,2) NOT NULL,
+  `name` varchar(35) NOT NULL,
+  `is_main` varchar(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `command_type_credit`
+--
+
+INSERT INTO `command_type_credit` (`code`, `id_vat_num`, `credit_account`, `percent`, `name`, `is_main`) VALUES
+('הוצ', '208653427', -1, '117.00', 'הוצאות', 'כן'),
+('הכ', '208653427', -1, '100.00', 'הכנסות', 'כן'),
+('הכ', '208653427', 1501, '17.00', 'הכנסות', 'לא');
 
 -- --------------------------------------------------------
 
@@ -100,11 +122,22 @@ CREATE TABLE `command_type_credit` (
 --
 
 CREATE TABLE `command_type_debit` (
-  `name` varchar(10) NOT NULL,
+  `code` varchar(10) NOT NULL,
   `id_vat_num` varchar(9) NOT NULL,
   `debit_account` int(11) NOT NULL,
-  `percent` decimal(5,2) NOT NULL
+  `percent` decimal(5,2) NOT NULL,
+  `name` varchar(35) NOT NULL,
+  `is_main` varchar(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `command_type_debit`
+--
+
+INSERT INTO `command_type_debit` (`code`, `id_vat_num`, `debit_account`, `percent`, `name`, `is_main`) VALUES
+('הוצ', '208653427', -1, '100.00', 'הוצאות', 'כן'),
+('הוצ', '208653427', 1502, '17.00', 'הוצאות', 'לא'),
+('הכ', '208653427', -1, '117.00', 'הכנסות', 'כן');
 
 -- --------------------------------------------------------
 
@@ -156,6 +189,16 @@ CREATE TABLE `photos` (
   `user_name` varchar(35) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `photos`
+--
+
+INSERT INTO `photos` (`name`, `upload_date`, `input_date`, `note`, `user_name`) VALUES
+('1690401977561tests_search (2).pdf', '2023-07-26', '0000-00-00', NULL, 'arielShahar@gmail.com'),
+('1691058125017ª×©×¤×-2023 (1).pdf', '2023-08-03', '0000-00-00', NULL, 'arielShahar@gmail.com'),
+('1691058125099tests_search (2).pdf', '2023-08-03', '0000-00-00', NULL, 'arielShahar@gmail.com'),
+('1691058125108tests_search (1).pdf', '2023-08-03', '0000-00-00', NULL, 'arielShahar@gmail.com');
+
 -- --------------------------------------------------------
 
 --
@@ -180,6 +223,13 @@ INSERT INTO `sort_code` (`id_vat_num`, `number`, `name`) VALUES
 ('208653427', 240, 'מוסדות'),
 ('208653427', 250, 'הלוואות'),
 ('208653427', 500, 'משכורות'),
+('209447355', 100, 'בנקים'),
+('209447355', 130, 'לקוחות'),
+('209447355', 150, 'בעלי מניות'),
+('209447355', 170, 'פקדונות'),
+('209447355', 180, 'רכוש קבוע'),
+('209447355', 220, 'ספקים'),
+('209447355', 250, 'הלוואות'),
 ('303877116', 100, 'בנקים'),
 ('303877116', 220, 'לקוחות'),
 ('328766404', 100, 'בנקים'),
@@ -227,9 +277,10 @@ INSERT INTO `users` (`user_name`, `password`) VALUES
 
 CREATE TABLE `workers` (
   `user_name` varchar(35) NOT NULL,
-  `first_name` varchar(15) NOT NULL,
-  `last_name` varchar(15) NOT NULL,
-  `id` varchar(9) NOT NULL
+  `full_name` varchar(15) NOT NULL,
+  `worker_type` varchar(15) NOT NULL,
+  `password` varchar(9) NOT NULL,
+  `is_active` varchar(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -260,13 +311,13 @@ ALTER TABLE `command_contain_command_type`
 -- Indexes for table `command_type_credit`
 --
 ALTER TABLE `command_type_credit`
-  ADD PRIMARY KEY (`name`,`id_vat_num`,`credit_account`);
+  ADD PRIMARY KEY (`code`,`id_vat_num`,`credit_account`);
 
 --
 -- Indexes for table `command_type_debit`
 --
 ALTER TABLE `command_type_debit`
-  ADD PRIMARY KEY (`name`,`id_vat_num`,`debit_account`);
+  ADD PRIMARY KEY (`code`,`id_vat_num`,`debit_account`);
 
 --
 -- Indexes for table `customers`

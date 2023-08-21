@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');
 
+// check the code of command type exist
 const isCodeExist = (idVat, code) => {
   const searchSortCode =
     'SELECT * FROM `command_type_credit` WHERE `id_vat_num`=? AND `code`=?';
@@ -20,6 +21,7 @@ const isCodeExist = (idVat, code) => {
   });
 };
 
+// adding new command type to database
 const AddCommandType = obj => {
   const addDebit =
     'INSERT INTO `command_type_debit`(`code`, `id_vat_num`, `debit_account`, `percent`, `name`, `is_main`) VALUES (?,?,?,?,?,?)';
@@ -68,6 +70,41 @@ const AddCommandType = obj => {
   }
 };
 
+// get the data of the debit commandType
+const getDebit = obj => {
+  const debitQuery =
+    'SELECT `debit_account`, `percent` FROM `command_type_debit` WHERE `code`=? AND `id_vat_num`=?';
+
+  return new Promise((resolve, reject) => {
+    con.query(debitQuery, [obj.commandType, obj.thisVatId], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      console.log('rows:', rows);
+      resolve(rows);
+    });
+  });
+};
+
+// get the data of the credit commandType
+const getCredit = obj => {
+  const creditQuery =
+    'SELECT `credit_account`, `percent` FROM `command_type_credit` WHERE `code`=? AND `id_vat_num`=?';
+
+  return new Promise((resolve, reject) => {
+    con.query(creditQuery, [obj.commandType, obj.thisVatId], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      console.log('rows:', rows);
+      resolve(rows);
+    });
+  });
+};
+
+// add command type request handler
 router.post('/add', (req, res) => {
   const body = [];
   req.on('data', chunk => {
@@ -98,6 +135,7 @@ router.post('/add', (req, res) => {
   });
 });
 
+// send data of existing command type to client
 router.post('/getTableData', (req, res) => {
   const getSCommandType =
     'SELECT `code`, `name` FROM `command_type_credit` WHERE `id_vat_num`=? GROUP BY `code`';
@@ -117,6 +155,47 @@ router.post('/getTableData', (req, res) => {
         resolve();
       });
     });
+  });
+});
+
+// get commandType list for select
+router.post('/getSelectCommandType', (req, res) => {
+  const selectData =
+    'SELECT `code` AS value, CONCAT(`code`, "-", `name`) AS label FROM `command_type_credit` WHERE `id_vat_num`=? GROUP BY `code`';
+
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    return new Promise((resolve, reject) => {
+      con.query(selectData, [obj.thisVatId], (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        // console.log(rows);
+        res.end(JSON.stringify(rows));
+        resolve();
+      });
+    });
+  });
+});
+
+router.post('/getCalculation', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    const resObj = await getDebit(obj);
+    const add = await getCredit(obj);
+    add.forEach(el => {
+      resObj.push(el);
+    });
+    res.end(JSON.stringify(resObj));
+    // console.log('res:', resObj);
   });
 });
 

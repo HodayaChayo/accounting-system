@@ -1,60 +1,264 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DisplayDocuments from '../../DisplayDocuments/DisplayDocuments';
 import PdfViewerComponent from '../../DisplayDocuments/PdfViewerComponent';
-
+import { v4 as uuid } from 'uuid';
 import css from './receivingDocuments.module.css';
+import Button from '../../Button/Button';
 import myFile from './cv pdf.pdf';
 import myPhoto from './mahat_tests_search (1).pdf';
 import Sidebar from '../../Sidebars/Sidebars';
 import Footer from '../../Footer/Footer';
 import Header from '../../Header/Header';
-
-
-// const [documentType, setDocumentType] = useState('');
-// const [doubt, setDoubt] = useState('');
+import {
+  numbersOnly,
+  dateNotGreater,
+  isAmountDecimalOrNumeric,
+} from '../../validations/validations';
 
 export default function ReceivingDocuments(props) {
+  const thisVatId = localStorage.getItem('CusVAT_Id');
+  const connectedUser =localStorage.getItem('ConnectedUser')
+  const [selectCommandType, setSelectCommandType] = useState([]);
+  const [selectAccount, setSelectAccount] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [commandData, setCommandData] = useState({
+    commandType: 'null',
+    reference: '',
+    date: '',
+    debitAccount: 'null',
+    creditAccount: 'null',
+    otherAccount: 'null',
+    debitAmount: 0,
+    creditAmount: 0,
+    otherAmount: 0,
+    note: '',
+    thisVatId: thisVatId,
+    connectedUser: connectedUser
+  });
+
+  // get command type data for select
+  useEffect(() => {
+    fetch('/commandType/getSelectCommandType', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ thisVatId }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        // console.log('get data');
+        // console.log(res);
+        setSelectCommandType(res);
+      });
+  }, []);
+
+  // get all the accounts for select
+  useEffect(() => {
+    fetch('/accounts/getSelectData', {
+      method: 'POST',
+      body: JSON.stringify({ thisVatId }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        // console.log(res);
+        setSelectAccount(res);
+      });
+  }, []);
+
+  // get chosen commandType data from server and calculate amounts
+  useEffect(() => {
+    const commandType = commandData.commandType;
+    if (commandType !== 'null') {
+      fetch('/commandType/getCalculation', {
+        method: 'POST',
+        body: JSON.stringify({ thisVatId, commandType }),
+      })
+        .then(res => res.json())
+        .then(res => {
+          // console.log(res);
+          let totalPercent = 0;
+          res.forEach(el => {
+            if (Object.keys(el)[0] === 'debit_account') {
+              totalPercent += el.percent;
+            }
+          });
+
+          let updates = {};
+          res.forEach(el => {
+            if (Object.keys(el)[0] === 'debit_account') {
+              if (el.debit_account === -1) {
+                let result = (el.percent / totalPercent) * totalAmount;
+                updates.debitAmount = result.toFixed(2);
+              } else {
+                updates.otherAccount = el.debit_account;
+                let result = (el.percent / totalPercent) * totalAmount;
+                updates.otherAmount = result.toFixed(2);
+              }
+            } else {
+              if (el.credit_account === -1) {
+                let result = (el.percent / totalPercent) * totalAmount;
+                updates.creditAmount = result.toFixed(2);
+              } else {
+                updates.otherAccount = el.credit_account;
+                let result = (el.percent / totalPercent) * totalAmount;
+                updates.otherAmount = result.toFixed(2);
+              }
+            }
+          });
+          setCommandData(prevData => ({ ...prevData, ...updates }));
+        });
+    } else {
+      let updates = {
+        otherAccount: 'null',
+        otherAmount: 0,
+        debitAmount: totalAmount,
+        creditAmount: totalAmount,
+      };
+
+      setCommandData(prevData => ({ ...prevData, ...updates }));
+    }
+  }, [
+    totalAmount,
+    commandData.commandType,
+    commandData.debitAccount,
+    commandData.creditAccount,
+  ]);
+
+  const sendCommand = ()=>{
+    fetch('/commands/addCommand', {
+      method: 'POST',
+      body: JSON.stringify(commandData),
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+      });
+  }
+
   return (
     <div className='body'>
       <Sidebar />
       <Header title='קליטת מסמכים' />
       <main className={css.allMain}>
         <div className={css.allInput}>
-          <select name='doubt' id=''></select>
-          <select name='TypeExpenditure' id=''></select>
+          <p>סוג פקודה:</p>
+          <select
+            name='commandType'
+            value={commandData.commandType}
+            onChange={e => {
+              setCommandData({ ...commandData, commandType: e.target.value });
+            }}
+          >
+            <option value='null' label='ללא בחירה'></option>
+            {selectCommandType.map(el => {
+              return (
+                <option key={uuid()} label={el.label} value={el.value}></option>
+              );
+            })}
+          </select>
+          <p>אסמכתה:</p>
           <input
             type='text'
             name='InvoiceNumber'
             placeholder='מספר חשבונית'
             maxLength={20}
-            // onChange={e => setPassword(e.target.value)}
+            onChange={e => {
+              setCommandData({ ...commandData, reference: e.target.value });
+            }}
           ></input>
+          <p>תאריך:</p>
           <input
             type='date'
             name='date'
             placeholder='תאריך'
             maxLength={20}
-            // onChange={e => setPassword(e.target.value)}
+            onChange={e => {
+              setCommandData({ ...commandData, date: e.target.value });
+            }}
           ></input>
+          <p>חשבון חובה:</p>
+          <select
+            name='debitAccount'
+            value={commandData.debitAccount}
+            onChange={e => {
+              setCommandData({ ...commandData, debitAccount: e.target.value });
+            }}
+          >
+            <option value='null' label='בחר'></option>
+
+            {selectAccount.map(el => {
+              return (
+                <option key={uuid()} label={el.label} value={el.value}></option>
+              );
+            })}
+          </select>
+          <p>חשבון זכות:</p>
+          <select
+            name='creditAccount'
+            value={commandData.creditAccount}
+            onChange={e => {
+              setCommandData({ ...commandData, creditAccount: e.target.value });
+            }}
+          >
+            <option value='null' label='בחר'></option>
+
+            {selectAccount.map(el => {
+              return (
+                <option key={uuid()} label={el.label} value={el.value}></option>
+              );
+            })}
+          </select>
+          <p>סכום כולל מע"מ</p>
           <input
             type='text'
             name='InvoiceAmount'
             placeholder='סכום כולל מע"מ'
             maxLength={20}
-            // onChange={e => setPassword(e.target.value)}
+            onChange={e => {
+              setTotalAmount(Number(e.target.value).toFixed(2));
+            }}
           ></input>
+          <p>לפני מע"מ: {totalAmount - commandData.otherAmount}</p>
+          <p>מע"מ: {commandData.otherAmount}</p>
+          <p>מע"מ מאולץ:</p>
           <input
             type='text'
             name='otherVAT'
             placeholder='מע"מ מאולץ'
+            value={commandData.otherAmount}
             maxLength={20}
-            // onChange={e => setPassword(e.target.value)}
+            onChange={e => {
+              setCommandData({ ...commandData, otherAmount: e.target.value });
+            }}
           ></input>
-          <textarea name='note' id='' cols='45' rows='10'></textarea>
-          <button>קלוט</button>
+          <p>הערות:</p>
+          <textarea
+            name='note'
+            cols='25'
+            rows='5'
+            onChange={e => {
+              setCommandData({ ...commandData, note: e.target.value });
+            }}
+          ></textarea>
+          <Button
+            text='קלוט'
+            fun={() => {
+              console.log(commandData);
+              sendCommand()
+            }}
+            isDisable={
+              !numbersOnly(commandData.reference) ||
+              !dateNotGreater(commandData.date) ||
+              commandData.debitAccount === 'null' ||
+              commandData.creditAccount === 'null' ||
+              Number(commandData.otherAmount) > Number(totalAmount) ||
+              !isAmountDecimalOrNumeric(Number(totalAmount)) ||
+              !isAmountDecimalOrNumeric(Number(commandData.otherAmount))
+            }
+          />
         </div>
         <div className={css.pdf}>
-          {/* <DisplayDocuments/> */}
           <PdfViewerComponent document={myFile} />
         </div>
       </main>
