@@ -1,20 +1,27 @@
 .allMain {
   display: flex;
   flex-direction: row;
-  gap: 1em;
+  gap: 3em;
   /* flex-wrap: wrap; */
   /* max-width: 45%; */
-  /* border: solid blue 3px; */
+  /* border: solid red 3px; */
+}
+
+.pdf{
+    /* border: solid blue 3px; */
+    min-width: 100%;
 }
 
 .allInput {
-  margin: auto;
-  padding:1.5em;
+  /* margin: auto; */
+  /* padding:1.5em; */
+  justify-content: center;
+  text-align: center;
   /* gap: 1em; */
   /* display: flex; */
   /* flex-direction: row; */
   /* flex-wrap: wrap; */
-  width: 30%;
+  max-width: 30%;
   /* justify-content: center; */
   /* border: solid red 3px; */
 }
@@ -29,6 +36,6 @@
 
 .pdf{
   /* border: solid green 3px; */
-  flex: 1;
+  /* flex: 1; */
 }
 

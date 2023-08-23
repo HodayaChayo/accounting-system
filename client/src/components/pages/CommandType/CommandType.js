@@ -22,6 +22,7 @@ export default function commandType() {
     },
   ];
 
+  // get table data of existing command type
   useEffect(() => {
     fetch('/commandType/getTableData', {
       method: 'POST',
