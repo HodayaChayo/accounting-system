@@ -58,8 +58,16 @@ export default function Login() {
         .then(res => {
           console.log(res);
           if (res.isConnect) {
-            localStorage.setItem('ConnectedUser', userName)
-            window.location.href = '/home';
+            localStorage.setItem('ConnectedUser', userName);
+            localStorage.setItem('UserType', res.type);
+            if (res.type === 'לקוח') {
+              localStorage.setItem('SelectedCus', res.cusData[0].user_name);
+              localStorage.setItem('CusVAT_Id', res.cusData[0].id_vat_num);
+              localStorage.setItem('CusName', res.cusData[0].name)
+              window.location.href = '/cusIndex';
+            } else {
+              window.location.href = '/home';
+            }
           } else {
             console.log('not connected');
             setLoginMess('שם משתמש או סיסמה לא נכונים');
@@ -73,7 +81,9 @@ export default function Login() {
 
   return (
     <div className={`body noSidebar`}>
-      <div><Header title='מערכת הנהלת חשבונות' /></div>
+      <div>
+        <Header title='מערכת הנהלת חשבונות' />
+      </div>
       <main className={css.main}>
         <form className={css.login}>
           <input
