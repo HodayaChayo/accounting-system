@@ -88,10 +88,10 @@ router.post('/getTableData', (req, res) => {
   req.on('end', async () => {
     try {
       const sql =
-        'SELECT `user_name`, `full_name`, `worker_type`, `password`, `is_active` FROM `workers`ORDER BY `name`;';
+        'SELECT user_name, full_name, worker_type FROM workers ORDER BY full_name';
       con.query(sql, (err, rows) => {
         if (err) throw err;
-        // console.log(rows);
+        console.log(rows);
         res.end(JSON.stringify(rows));
       });
     } catch (error) {

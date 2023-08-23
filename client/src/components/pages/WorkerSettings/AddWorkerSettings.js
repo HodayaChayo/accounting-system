@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { v4 as uuid } from 'uuid';
 import css from '../Home/addCustomer.module.css';
 import Button from '../../Button/Button';
 import cssPopup from '../../AlertDialog/popupGeneral.module.css';
@@ -15,7 +15,7 @@ export default function AddWorkerSettings(props) {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [workerName, setWorkerName] = useState('');
-  const [workerType, setWorkerType] = useState('');
+  const [workerType, setWorkerType] = useState('null');
   const [isActive, setIsActive] = useState(true);
 
   const createNewWorker = async () => {
@@ -38,6 +38,7 @@ export default function AddWorkerSettings(props) {
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
+          props.dataChange(prevValue => prevValue + 1);
           // props.setDisplay(false);
         } else {
           toast.error(res.message, {
@@ -81,18 +82,21 @@ export default function AddWorkerSettings(props) {
           ></input>
         </p>
         <p>
-          תפקיד:
-          <input
-            type='text'
+          *תפקיד:
+          <select
             name='workerType'
-            placeholder='תפקיד'
-            maxLength={20}
-            onChange={e => setWorkerType(e.target.value)}
-          ></input>
+            onChange={e => {
+              setWorkerType(e.target.value);
+            }}
+          >
+            <option label='בחר סוג עובד' value='null'></option>
+            <option value='מנהל ' label='מנהל'></option>
+            <option value='עובד' label='עובד'></option>
+          </select>
         </p>
         <div className={css.buttons}>
           <Button
-            text='צור לקוח'
+            text='צור עובד'
             fun={() => {
               createNewWorker();
               props.display(false);
@@ -100,7 +104,8 @@ export default function AddWorkerSettings(props) {
             isDisable={
               !checkUserName(userName) ||
               !checkPassword(password) ||
-              !checkCusName(workerName)
+              !checkCusName(workerName)||
+              workerType === 'null'
             }
           />
           <Button
