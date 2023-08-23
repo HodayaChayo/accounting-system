@@ -9,11 +9,8 @@ const {
   accounts,
   documents,
   commandType,
-<<<<<<< HEAD
   worker,
-=======
   commands
->>>>>>> fc5ac3677914cee1f3954f6a2194d3ee34a4c5e3
 } = require('./allQueries');
 
 module.exports = function (app) {
@@ -25,11 +22,8 @@ module.exports = function (app) {
   app.use('/accounts', accounts);
   app.use('/uploadingDocument', documents);
   app.use('/commandType', commandType)
-<<<<<<< HEAD
   app.use('/worker',worker);
-=======
   app.use('/commands', commands)
->>>>>>> fc5ac3677914cee1f3954f6a2194d3ee34a4c5e3
   app.all('*', (req, res) => {
     res.status(404).send('resource not found');
   });

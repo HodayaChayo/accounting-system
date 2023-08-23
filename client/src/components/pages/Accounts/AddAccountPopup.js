@@ -38,6 +38,7 @@ export default function AddAccountPopup(props) {
     { value: 'ספקים', label: 'ספקים' },
     { value: 'לקוחות', label: 'לקוחות' },
     { value: 'עובדים', label: 'עובדים' },
+    { value: 'הוצאות', label: 'הוצאות' },
     { value: 'ספק רש"פ', label: 'ספק רש"פ' },
     { value: 'ספק חשבונית עצמית', label: 'ספק חשבונית עצמית' },
     { value: 'הכנסות חייבות במע"מ', label: 'הכנסות חייבות במע"מ' },

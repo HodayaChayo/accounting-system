@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import DisplayDocuments from '../../DisplayDocuments/DisplayDocuments';
 import PdfViewerComponent from '../../DisplayDocuments/PdfViewerComponent';
 import { v4 as uuid } from 'uuid';
+import { ToastContainer, toast } from 'react-toastify';
 import css from './receivingDocuments.module.css';
 import Button from '../../Button/Button';
-import myFile from './cv pdf.pdf';
-import myPhoto from './mahat_tests_search (1).pdf';
+import myFile from './hesh.pdf';
 import Sidebar from '../../Sidebars/Sidebars';
 import Footer from '../../Footer/Footer';
 import Header from '../../Header/Header';
@@ -17,14 +17,14 @@ import {
 
 export default function ReceivingDocuments(props) {
   const thisVatId = localStorage.getItem('CusVAT_Id');
-  const connectedUser =localStorage.getItem('ConnectedUser')
+  const connectedUser = localStorage.getItem('ConnectedUser');
   const [selectCommandType, setSelectCommandType] = useState([]);
   const [selectAccount, setSelectAccount] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [commandData, setCommandData] = useState({
     commandType: 'null',
     reference: '',
-    date: '',
+    date: '0000-00-00',
     debitAccount: 'null',
     creditAccount: 'null',
     otherAccount: 'null',
@@ -33,7 +33,7 @@ export default function ReceivingDocuments(props) {
     otherAmount: 0,
     note: '',
     thisVatId: thisVatId,
-    connectedUser: connectedUser
+    connectedUser: connectedUser,
   });
 
   // get command type data for select
@@ -125,7 +125,7 @@ export default function ReceivingDocuments(props) {
     commandData.creditAccount,
   ]);
 
-  const sendCommand = ()=>{
+  const sendCommand = () => {
     fetch('/commands/addCommand', {
       method: 'POST',
       body: JSON.stringify(commandData),
@@ -133,12 +133,37 @@ export default function ReceivingDocuments(props) {
       .then(res => res.json())
       .then(res => {
         console.log(res);
+        if (res.isAdd) {
+          toast.success(res.message, {
+            position: toast.POSITION.BOTTOM_LEFT,
+          });
+          setCommandData({
+            commandType: 'null',
+            reference: '',
+            date: '0000-00-00',
+            debitAccount: 'null',
+            creditAccount: 'null',
+            otherAccount: 'null',
+            debitAmount: 0,
+            creditAmount: 0,
+            otherAmount: 0,
+            note: '',
+            thisVatId: thisVatId,
+            connectedUser: connectedUser,
+          });
+          setTotalAmount(0);
+        } else {
+          toast.error(res.message, {
+            position: toast.POSITION.BOTTOM_LEFT,
+          });
+        }
       });
-  }
+  };
 
   return (
     <div className='body'>
       <Sidebar />
+      <ToastContainer />
       <Header title='קליטת מסמכים' />
       <main className={css.allMain}>
         <div className={css.allInput}>
@@ -162,6 +187,7 @@ export default function ReceivingDocuments(props) {
             type='text'
             name='InvoiceNumber'
             placeholder='מספר חשבונית'
+            value={commandData.reference}
             maxLength={20}
             onChange={e => {
               setCommandData({ ...commandData, reference: e.target.value });
@@ -172,6 +198,7 @@ export default function ReceivingDocuments(props) {
             type='date'
             name='date'
             placeholder='תאריך'
+            value={commandData.date}
             maxLength={20}
             onChange={e => {
               setCommandData({ ...commandData, date: e.target.value });
@@ -214,6 +241,7 @@ export default function ReceivingDocuments(props) {
             type='text'
             name='InvoiceAmount'
             placeholder='סכום כולל מע"מ'
+            value={Number(totalAmount)}
             maxLength={20}
             onChange={e => {
               setTotalAmount(Number(e.target.value).toFixed(2));
@@ -239,13 +267,14 @@ export default function ReceivingDocuments(props) {
             rows='5'
             onChange={e => {
               setCommandData({ ...commandData, note: e.target.value });
+              console.log(commandData);
             }}
           ></textarea>
           <Button
             text='קלוט'
             fun={() => {
               console.log(commandData);
-              sendCommand()
+              sendCommand();
             }}
             isDisable={
               !numbersOnly(commandData.reference) ||
@@ -254,7 +283,10 @@ export default function ReceivingDocuments(props) {
               commandData.creditAccount === 'null' ||
               Number(commandData.otherAmount) > Number(totalAmount) ||
               !isAmountDecimalOrNumeric(Number(totalAmount)) ||
-              !isAmountDecimalOrNumeric(Number(commandData.otherAmount))
+              !(
+                isAmountDecimalOrNumeric(Number(commandData.otherAmount)) ||
+                Number(commandData.otherAmount) === 0
+              )
             }
           />
         </div>
