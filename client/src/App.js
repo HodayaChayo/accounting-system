@@ -11,6 +11,8 @@ import UploadingDocuments from './components/pages/UploadingDocuments/UploadingD
 
 import ReceivingDocuments from './components/pages/ReceivingDocuments/ReceivingDocuments.js';
 
+import WorkerSettings from './components/pages/WorkerSettings/WorkerSettings.js';
+
 function App() {
   return (
     <div className='App'>
@@ -33,6 +35,7 @@ function App() {
             path='/ReceivingDocuments'
             element={<ReceivingDocuments />}
           ></Route>
+          <Route path='/WorkerSettings' element={<WorkerSettings />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

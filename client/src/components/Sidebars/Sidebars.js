@@ -144,7 +144,14 @@ function Sidebars() {
             >
               חשבונות
             </MenuItem>
-            <MenuItem icon={<FaUsersCog />}>הגדרת עובדים</MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.location.href = 'http://localhost:3000/WorkerSettings';
+              }}
+              icon={<FaUsersCog />}
+            >
+              הגדרת עובדים
+            </MenuItem>
             <MenuItem icon={<BsBriefcaseFill />}>ניהול תיקי לקוחות</MenuItem>
             <MenuItem icon={<GrUserWorker />}>דוחות עובדים</MenuItem>
           </SubMenu>

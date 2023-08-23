@@ -208,7 +208,7 @@ export default function AddCustomer(props) {
         )}
         <div className={css.buttons}>
           <Button
-            text='צור לקוח'
+            text='צור עובד חדש'
             fun={() => {
               createNewCustomer();
               props.display(false);
