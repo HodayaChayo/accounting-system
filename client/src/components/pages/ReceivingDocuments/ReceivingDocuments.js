@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import DisplayDocuments from '../../DisplayDocuments/DisplayDocuments';
 import PdfViewerComponent from '../../DisplayDocuments/PdfViewerComponent';
 import { v4 as uuid } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
