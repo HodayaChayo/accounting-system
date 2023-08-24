@@ -40,8 +40,8 @@ import {
 function Sidebars() {
   //const { collapseSidebar } = useProSidebar();
   const [collapsed, setCollapsed] = useState(true);
-
   const [toggled, setToggled] = useState(false);
+  const userType = localStorage.getItem('UserType');
 
   const handleCollapsedChange = () => {
     setCollapsed(!collapsed);
@@ -88,15 +88,17 @@ function Sidebars() {
         </Menu>
 
         <Menu>
-          <MenuItem
-            className='link'
-            onClick={() => {
-              window.location.href = 'http://localhost:3000/home';
-            }}
-            icon={<FaUsers />}
-          >
-            רשימת לקוחות
-          </MenuItem>
+          {userType !== 'לקוח' && (
+            <MenuItem
+              className='link'
+              onClick={() => {
+                window.location.href = 'http://localhost:3000/home';
+              }}
+              icon={<FaUsers />}
+            >
+              רשימת לקוחות
+            </MenuItem>
+          )}
           <MenuItem
             className='link'
             onClick={() => {
@@ -107,54 +109,65 @@ function Sidebars() {
             {localStorage.getItem('CusName')}
           </MenuItem>
 
-          <SubMenu
-            defaultclose='true'
-            label={'הגדרות'}
-            icon={<AiFillSetting />}
-          >
-            <MenuItem
-              onClick={() => {
-                window.location.href = 'http://localhost:3000/UserSettings';
-              }}
-              icon={<GrUserSettings />}
+          {userType !== 'לקוח' && (
+            <SubMenu
+              defaultclose='true'
+              label={'הגדרות'}
+              icon={<AiFillSetting />}
             >
-              הגדרות עוסק{' '}
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                window.location.href = 'http://localhost:3000/commandType';
-              }}
-              icon={<FiDivideSquare />}
-            >
-              סוגיי פקודה{' '}
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                window.location.href = 'http://localhost:3000/sortCodes';
-              }}
-              icon={<GrCode />}
-            >
-              קודי מיון
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                window.location.href = 'http://localhost:3000/accounts';
-              }}
-              icon={<BsFillPostcardFill />}
-            >
-              חשבונות
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                window.location.href = 'http://localhost:3000/WorkerSettings';
-              }}
-              icon={<FaUsersCog />}
-            >
-              הגדרת עובדים
-            </MenuItem>
-            <MenuItem icon={<BsBriefcaseFill />}>ניהול תיקי לקוחות</MenuItem>
-            <MenuItem icon={<GrUserWorker />}>דוחות עובדים</MenuItem>
-          </SubMenu>
+              <MenuItem
+                onClick={() => {
+                  window.location.href = 'http://localhost:3000/UserSettings';
+                }}
+                icon={<GrUserSettings />}
+              >
+                הגדרות עוסק{' '}
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  window.location.href = 'http://localhost:3000/commandType';
+                }}
+                icon={<FiDivideSquare />}
+              >
+                סוגיי פקודה{' '}
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  window.location.href = 'http://localhost:3000/sortCodes';
+                }}
+                icon={<GrCode />}
+              >
+                קודי מיון
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  window.location.href = 'http://localhost:3000/accounts';
+                }}
+                icon={<BsFillPostcardFill />}
+              >
+                חשבונות
+              </MenuItem>
+              {userType !== 'עובד' && (
+                <MenuItem
+                  onClick={() => {
+                    window.location.href =
+                      'http://localhost:3000/WorkerSettings';
+                  }}
+                  icon={<FaUsersCog />}
+                >
+                  הגדרת עובדים
+                </MenuItem>
+              )}
+              {userType !== 'עובד' && (
+                <MenuItem icon={<BsBriefcaseFill />}>
+                  ניהול תיקי לקוחות
+                </MenuItem>
+              )}
+              {userType !== 'עובד' && (
+                <MenuItem icon={<GrUserWorker />}>דוחות עובדים</MenuItem>
+              )}
+            </SubMenu>
+          )}
           <SubMenu
             defaultclose='true'
             label={'קליטה'}
@@ -169,16 +182,20 @@ function Sidebars() {
             >
               העלאת מסמכים
             </MenuItem>
-            <MenuItem
-              onClick={() => {
-                window.location.href =
-                  'http://localhost:3000/ReceivingDocuments';
-              }}
-              icon={<RiStackFill />}
-            >
-              קליטת מסמכים
-            </MenuItem>
-            <MenuItem icon={<FaHandHoldingMedical />}>פקודות ידניות</MenuItem>
+            {userType !== 'לקוח' && (
+              <MenuItem
+                onClick={() => {
+                  window.location.href =
+                    'http://localhost:3000/ReceivingDocuments';
+                }}
+                icon={<RiStackFill />}
+              >
+                קליטת מסמכים
+              </MenuItem>
+            )}
+            {userType !== 'לקוח' && (
+              <MenuItem icon={<FaHandHoldingMedical />}>פקודות ידניות</MenuItem>
+            )}
           </SubMenu>
           <SubMenu
             defaultclose='true'
@@ -206,6 +223,7 @@ function Sidebars() {
           >
             התנתק
           </MenuItem>
+          {!collapsed && <p>{localStorage.getItem('ConnectedUser')}</p>}
         </Menu>
       </Sidebar>
     </div>
