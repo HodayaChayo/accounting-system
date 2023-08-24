@@ -8,6 +8,7 @@ import myFile from './hesh.pdf';
 import Sidebar from '../../Sidebars/Sidebars';
 import Footer from '../../Footer/Footer';
 import Header from '../../Header/Header';
+import Select from 'react-select';
 import {
   numbersOnly,
   dateNotGreater,
@@ -35,6 +36,10 @@ export default function ReceivingDocuments(props) {
     connectedUser: connectedUser,
   });
 
+  const [selectedDebitOptions, setSelectedDebitOptions] = useState();
+  const [selectedCreditOptions, setSelectedCreditOptions] = useState();
+
+
   // get command type data for select
   useEffect(() => {
     fetch('/commandType/getSelectCommandType', {
@@ -61,9 +66,20 @@ export default function ReceivingDocuments(props) {
       .then(res => res.json())
       .then(res => {
         // console.log(res);
+        // res.unshift({ value:'null', label:'בחר' });
         setSelectAccount(res);
       });
   }, []);
+
+  function handleDebitSelect(data) {
+    setSelectedDebitOptions(data);
+    setCommandData({ ...commandData, debitAccount: data.value });
+  }
+
+  function handleCreditSelect(data) {
+    setSelectedCreditOptions(data);
+    setCommandData({ ...commandData, creditAccount: data.value });
+  }
 
   // get chosen commandType data from server and calculate amounts
   useEffect(() => {
@@ -150,6 +166,8 @@ export default function ReceivingDocuments(props) {
             thisVatId: thisVatId,
             connectedUser: connectedUser,
           });
+          setSelectedDebitOptions('')
+          setSelectedCreditOptions('')
           setTotalAmount(0);
         } else {
           toast.error(res.message, {
@@ -204,7 +222,15 @@ export default function ReceivingDocuments(props) {
             }}
           ></input>
           <p>חשבון חובה:</p>
-          <select
+          <Select
+            options={selectAccount}
+            placeholder='Select'
+            value={selectedDebitOptions}
+            onChange={handleDebitSelect}
+            isSearchable={true}
+          />
+          {/* <select
+            
             name='debitAccount'
             value={commandData.debitAccount}
             onChange={e => {
@@ -218,9 +244,16 @@ export default function ReceivingDocuments(props) {
                 <option key={uuid()} label={el.label} value={el.value}></option>
               );
             })}
-          </select>
+          </select> */}
           <p>חשבון זכות:</p>
-          <select
+          <Select
+            options={selectAccount}
+            placeholder='Select'
+            value={selectedCreditOptions}
+            onChange={handleCreditSelect}
+            isSearchable={true}
+          />
+          {/* <select
             name='creditAccount'
             value={commandData.creditAccount}
             onChange={e => {
@@ -234,7 +267,7 @@ export default function ReceivingDocuments(props) {
                 <option key={uuid()} label={el.label} value={el.value}></option>
               );
             })}
-          </select>
+          </select> */}
           <p>סכום כולל מע"מ</p>
           <input
             type='text'
@@ -267,6 +300,7 @@ export default function ReceivingDocuments(props) {
             onChange={e => {
               setCommandData({ ...commandData, note: e.target.value });
               console.log(commandData);
+              console.log(selectedDebitOptions);
             }}
           ></textarea>
           <Button

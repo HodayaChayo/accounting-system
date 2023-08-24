@@ -42,6 +42,7 @@ export default function EditAccountPopup(props) {
     })
       .then(async res => await res.json())
       .then(async res => {
+        // console.log(res);
         setAccountNumber(res.number);
         setSortCodeValue(res.sort_code);
         setAccountName(res.name);
