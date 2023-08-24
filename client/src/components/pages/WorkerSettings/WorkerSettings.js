@@ -11,11 +11,14 @@ import AddWorkerSettings from './AddWorkerSettings';
 import Table from '../../Table/Table';
 import { FiEdit } from 'react-icons/fi';
 import ButtonIcon from '../../Button/ButtonIcon';
+import EditWorkerSettings from './EditWorkerSettings';
 
 export default function WorkerSettings() {
   const [displayAdd, setDisplayAdd] = useState(false);
+  const [displayEdit, setDisplayEdit] = useState(false);
   const [dataIsChanged, setDataIsChanged] = useState(0);
   const [workerArr, setWorkerArr] = useState([]);
+  const [selectedRow, setSelectedRow] = useState();
 
   const [columns, setColumns] = useState([
     ...workerColumns,
@@ -27,8 +30,8 @@ export default function WorkerSettings() {
         <ButtonIcon
           src={<FiEdit />}
           fun={() => {
-            // setSelectedRow(row.original);
-            // setAditPopup(true);
+            setSelectedRow(row.original.user_name);
+            setDisplayEdit(true);
           }}
         />
       ),
@@ -62,6 +65,13 @@ export default function WorkerSettings() {
         {displayAdd && (
           <AddWorkerSettings
             display={setDisplayAdd}
+            dataChange={setDataIsChanged}
+          />
+        )}
+        {displayEdit && (
+          <EditWorkerSettings
+            selectedUserRow={selectedRow}
+            displayEdit={setDisplayEdit}
             dataChange={setDataIsChanged}
           />
         )}

@@ -100,4 +100,27 @@ router.post('/getTableData', (req, res) => {
   });
 });
 
+router.post('/getSelectedWorkerData', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    console.log(obj);
+    const getDtaWorker =
+      'SELECT user_name, full_name, worker_type, password FROM workers WHERE user_name=?';
+
+    return new Promise((resolve, reject) => {
+      con.query(getDtaWorker, [obj.sentUserName], (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        res.end(JSON.stringify(rows[0]));
+        resolve();
+      });
+    });
+  });
+});
+
 module.exports = router;

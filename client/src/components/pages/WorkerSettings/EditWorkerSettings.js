@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { v4 as uuid } from 'uuid';
@@ -11,15 +11,37 @@ import {
   checkCusName,
 } from '../../validations/validations.js';
 
-export default function AddWorkerSettings(props) {
+export default function EditWorkerSettings(props) {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [workerName, setWorkerName] = useState('');
-  const [workerType, setWorkerType] = useState('null');
+  const [workerType, setWorkerType] = useState('');
   const [isActive, setIsActive] = useState(true);
+  const sentUserName = props.selectedUserRow;
 
-  const createNewWorker = async () => {
-    const addWorker = {
+  useEffect(() => {
+    fetch('/worker/getSelectedWorkerData', {
+      method: 'POST',
+      body: JSON.stringify({ sentUserName }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(res => {
+        setWorkerType(res.worker_type);
+        console.log(res);
+        setUserName(res.user_name);
+        setPassword(res.password);
+        setWorkerName(res.full_name);
+        // setWorkerType("עובד");
+
+        console.log(workerType);
+      });
+  }, []);
+
+  const editWorker = async () => {
+    const editWorker = {
       userName,
       password,
       workerName,
@@ -27,9 +49,9 @@ export default function AddWorkerSettings(props) {
       isActive,
     };
 
-    fetch('/worker/addWorker', {
+    fetch('/worker/editWorker', {
       method: 'POST',
-      body: JSON.stringify(addWorker),
+      body: JSON.stringify(editWorker),
     })
       .then(res => res.json())
       .then(res => {
@@ -54,6 +76,7 @@ export default function AddWorkerSettings(props) {
         <p>
           *שם העובד:
           <input
+            value={workerName}
             type='text'
             name='workerName'
             placeholder='שם העובד'
@@ -62,8 +85,9 @@ export default function AddWorkerSettings(props) {
           ></input>
         </p>
         <p>
-          *שם משתמש:
+          שם משתמש:
           <input
+            value={userName}
             type='email'
             name='userName'
             placeholder='מייל: xxx@yyy.zzz'
@@ -72,8 +96,9 @@ export default function AddWorkerSettings(props) {
           ></input>
         </p>
         <p>
-          *סיסמה:
+          סיסמה:
           <input
+            value={password}
             type='text'
             name='password'
             placeholder='סיסמה'
@@ -82,40 +107,48 @@ export default function AddWorkerSettings(props) {
           ></input>
         </p>
         <p>
-          *תפקיד:
+          תפקיד:
           <select
             name='workerType'
+            value={workerType}
             onChange={e => {
               setWorkerType(e.target.value);
             }}
           >
             <option label='בחר סוג עובד' value='null'></option>
-            <option value='מנהל ' label='מנהל'></option>
             <option value='עובד' label='עובד'></option>
+            <option value='מנהל ' label='מנהל'></option>
+            {/* <option
+              value='מנהל'
+              label='מנהל'
+              selected={workerType === 'מנהל'}
+            ></option>
+            <option
+              value='עובד'
+              label='עובד'
+              selected={workerType === 'עובד'}
+            ></option> */}
           </select>
         </p>
         <div className={css.buttons}>
           <Button
-            text='צור עובד'
+            text='עדכן עובד'
             fun={() => {
-              createNewWorker();
-              props.display(false);
+              editWorker();
+              props.displayEdit(false);
             }}
             isDisable={
               !checkUserName(userName) ||
               !checkPassword(password) ||
-              !checkCusName(workerName)||
+              !checkCusName(workerName) ||
               workerType === 'null'
             }
           />
           <Button
             text='ביטול'
             fun={() => {
-              props.display(false);
+              props.displayEdit(false);
               console.log(workerType);
-              
-              console.log(typeof(workerType));
-            
             }}
           />
         </div>
