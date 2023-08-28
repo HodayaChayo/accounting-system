@@ -37,6 +37,8 @@ td {
   padding: 0.5rem;
   border-bottom: 1px solid black;
   border-right: 1px solid black;
+  max-width: 15em;
+  /* border: solid red 3px; */
 }
 
 tr:hover{
