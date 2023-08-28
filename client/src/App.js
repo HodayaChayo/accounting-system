@@ -11,6 +11,7 @@ import UploadingDocuments from './components/pages/UploadingDocuments/UploadingD
 import ReceivingDocuments from './components/pages/ReceivingDocuments/ReceivingDocuments.js';
 import WorkerSettings from './components/pages/WorkerSettings/WorkerSettings.js';
 import LedgerReport from './components/pages/LedgerReport/LedgerReport.js';
+import VatReport from './components/pages/VatReport/VatReport.js';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path='/sortCodes' element={<SortCodes />}></Route>
           <Route path='/UserSettings' element={<UserSettings />}></Route>
           <Route path='/LedgerReport' element={<LedgerReport />}></Route>
+          <Route path='/VatReport' element={<VatReport />}></Route>
           <Route
             path='/UploadingDocuments'
             element={<UploadingDocuments />}
