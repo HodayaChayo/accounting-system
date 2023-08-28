@@ -13,6 +13,7 @@ export default function ColumnFilter({column}) {
         style={{
           // fontSize: '1em',
           margin: '0.3rem 0',
+          maxWidth: '4em'
         }}
       />
     </span>

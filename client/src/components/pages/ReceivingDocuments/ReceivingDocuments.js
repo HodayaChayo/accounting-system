@@ -39,7 +39,6 @@ export default function ReceivingDocuments(props) {
   const [selectedDebitOptions, setSelectedDebitOptions] = useState();
   const [selectedCreditOptions, setSelectedCreditOptions] = useState();
 
-
   // get command type data for select
   useEffect(() => {
     fetch('/commandType/getSelectCommandType', {
@@ -66,7 +65,6 @@ export default function ReceivingDocuments(props) {
       .then(res => res.json())
       .then(res => {
         // console.log(res);
-        // res.unshift({ value:'null', label:'בחר' });
         setSelectAccount(res);
       });
   }, []);
@@ -166,8 +164,8 @@ export default function ReceivingDocuments(props) {
             thisVatId: thisVatId,
             connectedUser: connectedUser,
           });
-          setSelectedDebitOptions('')
-          setSelectedCreditOptions('')
+          setSelectedDebitOptions('');
+          setSelectedCreditOptions('');
           setTotalAmount(0);
         } else {
           toast.error(res.message, {
@@ -224,50 +222,19 @@ export default function ReceivingDocuments(props) {
           <p>חשבון חובה:</p>
           <Select
             options={selectAccount}
-            placeholder='Select'
+            placeholder='בחר'
             value={selectedDebitOptions}
             onChange={handleDebitSelect}
             isSearchable={true}
           />
-          {/* <select
-            
-            name='debitAccount'
-            value={commandData.debitAccount}
-            onChange={e => {
-              setCommandData({ ...commandData, debitAccount: e.target.value });
-            }}
-          >
-            <option value='null' label='בחר'></option>
-
-            {selectAccount.map(el => {
-              return (
-                <option key={uuid()} label={el.label} value={el.value}></option>
-              );
-            })}
-          </select> */}
           <p>חשבון זכות:</p>
           <Select
             options={selectAccount}
-            placeholder='Select'
+            placeholder='בחר'
             value={selectedCreditOptions}
             onChange={handleCreditSelect}
             isSearchable={true}
           />
-          {/* <select
-            name='creditAccount'
-            value={commandData.creditAccount}
-            onChange={e => {
-              setCommandData({ ...commandData, creditAccount: e.target.value });
-            }}
-          >
-            <option value='null' label='בחר'></option>
-
-            {selectAccount.map(el => {
-              return (
-                <option key={uuid()} label={el.label} value={el.value}></option>
-              );
-            })}
-          </select> */}
           <p>סכום כולל מע"מ</p>
           <input
             type='text'
@@ -279,7 +246,9 @@ export default function ReceivingDocuments(props) {
               setTotalAmount(Number(e.target.value).toFixed(2));
             }}
           ></input>
-          <p>לפני מע"מ: {totalAmount - commandData.otherAmount}</p>
+          <p>
+            לפני מע"מ: {(Number(totalAmount) - Number(commandData.otherAmount)).toFixed(2)}
+          </p>
           <p>מע"מ: {commandData.otherAmount}</p>
           <p>מע"מ מאולץ:</p>
           <input
@@ -295,12 +264,12 @@ export default function ReceivingDocuments(props) {
           <p>הערות:</p>
           <textarea
             name='note'
+            value={commandData.note}
             cols='25'
             rows='5'
             onChange={e => {
               setCommandData({ ...commandData, note: e.target.value });
-              console.log(commandData);
-              console.log(selectedDebitOptions);
+              // console.log(commandData);
             }}
           ></textarea>
           <Button

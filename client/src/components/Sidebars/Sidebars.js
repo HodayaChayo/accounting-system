@@ -204,7 +204,14 @@ function Sidebars() {
           >
             <MenuItem icon={<VscGraphLine />}>רווח והפסד</MenuItem>
             <MenuItem icon={<VscGraphLeft />}>דוח מאזן</MenuItem>
-            <MenuItem icon={<IoIosListBox />}>כרטסת</MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.location.href = 'http://localhost:3000/LedgerReport';
+              }}
+              icon={<IoIosListBox />}
+            >
+              כרטסת
+            </MenuItem>
           </SubMenu>
           <SubMenu defaultclose='true' label={'דיווחים'} icon={<BsBroadcast />}>
             <MenuItem icon={<BsBank2 />}>מע"מ</MenuItem>
@@ -216,6 +223,16 @@ function Sidebars() {
             >
               מס הכנסה
             </MenuItem>
+
+            <MenuItem
+              onClick={() => {
+                window.location.href = 'http://localhost:3000/VatReport';
+              }}
+              icon={<BsBank2 />}
+            >
+              מע"מ
+            </MenuItem>
+            <MenuItem icon={<TbReceiptTax />}>מס הכנסה</MenuItem>
           </SubMenu>
           <SubMenu defaultclose='true' label={'תיקיות'} icon={<BsFolderFill />}>
             <MenuItem icon={<BsFillArchiveFill />}>ארכיון</MenuItem>

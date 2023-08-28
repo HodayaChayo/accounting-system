@@ -75,14 +75,15 @@ const updateAccount = obj => {
 // check if account have connected commands before delete
 const haveCommands = obj => {
   const check =
-    'SELECT * FROM `command` WHERE `id_vat_num`=? AND `duty_account`=? OR `credit_account`=?';
+    'SELECT * FROM `command` WHERE `id_vat_num`=? AND `debit_account`=? OR `credit_account`=?';
 
   return new Promise((resolve, reject) => {
     con.query(check, [obj.thisVatId, obj.number, obj.number], (err, rows) => {
       if (err) {
         reject(err);
       }
-      resolve(rows.length !== 0);
+      // console.log(rows);
+      resolve(rows.length != 0);
     });
   });
 };
