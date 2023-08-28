@@ -12,6 +12,7 @@ import UploadingDocuments from './components/pages/UploadingDocuments/UploadingD
 import ReceivingDocuments from './components/pages/ReceivingDocuments/ReceivingDocuments.js';
 
 import WorkerSettings from './components/pages/WorkerSettings/WorkerSettings.js';
+import IncomeTaxReport from './components/pages/IncomeTaxReport/IncomeTaxReport.js';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             element={<ReceivingDocuments />}
           ></Route>
           <Route path='/WorkerSettings' element={<WorkerSettings />}></Route>
+          <Route path='/IncomeTaxReport' element={<IncomeTaxReport />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

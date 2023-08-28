@@ -16,7 +16,8 @@ export default function EditWorkerSettings(props) {
   const [password, setPassword] = useState('');
   const [workerName, setWorkerName] = useState('');
   const [workerType, setWorkerType] = useState('');
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState('');
+  const [mailSelected, setMailSelected] = useState('');
   const sentUserName = props.selectedUserRow;
 
   useEffect(() => {
@@ -30,13 +31,13 @@ export default function EditWorkerSettings(props) {
       .then(res => res.json())
       .then(res => {
         setWorkerType(res.worker_type);
-        console.log(res);
+        // console.log(res);
         setUserName(res.user_name);
         setPassword(res.password);
         setWorkerName(res.full_name);
-        // setWorkerType("עובד");
+        setIsActive(res.is_active);
 
-        console.log(workerType);
+        // console.log(workerType);
       });
   }, []);
 
@@ -47,6 +48,7 @@ export default function EditWorkerSettings(props) {
       workerName,
       workerType,
       isActive,
+      sentUserName
     };
 
     fetch('/worker/editWorker', {
@@ -55,8 +57,8 @@ export default function EditWorkerSettings(props) {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res);
-        if (res.isAdd) {
+        // console.log(res);
+        if (res.isUpDate) {
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
@@ -118,16 +120,20 @@ export default function EditWorkerSettings(props) {
             <option label='בחר סוג עובד' value='null'></option>
             <option value='עובד' label='עובד'></option>
             <option value='מנהל ' label='מנהל'></option>
-            {/* <option
-              value='מנהל'
-              label='מנהל'
-              selected={workerType === 'מנהל'}
-            ></option>
-            <option
-              value='עובד'
-              label='עובד'
-              selected={workerType === 'עובד'}
-            ></option> */}
+          </select>
+        </p>
+        <p>
+          פעיל/לא פעיל:
+          <select
+            name='isActive'
+            value={isActive}
+            onChange={e => {
+              setIsActive(e.target.value);
+            }}
+          >
+            <option label='בחר סטאטוס עובד' value='null'></option>
+            <option value='פעיל' label='פעיל'></option>
+            <option value='לא פעיל' label='לא פעיל'></option>
           </select>
         </p>
         <div className={css.buttons}>
@@ -141,14 +147,14 @@ export default function EditWorkerSettings(props) {
               !checkUserName(userName) ||
               !checkPassword(password) ||
               !checkCusName(workerName) ||
-              workerType === 'null'
+              workerType === 'null' ||
+              isActive === 'null'
             }
           />
           <Button
             text='ביטול'
             fun={() => {
               props.displayEdit(false);
-              console.log(workerType);
             }}
           />
         </div>

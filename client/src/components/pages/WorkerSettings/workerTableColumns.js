@@ -11,8 +11,8 @@ export const workerColumns = [
     Header: 'תפקיד',
     accessor: 'worker_type',
   },
-  // {
-  //   Header: 'פעולות',
-  //   accessor: 'edit',
-  // },
+  {
+    Header: 'פעיל/לא פעיל',
+    accessor: 'is_active',
+  },
 ];

@@ -208,7 +208,14 @@ function Sidebars() {
           </SubMenu>
           <SubMenu defaultclose='true' label={'דיווחים'} icon={<BsBroadcast />}>
             <MenuItem icon={<BsBank2 />}>מע"מ</MenuItem>
-            <MenuItem icon={<TbReceiptTax />}>מס הכנסה</MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.location.href = 'http://localhost:3000/IncomeTaxReport';
+              }}
+              icon={<TbReceiptTax />}
+            >
+              מס הכנסה
+            </MenuItem>
           </SubMenu>
           <SubMenu defaultclose='true' label={'תיקיות'} icon={<BsFolderFill />}>
             <MenuItem icon={<BsFillArchiveFill />}>ארכיון</MenuItem>

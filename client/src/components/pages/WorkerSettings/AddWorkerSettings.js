@@ -16,7 +16,7 @@ export default function AddWorkerSettings(props) {
   const [password, setPassword] = useState('');
   const [workerName, setWorkerName] = useState('');
   const [workerType, setWorkerType] = useState('null');
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState('פעיל');
 
   const createNewWorker = async () => {
     const addWorker = {

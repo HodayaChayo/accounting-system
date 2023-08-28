@@ -1,0 +1,23 @@
+main{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.5em;
+  max-width: 56%;
+  text-align: center;
+  /* border: solid red 3px; */
+}
+
+.allDiv{
+display: flex;
+flex-direction: column;
+justify-content: center;
+flex-grow: 2;
+max-width: 100%;
+/* border: solid blue 3px; */
+}
+
+.allPAout{
+margin: auto;
+}

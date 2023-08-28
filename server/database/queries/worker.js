@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');
 
+// A query that receives a username and checks if the username it received already exists.
 async function isUserExist(userName) {
   const selectUser = 'SELECT * FROM users WHERE user_name = ?';
 
@@ -19,6 +20,7 @@ async function isUserExist(userName) {
   });
 }
 
+// A function creates a user and also creates him as an employee or manager.
 function insertCustomer(cusObj) {
   const insertUser = 'INSERT INTO users(user_name, password) VALUES (?,?)';
 
@@ -51,6 +53,7 @@ function insertCustomer(cusObj) {
   return countRows;
 }
 
+// A query that adds an employee to the system.
 router.post('/addWorker', (req, res) => {
   const body = [];
   req.on('data', chunk => {
@@ -80,6 +83,7 @@ router.post('/addWorker', (req, res) => {
   });
 });
 
+// A query that requests the employee data from the database.
 router.post('/getTableData', (req, res) => {
   const body = [];
   req.on('data', chunk => {
@@ -88,7 +92,7 @@ router.post('/getTableData', (req, res) => {
   req.on('end', async () => {
     try {
       const sql =
-        'SELECT user_name, full_name, worker_type FROM workers ORDER BY full_name';
+        'SELECT user_name, full_name, worker_type, is_active FROM workers ORDER BY full_name';
       con.query(sql, (err, rows) => {
         if (err) throw err;
         console.log(rows);
@@ -100,6 +104,7 @@ router.post('/getTableData', (req, res) => {
   });
 });
 
+// A query that requests the data of the selected employee from the database.
 router.post('/getSelectedWorkerData', (req, res) => {
   const body = [];
   req.on('data', chunk => {
@@ -109,7 +114,7 @@ router.post('/getSelectedWorkerData', (req, res) => {
     const obj = JSON.parse(body);
     console.log(obj);
     const getDtaWorker =
-      'SELECT user_name, full_name, worker_type, password FROM workers WHERE user_name=?';
+      'SELECT user_name, full_name, worker_type, password, is_active FROM workers WHERE user_name=?';
 
     return new Promise((resolve, reject) => {
       con.query(getDtaWorker, [obj.sentUserName], (err, rows) => {
@@ -120,6 +125,103 @@ router.post('/getSelectedWorkerData', (req, res) => {
         resolve();
       });
     });
+  });
+});
+
+// A function that checks if there is already a username that needs to be updated.
+async function canUpdateWorker(obj) {
+  if (obj.sentUserName !== obj.userName) {
+    const exist = await isUserExist(obj.userName);
+    if (exist) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// A query that updates a database employee in the users table.
+async function updateUser(obj) {
+  const selectUser =
+    'UPDATE `users` SET `user_name`=?,`password`=? WHERE user_name=?';
+
+  return new Promise((resolve, reject) => {
+    con.query(
+      selectUser,
+      [obj.userName, obj.password, obj.sentUserName],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        console.log('rows:', rows);
+        resolve(rows.length != 0);
+      }
+    );
+  });
+}
+
+// A query that updates an employee in the database in the employee table.
+async function updateWorker(obj) {
+  const update =
+    'UPDATE workers SET user_name=?, full_name=?, worker_type=?, password=?,  is_active=? WHERE user_name=?';
+
+  const workerValues = [
+    obj.userName,
+    obj.workerName,
+    obj.workerType,
+    obj.password,
+    obj.isActive,
+    obj.sentUserName,
+  ];
+
+  return new Promise((resolve, reject) => {
+    con.query(update, workerValues, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      console.log('rows:', rows);
+      resolve(rows.length != 0);
+    });
+  });
+}
+
+// Update works.
+router.post('/editWorker', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    try {
+      const obj = JSON.parse(body);
+      console.log(obj);
+      const canWeUpdate = await canUpdateWorker(obj);
+
+      if (canWeUpdate) {
+        await updateWorker(obj);
+        await updateUser(obj);
+        res.end(
+          JSON.stringify({ isUpDate: true, message: 'השינויים בוצעו בהצלחה!' })
+        );
+      } else {
+        console.log('not upDate');
+        res.end(
+          JSON.stringify({
+            isUpDate: false,
+            message: 'העובד לא עודכן! לא ניתן לעדכן לשם משתמש שכבר קיים במערכת',
+          })
+        );
+      }
+    } catch (error) {
+      console.error(error.message);
+      res.end(
+        JSON.stringify({
+          isUpDate: false,
+          message: 'שגיאת שאילתה',
+        })
+      );
+    }
   });
 });
 
