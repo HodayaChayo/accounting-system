@@ -137,8 +137,8 @@ router.post('/updateCus', (req, res) => {
     try {
       const obj = JSON.parse(body);
       console.log(obj);
-      const canWeUpdate = await canUpdate(obj)
-      
+      const canWeUpdate = await canUpdate(obj);
+
       if (canWeUpdate) {
         await upDateCustomer(obj);
         await updateUser(obj);
@@ -163,6 +163,31 @@ router.post('/updateCus', (req, res) => {
         })
       );
     }
+  });
+});
+
+// get vat frequency
+router.post('/getVatFrequency', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    // console.log(obj);
+
+    const getFrequency = 'SELECT `vat_frequency` FROM `customers` WHERE `id_vat_num`=?'
+
+    return new Promise((resolve, reject)=>{
+      con.query(getFrequency, [obj.thisVatId], (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        // console.log(rows);
+        res.end(JSON.stringify(rows));
+        resolve();
+      });
+    })
   });
 });
 

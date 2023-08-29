@@ -10,7 +10,7 @@ export default function IncomeTaxReport() {
     <div className='body'>
       <Header title={'דו"ח מס הכנסה'} />
       <Sidebars />
-      <main>
+      <main className={css.mainAll}>
         <div className={css.allDiv}>
           <p>0</p>
           <p>מקדמות על פי אחוז המקדמה</p>

@@ -1,0 +1,52 @@
+.mainAll {
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  /* border: solid green 3px; */
+}
+
+.selectors {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  justify-content: center;
+}
+
+.selectItem {
+  width: 10em;
+}
+
+.displayContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* border: solid red 3px; */
+}
+
+.displayContainer div {
+  width: 33%;
+}
+
+.displayContainer :nth-of-type(4) {
+  width: 100%;
+  margin-right: 66%;
+  margin-left: 0;
+  padding: 1em;
+}
+
+.displayContainer :nth-of-type(5) {
+  width: 100%;
+  margin-right: 66%;
+  margin-left: 0;
+  padding: 1em;
+}
+
+.displayContainer :nth-of-type(6) {
+  width: 100%;
+  margin-right: 66%;
+  margin-left: 0;
+  padding: 1em;
+}
+
+
