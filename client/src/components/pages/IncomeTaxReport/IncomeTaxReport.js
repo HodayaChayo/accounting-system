@@ -10,32 +10,32 @@ export default function IncomeTaxReport() {
     <div className='body'>
       <Header title={'דו"ח מס הכנסה'} />
       <Sidebars />
-      <main className={css.mainAll}>
-        <div className={css.allDiv}>
-          <p>0</p>
-          <p>מקדמות על פי אחוז המקדמה</p>
-        </div>
-        <p className={css.allPAout}>=</p>
-        <div className={css.allDiv}>
-          <p>0</p>
-          <p>אחוז המקדמה</p>
-        </div>
-        <p className={css.allPAout}>X</p>
-        <div className={css.allDiv}>
-          <p>0</p>
-          <p>המחזור העסקי</p>
-        </div>
-        <div className={css.allDiv}>
-          <p>0</p>
-          <p>ניכויים במקור לקיזוז</p>
-        </div>
-        <div className={css.allDiv}>
-          <p>0</p>
-          <p>סה"כ לתשלום</p>
-        </div>
-        <div className={css.allDiv}>
-          <p>0</p>
-          <p>ניכויים מצטברים</p>
+      <main>
+        <div className={css.mainAll}>
+          <div className={css.allDiv}>
+            <p>0</p>
+            <p>המחזור העסקי</p>
+          </div>
+          <p className={`${css.allPAout} ${css.allDiv}`}>X</p>
+
+          <div className={css.allDiv}>
+            <p>0</p>
+            <p>אחוז המקדמה</p>
+          </div>
+          <p className={`${css.allPAout} ${css.allDiv}`}>=</p>
+
+          <div className={css.allDiv}>
+            <p>0</p>
+            <p>מקדמות על פי אחוז המקדמה</p>
+          </div>
+          <div className={css.allDiv}>
+            <p>0</p>
+            <p>ניכויים במקור לקיזוז</p>
+          </div>
+          <div className={css.allDiv}>
+            <p>0</p>
+            <p>סה"כ לתשלום</p>
+          </div>
         </div>
       </main>
       <Footer />
