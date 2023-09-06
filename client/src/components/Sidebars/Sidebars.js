@@ -203,7 +203,6 @@ function Sidebars() {
             icon={<HiDocumentReport />}
           >
             <MenuItem icon={<VscGraphLine />}>רווח והפסד</MenuItem>
-            <MenuItem icon={<VscGraphLeft />}>דוח מאזן</MenuItem>
             <MenuItem
               onClick={() => {
                 window.location.href = 'http://localhost:3000/LedgerReport';
