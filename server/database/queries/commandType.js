@@ -182,6 +182,7 @@ router.post('/getSelectCommandType', (req, res) => {
   });
 });
 
+// get debit and credit data for command calculation
 router.post('/getCalculation', (req, res) => {
   const body = [];
   req.on('data', chunk => {

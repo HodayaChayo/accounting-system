@@ -21,7 +21,7 @@ async function isUserExist(userName) {
 }
 
 // A function creates a user and also creates him as an employee or manager.
-function insertCustomer(cusObj) {
+function insertWorker(cusObj) {
   const insertUser = 'INSERT INTO users(user_name, password) VALUES (?,?)';
 
   const insertWorker =
@@ -66,7 +66,7 @@ router.post('/addWorker', (req, res) => {
       const userExists = await isUserExist(obj.userName);
       console.log('User exists:', userExists);
       if (!userExists) {
-        insertCustomer(obj);
+        insertWorker(obj);
         res.end(JSON.stringify({ isAdd: true, message: 'העובד נוצר בהצלחה' }));
       } else {
         console.log('not added');
