@@ -87,7 +87,7 @@ export default function EditWorkerSettings(props) {
           ></input>
         </p>
         <p>
-          שם משתמש:
+          *שם משתמש:
           <input
             value={userName}
             type='email'
@@ -98,7 +98,7 @@ export default function EditWorkerSettings(props) {
           ></input>
         </p>
         <p>
-          סיסמה:
+          *סיסמה:
           <input
             value={password}
             type='text'
@@ -109,7 +109,7 @@ export default function EditWorkerSettings(props) {
           ></input>
         </p>
         <p>
-          תפקיד:
+          *תפקיד:
           <select
             name='workerType'
             value={workerType}
@@ -123,7 +123,7 @@ export default function EditWorkerSettings(props) {
           </select>
         </p>
         <p>
-          פעיל/לא פעיל:
+          *פעיל/לא פעיל:
           <select
             name='isActive'
             value={isActive}
