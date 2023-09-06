@@ -1,5 +1,7 @@
 'use strict';
 
+// this class return the customer data, used to select a customer
+
 const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');

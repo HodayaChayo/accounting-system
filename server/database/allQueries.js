@@ -1,3 +1,5 @@
+// this class used to collect all the class for the apiController 
+
 const login = require('./queries/login');
 const addCustomer = require('./queries/addCustomer');
 const customerTable = require('./queries/customerTable');

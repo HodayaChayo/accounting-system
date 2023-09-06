@@ -1,5 +1,7 @@
 'use strict';
 
+// this class handle the request of adding customer
+
 const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');

@@ -1,5 +1,7 @@
 'use strict';
 
+// this class handle all the requests to get data for ledger report
+
 const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');

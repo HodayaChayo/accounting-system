@@ -1,4 +1,7 @@
 'use strict';
+
+// this class handle the login verification to the system
+
 const con = require('../dbConnection');
 const express = require('express');
 const router = express.Router();

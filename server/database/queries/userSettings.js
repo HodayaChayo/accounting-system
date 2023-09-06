@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');
 
+// this class handle the request to updating data of customers
+
 // A query that goes to the database and brings all the user details.
 router.post('/getUserData', (req, res) => {
   const getSettings =

@@ -1,5 +1,7 @@
 'use strict';
 
+// this class handle all the requests about accounts from client
+
 const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');

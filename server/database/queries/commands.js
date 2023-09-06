@@ -1,9 +1,12 @@
 'use strict';
 
+// this class handle all the requests about commands
+
 const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');
 
+// check if the commands is a duplicate or not
 const checkDuplicates = obj => {
   const check =
     'SELECT * FROM `command` WHERE `id_vat_num`=? AND `reference`=? AND (`debit_account`=? OR `credit_account`=?)';
@@ -29,6 +32,7 @@ const checkDuplicates = obj => {
   });
 };
 
+// function for adding a command
 const addCommand = obj => {
   const add =
     'INSERT INTO `command`(`command_type`, `reference`, `debit_account`, `credit_account`, `other_account`, `date`, `debit_amount`, `credit_amount`, `other_amount`, `details`, `input_date`, `input_by`, `id_vat_num`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
@@ -61,6 +65,7 @@ const addCommand = obj => {
   });
 };
 
+// handler the request of adding a command
 router.post('/addCommand', (req, res) => {
   const body = [];
   req.on('data', chunk => {

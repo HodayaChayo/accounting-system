@@ -1,5 +1,7 @@
 'use strict';
 
+// this class handle all request the server gets and routing the request to the correct class
+
 const {
   login,
   addCustomer,
