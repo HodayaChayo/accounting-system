@@ -36,12 +36,14 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// Transferring the documents to the database
 router.post('/upload-files', upload.array('uploaded-file'), (req, res) => {
   console.log(req.files);
   console.log(req.body);
   res.json({ message: 'Successfully uploaded files' });
 });
 
+// Saving the username for those documents sent to the database.
 router.post('/saveUserName', (req, res) => {
   const body = [];
   req.on('data', chunk => {
@@ -55,6 +57,8 @@ router.post('/saveUserName', (req, res) => {
   });
 });
 
+
+// A query that creates a document in the system
 const insertFile = async (file, name, date) => {
   const insertDoc =
     'INSERT INTO `photos`(`name`,`upload_date`,`user_name`) VALUES (?,?,?)';
