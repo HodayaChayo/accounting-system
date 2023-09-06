@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');
 
+// A function that checks if the username exists in the database.
 async function isUserExist(userName) {
   const selectUser = 'SELECT * FROM users WHERE user_name = ?';
 
@@ -19,6 +20,7 @@ async function isUserExist(userName) {
   });
 }
 
+// A query that creates the customer in the users table and also in the customers table.
 function insertCustomer(cusObj) {
   const insertUser = 'INSERT INTO users(user_name, password) VALUES (?,?)';
 
@@ -55,6 +57,8 @@ function insertCustomer(cusObj) {
   return countRows;
 }
 
+
+// Adding a customer in the database.
 router.post('/', (req, res) => {
   const body = [];
   req.on('data', chunk => {

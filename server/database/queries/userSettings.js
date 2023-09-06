@@ -128,6 +128,7 @@ function upDateCustomer(cusObj) {
   });
 }
 
+// Client update.
 router.post('/updateCus', (req, res) => {
   const body = [];
   req.on('data', chunk => {
