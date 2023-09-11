@@ -6,23 +6,17 @@ import Footer from '../../Footer/Footer';
 import Select from 'react-select';
 import Button from '../../Button/Button';
 import { monthly, biMonthly } from '../../monthSelect/monthSelect';
-import {FaLockOpen, FaLock} from 'react-icons/fa'
+import { FaLockOpen, FaLock } from 'react-icons/fa';
 
 export default function VatReport() {
   const thisVatId = localStorage.getItem('CusVAT_Id');
   const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth();
-  const monthDisplay =
-    currentMonth % Number(vatFrequency) === 0 ? currentMonth : currentMonth - 1;
+  const currentMonth = new Date().getMonth() + 1;
   const [vatFrequency, setVatFrequency] = useState();
   const [selectYear, setSelectYear] = useState([]);
   const [year, setYear] = useState({ value: currentYear, label: currentYear });
-  const [month, setMonth] = useState(
-    vatFrequency === '1'
-      ? monthly[monthDisplay]
-      : biMonthly[monthDisplay / 2 - 1]
-  );
-  const [lock, setLock] = useState()
+  const [month, setMonth] = useState();
+  const [lock, setLock] = useState();
 
   useEffect(() => {
     let list = [];
@@ -40,12 +34,34 @@ export default function VatReport() {
       .then(res => res.json())
       .then(res => {
         // console.log(res);
-        setVatFrequency(res);
+        setVatFrequency(res.vat_frequency);
+        if (currentMonth % res.vat_frequency === 0) {
+          setMonth(
+            res.vat_frequency === 1
+              ? monthly[currentMonth - 1]
+              : biMonthly[
+                  currentMonth === 1
+                    ? 0
+                    : Math.abs(Math.floor(currentMonth / 2) - 1)
+                ]
+          );
+        } else {
+          setMonth(
+            res.vat_frequency === 1
+              ? monthly[currentMonth - 1]
+              : biMonthly[
+                  currentMonth === 1
+                    ? 0
+                    : Math.abs(Math.floor(currentMonth / 2) - 1)
+                ]
+          );
+        }
       });
-      isLocked()
+    // console.log(month);
+    // isLocked()
   }, []);
 
-  const isLocked = ()=>{
+  const getReportData = () => {
     fetch('/vatReport/isLocked', {
       method: 'POST',
       body: JSON.stringify({ thisVatId, year, month }),
@@ -55,7 +71,7 @@ export default function VatReport() {
         // console.log(res);
         setLock(res);
       });
-  }
+  };
 
   return (
     <div className='body'>
@@ -81,10 +97,7 @@ export default function VatReport() {
             className={css.selectItem}
             text='הצג'
             fun={() => {
-              console.log(currentMonth);
-              console.log(year);
-              console.log(month);
-              console.log(monthDisplay);
+              getReportData();
             }}
           />
         </div>
@@ -113,8 +126,8 @@ export default function VatReport() {
             <p>מע"מ לתשלום:</p>
             <p>סכום</p>
           </div>
-          <Button text={lock ? 'שחרר דוח' : 'נעל דוח'} fun={()=>{}}/>
-          {lock ? <FaLock/> : <FaLockOpen/>}
+          <Button text={lock ? 'שחרר דוח' : 'נעל דוח'} fun={() => {}} />
+          {lock ? <FaLock /> : <FaLockOpen />}
         </div>
         <h3>פירוט מע"מ</h3>
       </main>

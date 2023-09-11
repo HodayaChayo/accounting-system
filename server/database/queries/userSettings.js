@@ -186,8 +186,8 @@ router.post('/getVatFrequency', (req, res) => {
         if (err) {
           reject(err);
         }
-        // console.log(rows);
-        res.end(JSON.stringify(rows));
+        console.log(rows);
+        res.end(JSON.stringify(rows[0]));
         resolve();
       });
     })
