@@ -12,6 +12,7 @@ export default function VatReport() {
   const thisVatId = localStorage.getItem('CusVAT_Id');
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
+  // const currentMonth = 7
   const [vatFrequency, setVatFrequency] = useState();
   const [selectYear, setSelectYear] = useState([]);
   const [year, setYear] = useState({ value: currentYear, label: currentYear });
@@ -35,27 +36,27 @@ export default function VatReport() {
       .then(res => {
         // console.log(res);
         setVatFrequency(res.vat_frequency);
-        if (currentMonth % res.vat_frequency === 0) {
-          setMonth(
-            res.vat_frequency === 1
-              ? monthly[currentMonth - 1]
-              : biMonthly[
-                  currentMonth === 1
-                    ? 0
-                    : Math.abs(Math.floor(currentMonth / 2) - 1)
-                ]
-          );
-        } else {
-          setMonth(
-            res.vat_frequency === 1
-              ? monthly[currentMonth - 1]
-              : biMonthly[
-                  currentMonth === 1
-                    ? 0
-                    : Math.abs(Math.floor(currentMonth / 2) - 1)
-                ]
-          );
-        }
+        // if (currentMonth % res.vat_frequency === 0) {
+        //   setMonth(
+        //     res.vat_frequency === 1
+        //       ? monthly[currentMonth - 1]
+        //       : biMonthly[
+        //           currentMonth === 1
+        //             ? 0
+        //             : Math.abs(Math.floor(currentMonth / 2) - 1)
+        //         ]
+        //   );
+        // } else {
+        //   setMonth(
+        //     res.vat_frequency === 1
+        //       ? monthly[currentMonth - 1]
+        //       : biMonthly[
+        //           currentMonth === 1
+        //             ? 0
+        //             : Math.abs(Math.floor(currentMonth / 2) - 1)
+        //         ]
+        //   );
+        // }
       });
     // console.log(month);
     // isLocked()
@@ -97,6 +98,9 @@ export default function VatReport() {
             className={css.selectItem}
             text='הצג'
             fun={() => {
+              console.log(vatFrequency);
+              console.log(month);
+              console.log(year);
               getReportData();
             }}
           />
