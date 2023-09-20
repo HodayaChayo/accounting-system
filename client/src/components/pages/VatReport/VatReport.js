@@ -5,19 +5,21 @@ import Header from '../../Header/Header';
 import Footer from '../../Footer/Footer';
 import Select from 'react-select';
 import Button from '../../Button/Button';
+import Table from '../../Table/Table';
+import { vatReportColumns } from './vatReportColumns';
 import { monthly, biMonthly } from '../../monthSelect/monthSelect';
 import { FaLockOpen, FaLock } from 'react-icons/fa';
 
 export default function VatReport() {
   const thisVatId = localStorage.getItem('CusVAT_Id');
   const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-  // const currentMonth = 7
   const [vatFrequency, setVatFrequency] = useState();
   const [selectYear, setSelectYear] = useState([]);
   const [year, setYear] = useState({ value: currentYear, label: currentYear });
   const [month, setMonth] = useState();
-  const [lock, setLock] = useState();
+  const [data, setData] = useState();
+  const [lock, setLock] = useState('?');
+  const [monthTitle, setMonthTitle] = useState({ value: '--', label: '--' });
 
   useEffect(() => {
     let list = [];
@@ -34,43 +36,20 @@ export default function VatReport() {
     })
       .then(res => res.json())
       .then(res => {
-        // console.log(res);
         setVatFrequency(res.vat_frequency);
-        // if (currentMonth % res.vat_frequency === 0) {
-        //   setMonth(
-        //     res.vat_frequency === 1
-        //       ? monthly[currentMonth - 1]
-        //       : biMonthly[
-        //           currentMonth === 1
-        //             ? 0
-        //             : Math.abs(Math.floor(currentMonth / 2) - 1)
-        //         ]
-        //   );
-        // } else {
-        //   setMonth(
-        //     res.vat_frequency === 1
-        //       ? monthly[currentMonth - 1]
-        //       : biMonthly[
-        //           currentMonth === 1
-        //             ? 0
-        //             : Math.abs(Math.floor(currentMonth / 2) - 1)
-        //         ]
-        //   );
-        // }
       });
-    // console.log(month);
-    // isLocked()
   }, []);
 
   const getReportData = () => {
-    fetch('/vatReport/isLocked', {
+    fetch('/vatReport/getData', {
       method: 'POST',
       body: JSON.stringify({ thisVatId, year, month }),
     })
       .then(res => res.json())
       .then(res => {
-        // console.log(res);
-        setLock(res);
+        console.log(res);
+        setData(res);
+        setLock(res.lock);
       });
   };
 
@@ -98,42 +77,72 @@ export default function VatReport() {
             className={css.selectItem}
             text='הצג'
             fun={() => {
-              console.log(vatFrequency);
-              console.log(month);
-              console.log(year);
-              getReportData();
+              if (month !== undefined) {
+                getReportData();
+                setMonthTitle(month);
+              }
             }}
           />
         </div>
+        <h3>מע"מ לדיווח: {monthTitle.label}</h3>
         <div className={css.displayContainer}>
           <div>
             <p>הכנסות פטורות:</p>
-            <p>סכום</p>
+            <p>{lock === '?' ? '--' : data.noVat.mySum}</p>
           </div>
           <div>
             <p>הכנסות חייבות:</p>
-            <p>סכום</p>
+            <p>{lock === '?' ? '--' : data.withVat.mySum}</p>
           </div>
           <div>
             <p>מע"מ:</p>
-            <p>סכום</p>
+            <p>{lock === '?' ? '--' : data.vat.mySum}</p>
           </div>
           <div>
             <p>מע"מ תשומות נכסים:</p>
-            <p>סכום</p>
+            <p>{lock === '?' ? '--' : data.vatOnAssets.mySum}</p>
           </div>
           <div>
             <p>מע"מ תשומות אחרות:</p>
-            <p>סכום</p>
+            <p>{lock === '?' ? '--' : data.vatOnOthers.mySum}</p>
           </div>
           <div>
             <p>מע"מ לתשלום:</p>
-            <p>סכום</p>
+            <p>
+              {lock === '?'
+                ? '--'
+                : data.vat.mySum -
+                  data.vatOnAssets.mySum -
+                  data.vatOnOthers.mySum}
+            </p>
           </div>
-          <Button text={lock ? 'שחרר דוח' : 'נעל דוח'} fun={() => {}} />
-          {lock ? <FaLock /> : <FaLockOpen />}
+
+          <Button
+            text={lock === true ? 'שחרר דוח' : 'נעל דוח'}
+            isDisable={lock === '?'}
+            fun={() => {}}
+          />
+
+          {lock === true ? <FaLock /> : <FaLockOpen />}
         </div>
-        <h3>פירוט מע"מ</h3>
+        <h2>פירוט מע"מ</h2>
+        <h3>הכנסות פטורות</h3>
+        {lock !== '?' && (
+          <Table myData={data.noVat.rows} myColumns={vatReportColumns} />
+        )}
+        <h3>הכנסות חייבות</h3>
+        {lock !== '?' && (
+          <Table myData={data.withVat.rows} myColumns={vatReportColumns} />
+        )}
+        <h3>תשומות אחרות</h3>
+        {lock !== '?' && (
+          <Table myData={data.vatOnOthers.rows} myColumns={vatReportColumns} />
+        )}
+
+        <h3>תשומות על נכסים</h3>
+        {lock !== '?' && (
+          <Table myData={data.vatOnAssets.rows} myColumns={vatReportColumns} />
+        )}
       </main>
       <Footer />
     </div>

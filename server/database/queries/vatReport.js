@@ -5,6 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const con = require('../dbConnection');
+const monthCalc = 0.0001;
 
 // get date of the first day in the next month
 function getNextMonthFirstDay(inputMonth, inputYear) {
@@ -46,6 +47,7 @@ const isLocked = obj => {
   });
 };
 
+// global where query wether tha report is locked or unlocked
 const whereLocked = 'WHERE `id_vat_num`=? AND `vat_report`=?';
 const whereUnlocked =
   'WHERE `id_vat_num`=? AND `vat_report`=0 AND `date` BETWEEN DATE_SUB(?, INTERVAL 6 MONTH) AND ? ';
@@ -59,35 +61,43 @@ const getIncomeNoVatAccount = idVAT => {
       if (err) {
         reject(err);
       }
-      resolve(rows[0].number);
+      if (rows.length !== 0) {
+        resolve(rows[0].number);
+      }
+      resolve(-1);
     });
   });
 };
 
+// get the data of the incomes without Vat
 const incomeNoVatData = async (isLock, idVAT, month, year, where) => {
-  const sql = 'SELECT * FROM `command` ' + where + ' AND`credit_account`=?';
+  const sql =
+    'SELECT *, DATE_FORMAT(`date`, "%d/%m/%Y") AS new_date, credit_amount AS amount, DATE_FORMAT(`input_date`, "%d/%m/%Y") AS new_input_date FROM `command` ' +
+    where +
+    ' AND`credit_account`=?';
   const account = await getIncomeNoVatAccount(idVAT);
-  console.log(account);
   const date = getNextMonthFirstDay(month, year);
-  const vat = month + 0.0001 * year;
+  const vat = month + monthCalc * year;
   const unlockData = [idVAT, date, date, account];
   const lockData = [idVAT, vat, account];
   const data = isLock ? lockData : unlockData;
-  const sum = 'SELECT SUM(`credit_amount`) AS sum FROM `command` ' + where + ' AND`credit_account`=?'
+  const sum =
+    'SELECT SUM(`credit_amount`) AS sum FROM `command` ' +
+    where +
+    ' AND`credit_account`=?';
 
   return new Promise((resolve, reject) => {
     con.query(sum, data, (err, rows) => {
       if (err) {
         reject(err);
       }
-      console.log(rows);
-      const mySum = rows[0].sum
+      const mySum = rows[0].sum;
       con.query(sql, data, (err, rows) => {
         if (err) {
           reject(err);
         }
         // console.log(rows);
-        resolve({rows, mySum});
+        resolve({ rows, mySum });
       });
     });
   });
@@ -102,7 +112,43 @@ const getIncomeWithVatAccount = idVAT => {
       if (err) {
         reject(err);
       }
-      resolve(rows);
+      if (rows.length !== 0) {
+        resolve(rows[0].number);
+      }
+      resolve(-1);
+    });
+  });
+};
+
+// get the data of the incomes with Vat
+const incomeWithVatData = async (isLock, idVAT, month, year, where) => {
+  const sql =
+    'SELECT *, DATE_FORMAT(`date`, "%d/%m/%Y") AS new_date, credit_amount AS amount, DATE_FORMAT(`input_date`, "%d/%m/%Y") AS new_input_date FROM `command` ' +
+    where +
+    ' AND`credit_account`=?';  const account = await getIncomeWithVatAccount(idVAT);
+  const date = getNextMonthFirstDay(month, year);
+  const vat = month + monthCalc * year;
+  const unlockData = [idVAT, date, date, account];
+  const lockData = [idVAT, vat, account];
+  const data = isLock ? lockData : unlockData;
+  const sum =
+    'SELECT SUM(`credit_amount`) AS sum FROM `command` ' +
+    where +
+    ' AND`credit_account`=?';
+
+  return new Promise((resolve, reject) => {
+    con.query(sum, data, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+      const mySum = rows[0].sum;
+      con.query(sql, data, (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        // console.log(rows);
+        resolve({ rows, mySum });
+      });
     });
   });
 };
@@ -116,7 +162,87 @@ const getVatIncomeAccount = idVAT => {
       if (err) {
         reject(err);
       }
-      resolve(rows);
+      if (rows.length !== 0) {
+        resolve(rows[0].number);
+      }
+      resolve(-1);
+    });
+  });
+};
+
+// get the sum of the incomes Vat
+const vatIncomeSum = async (isLock, idVAT, month, year, where) => {
+  // const sql = 'SELECT * FROM `command` ' + where + ' AND`credit_account`=?';
+  const account = await getVatIncomeAccount(idVAT);
+  const date = getNextMonthFirstDay(month, year);
+  const vat = month + monthCalc * year;
+  const unlockData = [idVAT, date, date, account];
+  const lockData = [idVAT, vat, account];
+  const data = isLock ? lockData : unlockData;
+  const sum =
+    'SELECT SUM(`other_amount`) AS sum FROM `command` ' +
+    where +
+    ' AND `other_account`=?';
+
+  return new Promise((resolve, reject) => {
+    con.query(sum, data, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+      const mySum = rows[0].sum;
+      resolve({ mySum });
+    });
+  });
+};
+
+// get the account of expenses on assets
+const getExpensesOnAssetsAccount = idVAT => {
+  const sql = `SELECT number FROM accounts WHERE id_vat_num=? AND type='מע"מ רכוש קבוע'`;
+
+  return new Promise((resolve, reject) => {
+    con.query(sql, [idVAT], (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+      // console.log(rows);
+      if (rows.length !== 0) {
+        resolve(rows[0].number);
+      }
+      resolve(-1);
+    });
+  });
+};
+
+// get the data of the expenses on assets
+const expensesOnAssetsData = async (isLock, idVAT, month, year, where) => {
+  const sql =
+    'SELECT *, DATE_FORMAT(`date`, "%d/%m/%Y") AS new_date, credit_amount AS amount, DATE_FORMAT(`input_date`, "%d/%m/%Y") AS new_input_date FROM `command` ' +
+    where +
+    ' AND`other_account`=?';  const account = await getExpensesOnAssetsAccount(idVAT);
+  // console.log(account);
+  const date = getNextMonthFirstDay(month, year);
+  const vat = month + monthCalc * year;
+  const unlockData = [idVAT, date, date, account];
+  const lockData = [idVAT, vat, account];
+  const data = isLock ? lockData : unlockData;
+  const sum =
+    'SELECT SUM(`other_amount`) AS sum FROM `command` ' +
+    where +
+    ' AND `other_account`=?';
+
+  return new Promise((resolve, reject) => {
+    con.query(sum, data, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+      const mySum = rows[0].sum;
+      con.query(sql, data, (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        // console.log(rows);
+        resolve({ rows, mySum });
+      });
     });
   });
 };
@@ -130,43 +256,49 @@ const getExpensesAccount = idVAT => {
       if (err) {
         reject(err);
       }
-      resolve(rows);
+      if (rows.length !== 0) {
+        resolve(rows[0].number);
+      }
+      resolve(-1);
     });
   });
 };
 
-// get the account of expenses on assets
-const getExpensesOnAssetsAccount = idVAT => {
-  const sql = `SELECT number FROM accounts WHERE id_vat_num=? AND type='רכוש קבוע'`;
+// get the data of other expenses
+const getExpensesData = async (isLock, idVAT, month, year, where) => {
+  const sql =
+    'SELECT *, DATE_FORMAT(`date`, "%d/%m/%Y") AS new_date, credit_amount AS amount, DATE_FORMAT(`input_date`, "%d/%m/%Y") AS new_input_date FROM `command` ' +
+    where +
+    ' AND`other_account`=?';  const account = await getExpensesAccount(idVAT);
+  // console.log(account);
+  const date = getNextMonthFirstDay(month, year);
+  const vat = month + monthCalc * year;
+  const unlockData = [idVAT, date, date, account];
+  const lockData = [idVAT, vat, account];
+  const data = isLock ? lockData : unlockData;
+  const sum =
+    'SELECT SUM(`other_amount`) AS sum FROM `command` ' +
+    where +
+    ' AND `other_account`=?';
 
   return new Promise((resolve, reject) => {
-    con.query(sql, [idVAT], (err, rows) => {
+    con.query(sum, data, (err, rows) => {
       if (err) {
         reject(err);
       }
-      resolve(rows);
+      const mySum = rows[0].sum;
+      con.query(sql, data, (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        // console.log(rows);
+        resolve({ rows, mySum });
+      });
     });
   });
 };
 
-// get data of all the commands that locked in the selected report
-const dataOfLocked = obj => {
-  const vat = obj.month.value + 0.0001 * obj.year.value;
-  const select =
-    'SELECT * FROM `command` WHERE `id_vat_num`=? AND `vat_report` =?';
-  return new Promise((resolve, reject) => {
-    con.query(select, [obj.thisVatId, vat], (err, rows) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(rows);
-    });
-  });
-};
-
-const dataOfUnlocked = obj => {};
-
-router.post('/isLocked', (req, res) => {
+router.post('/getData', (req, res) => {
   const body = [];
   req.on('data', chunk => {
     body.push(chunk);
@@ -177,6 +309,46 @@ router.post('/isLocked', (req, res) => {
     try {
       const reportLocked = await isLocked(obj);
       if (reportLocked) {
+        const result = {
+          lock: reportLocked,
+          noVat: await incomeNoVatData(
+            true,
+            obj.thisVatId,
+            obj.month.value,
+            obj.year.value,
+            whereLocked
+          ),
+          withVat: await incomeWithVatData(
+            true,
+            obj.thisVatId,
+            obj.month.value,
+            obj.year.value,
+            whereLocked
+          ),
+          vat: await vatIncomeSum(
+            true,
+            obj.thisVatId,
+            obj.month.value,
+            obj.year.value,
+            whereLocked
+          ),
+          vatOnAssets: await expensesOnAssetsData(
+            true,
+            obj.thisVatId,
+            obj.month.value,
+            obj.year.value,
+            whereLocked
+          ),
+          vatOnOthers: await getExpensesData(
+            true,
+            obj.thisVatId,
+            obj.month.value,
+            obj.year.value,
+            whereLocked
+          ),
+        };
+        console.log('locked result: ', result);
+        res.end(JSON.stringify(result));
       } else {
         const result = {
           lock: reportLocked,
@@ -187,9 +359,37 @@ router.post('/isLocked', (req, res) => {
             obj.year.value,
             whereUnlocked
           ),
-          // withVat:
+          withVat: await incomeWithVatData(
+            false,
+            obj.thisVatId,
+            obj.month.value,
+            obj.year.value,
+            whereUnlocked
+          ),
+          vat: await vatIncomeSum(
+            false,
+            obj.thisVatId,
+            obj.month.value,
+            obj.year.value,
+            whereUnlocked
+          ),
+          vatOnAssets: await expensesOnAssetsData(
+            false,
+            obj.thisVatId,
+            obj.month.value,
+            obj.year.value,
+            whereUnlocked
+          ),
+          vatOnOthers: await getExpensesData(
+            false,
+            obj.thisVatId,
+            obj.month.value,
+            obj.year.value,
+            whereUnlocked
+          ),
         };
-        console.log(result.noVat);
+        console.log('unlocked result: ', result);
+        res.end(JSON.stringify(result));
       }
     } catch (error) {
       console.error(error.message);
