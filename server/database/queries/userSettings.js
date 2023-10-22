@@ -194,4 +194,30 @@ router.post('/getVatFrequency', (req, res) => {
   });
 });
 
+// get income frequency
+router.post('/getIncomeFrequency', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    // console.log(obj);
+
+    const getFrequency =
+      'SELECT `tax_income_frequency` FROM `customers` WHERE `id_vat_num`=?';
+
+    return new Promise((resolve, reject) => {
+      con.query(getFrequency, [obj.thisVatId], (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        console.log(rows);
+        res.end(JSON.stringify(rows[0]));
+        resolve();
+      });
+    });
+  });
+});
+
 module.exports = router;

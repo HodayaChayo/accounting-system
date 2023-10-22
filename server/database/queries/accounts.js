@@ -266,7 +266,8 @@ router.post('/delete', (req, res) => {
 });
 
 router.post('/getSelectData', (req, res) => {
-  const selectData = 'SELECT `number` AS value, CONCAT(`number`, "-", `name`) AS label FROM `accounts` WHERE `id_vat_num`=?'
+  const selectData =
+    'SELECT `number` AS value, CONCAT(`number`, "-", `name`) AS label FROM `accounts` WHERE `id_vat_num`=?';
 
   const body = [];
   req.on('data', chunk => {
@@ -274,7 +275,7 @@ router.post('/getSelectData', (req, res) => {
   });
   req.on('end', async () => {
     const obj = JSON.parse(body);
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
       con.query(selectData, [obj.thisVatId], (err, rows) => {
         if (err) {
           reject(err);
@@ -283,8 +284,9 @@ router.post('/getSelectData', (req, res) => {
         res.end(JSON.stringify(rows));
         resolve();
       });
-    })
+    });
   });
 });
+
 
 module.exports = router;
