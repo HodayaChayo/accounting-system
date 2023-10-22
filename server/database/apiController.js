@@ -14,7 +14,8 @@ const {
   worker,
   commands,
   ledgerReport,
-  vatReport
+  vatReport,
+  incomeReport,
 } = require('./allQueries');
 
 module.exports = function (app) {
@@ -30,6 +31,7 @@ module.exports = function (app) {
   app.use('/commands', commands)
   app.use('/ledgerReport', ledgerReport)
   app.use('/vatReport', vatReport)
+  app.use('/incomeReport', incomeReport);
   app.all('*', (req, res) => {
     res.status(404).send('resource not found');
   });

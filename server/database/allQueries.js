@@ -12,6 +12,7 @@ const worker = require('./queries/worker');
 const commands = require('./queries/commands')
 const ledgerReport = require('./queries/ledgerReport')
 const vatReport =require('./queries/vatReport')
+const incomeReport = require('./queries/incomeReport')
 
 module.exports = {
   login,
@@ -25,5 +26,6 @@ module.exports = {
   worker,
   commands,
   ledgerReport,
-  vatReport
+  vatReport,
+  incomeReport,
 };
