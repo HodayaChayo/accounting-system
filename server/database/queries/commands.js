@@ -33,9 +33,9 @@ const checkDuplicates = obj => {
 };
 
 // function for adding a command
-const addCommand = obj => {
+const addCommand = (obj, photo) => {
   const add =
-    'INSERT INTO `command`(`command_type`, `reference`, `debit_account`, `credit_account`, `other_account`, `date`, `debit_amount`, `credit_amount`, `other_amount`, `details`, `input_date`, `input_by`, `id_vat_num`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
+    'INSERT INTO `command`(`command_type`, `reference`, `debit_account`, `credit_account`, `other_account`, `date`, `debit_amount`, `credit_amount`, `other_amount`, `details`,`photo`, `input_date`, `input_by`, `id_vat_num`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
   const command = [
     obj.commandType,
@@ -48,6 +48,7 @@ const addCommand = obj => {
     Number(obj.creditAmount),
     Number(obj.otherAmount),
     obj.note,
+    photo,
     new Date(),
     obj.connectedUser,
     obj.thisVatId,
@@ -59,11 +60,32 @@ const addCommand = obj => {
         reject(err);
         return;
       }
-      console.log('rows:', rows);
+      // console.log('rows:', rows);
       resolve(rows);
     });
   });
 };
+
+const updatePhoto = (photo, user)=>{
+  const sqlPhoto ='UPDATE `photos` SET `input_date`=? WHERE `user_name`=? AND `name`=?'
+
+  const data = [
+    new Date(),
+    user,
+    photo
+  ]
+
+  return new Promise((resolve, reject) => {
+    con.query(sqlPhoto, data, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      // console.log('rows:', rows);
+      resolve(rows);
+    });
+  });
+}
 
 // handler the request of adding a command
 router.post('/addCommand', (req, res) => {
@@ -76,10 +98,11 @@ router.post('/addCommand', (req, res) => {
     console.log(obj);
 
     try {
-      const isExist = await checkDuplicates(obj);
+      const isExist = await checkDuplicates(obj.commandData);
 
       if (!isExist) {
-        await addCommand(obj);
+        await addCommand(obj.commandData, obj.selectedDoc.name);
+        await updatePhoto(obj.selectedDoc.name, obj.selectedCus)
         res.end(
           JSON.stringify({ isAdd: true, message: 'פקודה נקלטה בהצלחה' })
         );
@@ -93,6 +116,12 @@ router.post('/addCommand', (req, res) => {
       }
     } catch (error) {
       console.error(error.message);
+      res.end(
+        JSON.stringify({
+          isAdd: false,
+          message: 'שגיאה משרת',
+        })
+      );
     }
   });
 });

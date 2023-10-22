@@ -43,7 +43,7 @@ router.post('/getDoc', (req, res) => {
   });
   req.on('end', async () => {
     const obj = JSON.parse(body);
-    console.log(obj);
+    // console.log(obj);
 
     // Use path.join to create the correct file path
     const filePath = path.join(__dirname ,'../documents/' , obj.selectedDoc.name);
@@ -53,9 +53,7 @@ router.post('/getDoc', (req, res) => {
       if (err) {
         console.error('Error sending file:', err);
         res.status(404).send('File not found');
-      } else {
-        console.log('good');
-      }
+      } 
     });
   });
 });

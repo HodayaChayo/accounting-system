@@ -25,6 +25,8 @@ export default function ReceivingDocuments(props) {
   const [selectedDoc, setSelectedDoc] = useState('?');
   const [doc, setDoc] = useState(myFile);
   const [docNumber, setDocNumber] = useState(0);
+  const [firstLoad, setFirstLoad] = useState(true);
+  const [change, setChange] = useState(true);
   const [selectCommandType, setSelectCommandType] = useState([]);
   const [selectAccount, setSelectAccount] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -75,10 +77,12 @@ export default function ReceivingDocuments(props) {
         setSelectAccount(res);
       });
     getOpenDocList();
+    setFirstLoad(false);
   }, []);
 
   // get names list of all th opened documents
   const getOpenDocList = () => {
+    const docNum = docNumber;
     fetch('/documents/getOpenDocList', {
       method: 'POST',
       body: JSON.stringify({ selectedCus }),
@@ -87,15 +91,27 @@ export default function ReceivingDocuments(props) {
       .then(res => {
         console.log(res);
         setDocList(res);
-        if (res.length !== 0) {
+        if (res.length !== 0 && firstLoad) {
           setSelectedDoc(res[0]);
           setDocNumber(1);
+          console.log('1');
+        } else {
+          if (docNum <= res.length) {
+            setSelectedDoc(res[docNum - 1]);
+            console.log('2');
+          } else {
+            setDocNumber(docNum - 1);
+            setSelectedDoc(res[docNum - 2]);
+            console.log('3');
+          }
         }
       });
   };
 
+
+
   useEffect(() => {
-    if (selectedDoc !== '?') {
+    if (docList.length !== 0) {
       fetch('/documents/getDoc', {
         method: 'POST',
         body: JSON.stringify({ selectedDoc }),
@@ -112,16 +128,16 @@ export default function ReceivingDocuments(props) {
 
   // move to the document on the right
   const rightArrowDoc = () => {
-    const docNum = docNumber
+    const docNum = docNumber;
     if (docNum - 1 !== 0 && docNum !== 0) {
       setDocNumber(docNum => docNum - 1);
-      setSelectedDoc(docList[docNum-2]);
+      setSelectedDoc(docList[docNum - 2]);
     }
   };
 
   // move to the document on the left
   const leftArrowDoc = () => {
-    const docNum = docNumber
+    const docNum = docNumber;
     if (docNum + 1 <= docList.length && docNum !== 0) {
       setDocNumber(docNum => docNum + 1);
       setSelectedDoc(docList[docNum]);
@@ -200,7 +216,7 @@ export default function ReceivingDocuments(props) {
   const sendCommand = () => {
     fetch('/commands/addCommand', {
       method: 'POST',
-      body: JSON.stringify(commandData),
+      body: JSON.stringify({ commandData, selectedDoc, selectedCus }),
     })
       .then(res => res.json())
       .then(res => {
@@ -223,6 +239,7 @@ export default function ReceivingDocuments(props) {
             thisVatId: thisVatId,
             connectedUser: connectedUser,
           });
+          getOpenDocList()
           setSelectedDebitOptions('');
           setSelectedCreditOptions('');
           setTotalAmount(0);
@@ -335,6 +352,7 @@ export default function ReceivingDocuments(props) {
             onChange={e => {
               setCommandData({ ...commandData, note: e.target.value });
               console.log(selectedDoc);
+              console.log(change);
             }}
           ></textarea>
           <Button
@@ -342,6 +360,7 @@ export default function ReceivingDocuments(props) {
             fun={() => {
               console.log(commandData);
               sendCommand();
+              // setChange(prev => !prev);
             }}
             isDisable={
               !numbersOnly(commandData.reference) ||
