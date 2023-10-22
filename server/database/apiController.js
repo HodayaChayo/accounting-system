@@ -9,13 +9,14 @@ const {
   sortCode,
   userSettings,
   accounts,
-  documents,
+  uploadingDocument,
   commandType,
   worker,
   commands,
   ledgerReport,
   vatReport,
   incomeReport,
+  documents,
 } = require('./allQueries');
 
 module.exports = function (app) {
@@ -25,13 +26,14 @@ module.exports = function (app) {
   app.use('/sortCode', sortCode);
   app.use('/userSettings', userSettings);
   app.use('/accounts', accounts);
-  app.use('/uploadingDocument', documents);
-  app.use('/commandType', commandType)
-  app.use('/worker',worker);
-  app.use('/commands', commands)
-  app.use('/ledgerReport', ledgerReport)
-  app.use('/vatReport', vatReport)
+  app.use('/uploadingDocument', uploadingDocument);
+  app.use('/commandType', commandType);
+  app.use('/worker', worker);
+  app.use('/commands', commands);
+  app.use('/ledgerReport', ledgerReport);
+  app.use('/vatReport', vatReport);
   app.use('/incomeReport', incomeReport);
+  app.use('/documents', documents);
   app.all('*', (req, res) => {
     res.status(404).send('resource not found');
   });

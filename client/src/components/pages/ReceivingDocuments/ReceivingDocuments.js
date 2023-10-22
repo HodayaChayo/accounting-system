@@ -4,11 +4,13 @@ import { v4 as uuid } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
 import css from './receivingDocuments.module.css';
 import Button from '../../Button/Button';
-import myFile from './hesh.pdf';
+import ButtonIcon from '../../Button/ButtonIcon';
+import myFile from './WaitingAnimation.gif';
 import Sidebar from '../../Sidebars/Sidebars';
 import Footer from '../../Footer/Footer';
 import Header from '../../Header/Header';
 import Select from 'react-select';
+import { BsArrowLeftSquareFill, BsArrowRightSquareFill } from 'react-icons/bs';
 import {
   numbersOnly,
   dateNotGreater,
@@ -18,6 +20,11 @@ import {
 export default function ReceivingDocuments(props) {
   const thisVatId = localStorage.getItem('CusVAT_Id');
   const connectedUser = localStorage.getItem('ConnectedUser');
+  const selectedCus = localStorage.getItem('SelectedCus');
+  const [docList, setDocList] = useState([]);
+  const [selectedDoc, setSelectedDoc] = useState('?');
+  const [doc, setDoc] = useState(myFile);
+  const [docNumber, setDocNumber] = useState(0);
   const [selectCommandType, setSelectCommandType] = useState([]);
   const [selectAccount, setSelectAccount] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -67,7 +74,59 @@ export default function ReceivingDocuments(props) {
         // console.log(res);
         setSelectAccount(res);
       });
+    getOpenDocList();
   }, []);
+
+  // get names list of all th opened documents
+  const getOpenDocList = () => {
+    fetch('/documents/getOpenDocList', {
+      method: 'POST',
+      body: JSON.stringify({ selectedCus }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        setDocList(res);
+        if (res.length !== 0) {
+          setSelectedDoc(res[0]);
+          setDocNumber(1);
+        }
+      });
+  };
+
+  useEffect(() => {
+    if (selectedDoc !== '?') {
+      fetch('/documents/getDoc', {
+        method: 'POST',
+        body: JSON.stringify({ selectedDoc }),
+      })
+        .then(res => (res.ok ? res.blob() : Promise.reject(res)))
+        .then(blob => {
+          const blobUrl = URL.createObjectURL(blob);
+          // now do something with the URL
+          console.log('what?', blobUrl);
+          setDoc(blobUrl);
+        });
+    }
+  }, [selectedDoc]);
+
+  // move to the document on the right
+  const rightArrowDoc = () => {
+    const docNum = docNumber
+    if (docNum - 1 !== 0 && docNum !== 0) {
+      setDocNumber(docNum => docNum - 1);
+      setSelectedDoc(docList[docNum-2]);
+    }
+  };
+
+  // move to the document on the left
+  const leftArrowDoc = () => {
+    const docNum = docNumber
+    if (docNum + 1 <= docList.length && docNum !== 0) {
+      setDocNumber(docNum => docNum + 1);
+      setSelectedDoc(docList[docNum]);
+    }
+  };
 
   function handleDebitSelect(data) {
     setSelectedDebitOptions(data);
@@ -182,6 +241,11 @@ export default function ReceivingDocuments(props) {
       <Header title='קליטת מסמכים' />
       <main className={css.allMain}>
         <div className={css.allInput}>
+          <div className={css.buttons}>
+            <ButtonIcon src={<BsArrowRightSquareFill />} fun={rightArrowDoc} />
+            מסמך: {docNumber} מתוך: {docList.length}
+            <ButtonIcon src={<BsArrowLeftSquareFill />} fun={leftArrowDoc} />
+          </div>
           <p>סוג פקודה:</p>
           <select
             name='commandType'
@@ -247,7 +311,8 @@ export default function ReceivingDocuments(props) {
             }}
           ></input>
           <p>
-            לפני מע"מ: {(Number(totalAmount) - Number(commandData.otherAmount)).toFixed(2)}
+            לפני מע"מ:{' '}
+            {(Number(totalAmount) - Number(commandData.otherAmount)).toFixed(2)}
           </p>
           <p>מע"מ: {commandData.otherAmount}</p>
           <p>מע"מ מאולץ:</p>
@@ -269,7 +334,7 @@ export default function ReceivingDocuments(props) {
             rows='5'
             onChange={e => {
               setCommandData({ ...commandData, note: e.target.value });
-              // console.log(commandData);
+              console.log(selectedDoc);
             }}
           ></textarea>
           <Button
@@ -293,7 +358,11 @@ export default function ReceivingDocuments(props) {
           />
         </div>
         <div className={css.pdf}>
-          <PdfViewerComponent document={myFile} />
+          {docList.length === 0 ? (
+            <p>אין מסמכים לקליטה</p>
+          ) : (
+            <PdfViewerComponent document={doc} />
+          )}
         </div>
       </main>
       <Footer />

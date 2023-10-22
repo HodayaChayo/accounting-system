@@ -9,6 +9,7 @@ import Table from '../../Table/Table';
 import { vatReportColumns } from './vatReportColumns';
 import { monthly, biMonthly } from '../../monthSelect/monthSelect';
 import { FaLockOpen, FaLock } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function VatReport() {
   const thisVatId = localStorage.getItem('CusVAT_Id');
@@ -53,9 +54,54 @@ export default function VatReport() {
       });
   };
 
+  // locking the selected month report
+  const lockReport = () => {
+    fetch('/vatReport/lockReport', {
+      method: 'POST',
+      body: JSON.stringify({ thisVatId, year, month }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if (res.isUpDate) {
+          toast.success(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          getReportData()
+        } else {
+          toast.error(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+        }
+      });
+  };
+
+  // locking the selected month report
+  const unlockReport = () => {
+    fetch('/vatReport/unlockReport', {
+      method: 'POST',
+      body: JSON.stringify({ thisVatId, year, month }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if (res.isUpDate) {
+          toast.success(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          getReportData()
+        } else {
+          toast.error(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+        }
+      });
+  };
+
   return (
     <div className='body'>
       <Sidebars />
+      <ToastContainer/>
       <Header title='דוח מע"מ' />
       <main className={css.mainAll}>
         <div className={css.selectors}>
@@ -120,7 +166,13 @@ export default function VatReport() {
           <Button
             text={lock === true ? 'שחרר דוח' : 'נעל דוח'}
             isDisable={lock === '?'}
-            fun={() => {}}
+            fun={() => {
+              if (lock === true) {
+                unlockReport()
+              } else {
+                lockReport();
+              }
+            }}
           />
 
           {lock === true ? <FaLock /> : <FaLockOpen />}

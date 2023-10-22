@@ -125,7 +125,8 @@ const incomeWithVatData = async (isLock, idVAT, month, year, where) => {
   const sql =
     'SELECT *, DATE_FORMAT(`date`, "%d/%m/%Y") AS new_date, credit_amount AS amount, DATE_FORMAT(`input_date`, "%d/%m/%Y") AS new_input_date FROM `command` ' +
     where +
-    ' AND`credit_account`=?';  const account = await getIncomeWithVatAccount(idVAT);
+    ' AND`credit_account`=?';
+  const account = await getIncomeWithVatAccount(idVAT);
   const date = getNextMonthFirstDay(month, year);
   const vat = month + monthCalc * year;
   const unlockData = [idVAT, date, date, account];
@@ -218,7 +219,8 @@ const expensesOnAssetsData = async (isLock, idVAT, month, year, where) => {
   const sql =
     'SELECT *, DATE_FORMAT(`date`, "%d/%m/%Y") AS new_date, credit_amount AS amount, DATE_FORMAT(`input_date`, "%d/%m/%Y") AS new_input_date FROM `command` ' +
     where +
-    ' AND`other_account`=?';  const account = await getExpensesOnAssetsAccount(idVAT);
+    ' AND`other_account`=?';
+  const account = await getExpensesOnAssetsAccount(idVAT);
   // console.log(account);
   const date = getNextMonthFirstDay(month, year);
   const vat = month + monthCalc * year;
@@ -269,7 +271,8 @@ const getExpensesData = async (isLock, idVAT, month, year, where) => {
   const sql =
     'SELECT *, DATE_FORMAT(`date`, "%d/%m/%Y") AS new_date, credit_amount AS amount, DATE_FORMAT(`input_date`, "%d/%m/%Y") AS new_input_date FROM `command` ' +
     where +
-    ' AND`other_account`=?';  const account = await getExpensesAccount(idVAT);
+    ' AND`other_account`=?';
+  const account = await getExpensesAccount(idVAT);
   // console.log(account);
   const date = getNextMonthFirstDay(month, year);
   const vat = month + monthCalc * year;
@@ -295,6 +298,60 @@ const getExpensesData = async (isLock, idVAT, month, year, where) => {
         resolve({ rows, mySum });
       });
     });
+  });
+};
+
+const lockReport = (idVAT, month, year, where) => {
+  const vat = month + monthCalc * year;
+  const date = getNextMonthFirstDay(month, year);
+  const sql1 = 'UPDATE `command` SET `vat_report`=? ' + where;
+  const data1 = [vat, idVAT, date, date];
+
+  const sql2 =
+    'INSERT INTO `vat_report`(`id_vat_num`, `year`, `month`) VALUES (?,?,?)';
+  const data2 = [idVAT, year, month];
+
+  return new Promise((resolve, reject) => {
+    con.query(sql1, data1, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+    });
+
+    con.query(sql2, data2, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+    });
+
+    resolve();
+  });
+};
+
+const unlockReport = (idVAT, month, year, where) => {
+  const vat = month + monthCalc * year;
+  const date = getNextMonthFirstDay(month, year);
+  const sql1 = 'UPDATE `command` SET `vat_report`=? ' + where;
+  const data1 = [0, idVAT, vat];
+
+  const sql2 =
+    'DELETE FROM `vat_report` WHERE `id_vat_num`=? AND `year`=? AND `month`=?';
+  const data2 = [idVAT, year, month];
+
+  return new Promise((resolve, reject) => {
+    con.query(sql1, data1, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+    });
+
+    con.query(sql2, data2, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+    });
+
+    resolve();
   });
 };
 
@@ -391,6 +448,75 @@ router.post('/getData', (req, res) => {
         console.log('unlocked result: ', result);
         res.end(JSON.stringify(result));
       }
+    } catch (error) {
+      console.error(error.message);
+      res.end(
+        JSON.stringify({
+          isUpDate: false,
+          message: 'שגיאת שאילתה',
+        })
+      );
+    }
+  });
+});
+
+router.post('/lockReport', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    console.log(obj);
+    try {
+      await lockReport(
+        obj.thisVatId,
+        obj.month.value,
+        obj.year.value,
+        whereUnlocked
+      );
+      res.end(
+        JSON.stringify({
+          isUpDate: true,
+          message: 'הדוח ננעל בהצלחה',
+        })
+      );
+
+    } catch (error) {
+      console.error(error.message);
+      res.end(
+        JSON.stringify({
+          isUpDate: false,
+          message: 'שגיאת שאילתה',
+        })
+      );
+    }
+  });
+});
+
+
+router.post('/unlockReport', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    console.log(obj);
+    try {
+      await unlockReport(
+        obj.thisVatId,
+        obj.month.value,
+        obj.year.value,
+        whereLocked
+      );
+      res.end(
+        JSON.stringify({
+          isUpDate: true,
+          message: 'הדוח שוחרר בהצלחה',
+        })
+      );
+
     } catch (error) {
       console.error(error.message);
       res.end(
