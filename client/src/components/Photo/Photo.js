@@ -3,7 +3,6 @@ import ButtonIcon from '../Button/ButtonIcon';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import PdfViewerComponent from '../DisplayDocuments/PdfViewerComponent';
 import css from './photo.module.css';
-import doc from './16979164046631376768.pdf';
 
 export default function Photo(props) {
   return (

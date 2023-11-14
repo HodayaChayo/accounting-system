@@ -9,6 +9,7 @@ import myFile from './WaitingAnimation.gif';
 import Sidebar from '../../Sidebars/Sidebars';
 import Footer from '../../Footer/Footer';
 import Header from '../../Header/Header';
+import ArchiveBox from './ArchiveBox';
 import Select from 'react-select';
 import { BsArrowLeftSquareFill, BsArrowRightSquareFill } from 'react-icons/bs';
 import {
@@ -26,7 +27,7 @@ export default function ReceivingDocuments(props) {
   const [doc, setDoc] = useState(myFile);
   const [docNumber, setDocNumber] = useState(0);
   const [firstLoad, setFirstLoad] = useState(true);
-  const [change, setChange] = useState(true);
+  const [archivePopup, setArchivePopup] = useState(false);
   const [selectCommandType, setSelectCommandType] = useState([]);
   const [selectAccount, setSelectAccount] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -47,23 +48,6 @@ export default function ReceivingDocuments(props) {
 
   const [selectedDebitOptions, setSelectedDebitOptions] = useState();
   const [selectedCreditOptions, setSelectedCreditOptions] = useState();
-
-  const handleInputChange = (e) => {
-    const rawValue = e.target.value;
-
-    // Remove any non-numeric characters except for the dot
-    const numericValue = rawValue.replace(/[^0-9.]/g, '');
-
-    // Parse the numeric value to a float
-    const floatValue = parseFloat(numericValue);
-
-    // Update the state with the raw input value (numericValue)
-    setTotalAmount(floatValue);
-
-    // If you want to display the formatted value with two decimal places in the input
-    // uncomment the following line and use it in the value attribute:
-    // setTotalAmount(floatValue.toFixed(2));
-  };
 
   // get command type data for select
   useEffect(() => {
@@ -124,8 +108,6 @@ export default function ReceivingDocuments(props) {
         }
       });
   };
-
-
 
   useEffect(() => {
     if (docList.length !== 0) {
@@ -256,7 +238,7 @@ export default function ReceivingDocuments(props) {
             thisVatId: thisVatId,
             connectedUser: connectedUser,
           });
-          getOpenDocList()
+          getOpenDocList();
           setSelectedDebitOptions('');
           setSelectedCreditOptions('');
           setTotalAmount(0);
@@ -273,8 +255,23 @@ export default function ReceivingDocuments(props) {
       <Sidebar />
       <ToastContainer />
       <Header title='קליטת מסמכים' />
+      {archivePopup && (
+        <ArchiveBox
+          setDisplay={setArchivePopup}
+          doc={selectedDoc}
+          fun={getOpenDocList}
+        />
+      )}
       <main className={css.allMain}>
         <div className={css.allInput}>
+          <div>
+            <Button
+              text='העבר לארכיון'
+              fun={() => {
+                setArchivePopup(true);
+              }}
+            />
+          </div>
           <div className={css.buttons}>
             <ButtonIcon src={<BsArrowRightSquareFill />} fun={rightArrowDoc} />
             מסמך: {docNumber} מתוך: {docList.length}
@@ -369,7 +366,7 @@ export default function ReceivingDocuments(props) {
             onChange={e => {
               setCommandData({ ...commandData, note: e.target.value });
               console.log(totalAmount);
-              console.log(typeof(totalAmount));
+              console.log(typeof totalAmount);
               console.log(commandData);
             }}
           ></textarea>

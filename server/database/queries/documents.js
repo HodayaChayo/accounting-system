@@ -23,6 +23,22 @@ const getOpenDocList = user_name => {
   });
 };
 
+// save doc in archive
+const saveInArchive = (obj) =>{
+  const save = 'UPDATE `photos` SET `input_date`=? ,`note`=? WHERE `user_name`=? AND `name`=?'
+  const data =[ new Date(), obj.note, obj.selectedCus, obj.doc.name ]
+
+  return new Promise((resolve, reject) => {
+    con.query(save, data, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
 router.post('/getOpenDocList', (req, res) => {
   const body = [];
   req.on('data', chunk => {
@@ -46,15 +62,44 @@ router.post('/getDoc', (req, res) => {
     console.log(obj);
 
     // Use path.join to create the correct file path
-    const filePath = path.join(__dirname ,'../documents/' , obj.selectedDoc.name);
+    const filePath = path.join(
+      __dirname,
+      '../documents/',
+      obj.selectedDoc.name
+    );
 
     // Use res.sendFile to send the file
     res.sendFile(filePath, err => {
       if (err) {
         console.error('Error sending file:', err);
         res.status(404).send('File not found');
-      } 
+      }
     });
+  });
+});
+
+router.post('/saveInArchive', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    console.log(obj);
+    try{
+      await saveInArchive(obj)
+      res.end(
+        JSON.stringify({ isAdd: true, message: 'מסמך הועבר לאכיון' })
+      );
+    }catch (error) {
+      console.error(error.message);
+      res.end(
+        JSON.stringify({
+          isAdd: false,
+          message: 'שגיאה משרת',
+        })
+      );
+    }
   });
 });
 
