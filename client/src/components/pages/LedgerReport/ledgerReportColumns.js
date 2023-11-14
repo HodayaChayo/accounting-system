@@ -1,3 +1,8 @@
+import React from "react";
+import ButtonIcon from "../../Button/ButtonIcon";
+import { FiEdit } from 'react-icons/fi';
+import Photo from "../../Photo/Photo";
+
 export const ledgerReportColumns = [
   {
     Header: 'אינדקס',
@@ -27,10 +32,20 @@ export const ledgerReportColumns = [
     Header: 'חשבון נגדי',
     accessor: 'against_account',
   },
-  {
-    Header: 'מסמך',
-    accessor: 'photo',
-  },
+  // {
+  //   Header: 'מסמך',
+  //   accessor: 'photo',
+  //   disableFilters: true,
+  //   Cell: ({ row }) => (
+  //     <ButtonIcon
+  //       src={row.original.photo !== '' && <FiEdit />}
+  //       fun={() => {
+  //         console.log(row.original);
+          
+  //       }}
+  //     />
+  //   ),
+  // },
   {
     Header: 'תאריך קליטה',
     accessor: 'new_input_date',

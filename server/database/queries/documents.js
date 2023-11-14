@@ -43,7 +43,7 @@ router.post('/getDoc', (req, res) => {
   });
   req.on('end', async () => {
     const obj = JSON.parse(body);
-    // console.log(obj);
+    console.log(obj);
 
     // Use path.join to create the correct file path
     const filePath = path.join(__dirname ,'../documents/' , obj.selectedDoc.name);

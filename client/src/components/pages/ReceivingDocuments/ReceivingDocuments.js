@@ -48,6 +48,23 @@ export default function ReceivingDocuments(props) {
   const [selectedDebitOptions, setSelectedDebitOptions] = useState();
   const [selectedCreditOptions, setSelectedCreditOptions] = useState();
 
+  const handleInputChange = (e) => {
+    const rawValue = e.target.value;
+
+    // Remove any non-numeric characters except for the dot
+    const numericValue = rawValue.replace(/[^0-9.]/g, '');
+
+    // Parse the numeric value to a float
+    const floatValue = parseFloat(numericValue);
+
+    // Update the state with the raw input value (numericValue)
+    setTotalAmount(floatValue);
+
+    // If you want to display the formatted value with two decimal places in the input
+    // uncomment the following line and use it in the value attribute:
+    // setTotalAmount(floatValue.toFixed(2));
+  };
+
   // get command type data for select
   useEffect(() => {
     fetch('/commandType/getSelectCommandType', {
@@ -321,10 +338,10 @@ export default function ReceivingDocuments(props) {
             type='text'
             name='InvoiceAmount'
             placeholder='סכום כולל מע"מ'
-            value={Number(totalAmount)}
+            value={totalAmount}
             maxLength={20}
             onChange={e => {
-              setTotalAmount(Number(e.target.value).toFixed(2));
+              setTotalAmount(e.target.value);
             }}
           ></input>
           <p>
@@ -351,8 +368,9 @@ export default function ReceivingDocuments(props) {
             rows='5'
             onChange={e => {
               setCommandData({ ...commandData, note: e.target.value });
-              console.log(selectedDoc);
-              console.log(change);
+              console.log(totalAmount);
+              console.log(typeof(totalAmount));
+              console.log(commandData);
             }}
           ></textarea>
           <Button
