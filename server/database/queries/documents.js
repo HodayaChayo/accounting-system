@@ -24,9 +24,10 @@ const getOpenDocList = user_name => {
 };
 
 // save doc in archive
-const saveInArchive = (obj) =>{
-  const save = 'UPDATE `photos` SET `input_date`=? ,`note`=? WHERE `user_name`=? AND `name`=?'
-  const data =[ new Date(), obj.note, obj.selectedCus, obj.doc.name ]
+const saveInArchive = obj => {
+  const save =
+    'UPDATE `photos` SET `input_date`=? ,`note`=? WHERE `user_name`=? AND `name`=?';
+  const data = [new Date(), obj.note, obj.selectedCus, obj.doc.name];
 
   return new Promise((resolve, reject) => {
     con.query(save, data, (err, rows) => {
@@ -37,7 +38,7 @@ const saveInArchive = (obj) =>{
       resolve();
     });
   });
-}
+};
 
 router.post('/getOpenDocList', (req, res) => {
   const body = [];
@@ -78,6 +79,7 @@ router.post('/getDoc', (req, res) => {
   });
 });
 
+// save document in archive
 router.post('/saveInArchive', (req, res) => {
   const body = [];
   req.on('data', chunk => {
@@ -86,12 +88,10 @@ router.post('/saveInArchive', (req, res) => {
   req.on('end', async () => {
     const obj = JSON.parse(body);
     console.log(obj);
-    try{
-      await saveInArchive(obj)
-      res.end(
-        JSON.stringify({ isAdd: true, message: 'מסמך הועבר לאכיון' })
-      );
-    }catch (error) {
+    try {
+      await saveInArchive(obj);
+      res.end(JSON.stringify({ isAdd: true, message: 'מסמך הועבר לאכיון' }));
+    } catch (error) {
       console.error(error.message);
       res.end(
         JSON.stringify({
@@ -100,6 +100,28 @@ router.post('/saveInArchive', (req, res) => {
         })
       );
     }
+  });
+});
+
+router.post('/archiveData', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    console.log(obj);
+    const sql = 'SELECT `name`, DATE_FORMAT(`upload_date`, "%d/%m/%Y") AS `upload_date`, DATE_FORMAT(`input_date`, "%d/%m/%Y") AS `input_date`, `note` FROM `photos` WHERE `user_name`=? AND `note`!= "NULL"'
+
+    return new Promise((resolve, reject)=>{
+      con.query(sql,[obj.selectedCus],(err, rows)=>{
+        if(err){
+          reject(err)
+        }
+        res.end(JSON.stringify(rows))
+        resolve()
+      })
+    })
   });
 });
 

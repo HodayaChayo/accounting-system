@@ -13,6 +13,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 export default function VatReport() {
   const thisVatId = localStorage.getItem('CusVAT_Id');
+  const userType = localStorage.getItem('UserType');
   const currentYear = new Date().getFullYear();
   const [vatFrequency, setVatFrequency] = useState();
   const [selectYear, setSelectYear] = useState([]);
@@ -67,7 +68,7 @@ export default function VatReport() {
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
-          getReportData()
+          getReportData();
         } else {
           toast.error(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
@@ -89,7 +90,7 @@ export default function VatReport() {
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
-          getReportData()
+          getReportData();
         } else {
           toast.error(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
@@ -101,7 +102,7 @@ export default function VatReport() {
   return (
     <div className='body'>
       <Sidebars />
-      <ToastContainer/>
+      <ToastContainer />
       <Header title='דוח מע"מ' />
       <main className={css.mainAll}>
         <div className={css.selectors}>
@@ -163,17 +164,19 @@ export default function VatReport() {
             </p>
           </div>
 
-          <Button
-            text={lock === true ? 'שחרר דוח' : 'נעל דוח'}
-            isDisable={lock === '?'}
-            fun={() => {
-              if (lock === true) {
-                unlockReport()
-              } else {
-                lockReport();
-              }
-            }}
-          />
+          {userType !== 'לקוח' && (
+            <Button
+              text={lock === true ? 'שחרר דוח' : 'נעל דוח'}
+              isDisable={lock === '?'}
+              fun={() => {
+                if (lock === true) {
+                  unlockReport();
+                } else {
+                  lockReport();
+                }
+              }}
+            />
+          )}
 
           {lock === true ? <FaLock /> : <FaLockOpen />}
         </div>
