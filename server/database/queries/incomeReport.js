@@ -49,7 +49,7 @@ const isLocked = obj => {
 
 const whereLocked = 'WHERE `id_vat_num`=? AND `tax_income_report`=?';
 const whereUnlocked =
-  'WHERE `id_vat_num`= ? AND `date` BETWEEN DATE_SUB(?, INTERVAL 2 MONTH) AND ? ';
+  'WHERE `id_vat_num`= ? AND `date` BETWEEN DATE_SUB(?, INTERVAL ? MONTH) AND ? ';
 
 // get the accounts numbers of the incomes
 async function getNumberAccount(obj) {
@@ -70,7 +70,7 @@ async function getNumberAccount(obj) {
   });
 }
 
-async function getAllComment(lock, obj, where) {
+async function getAllComment(lock, obj, where, frequency) {
   const numberAccount = await getNumberAccount(obj);
   const dateFormatSQL = getNextMonthFirstDay(obj.month.value, obj.year.value);
   let getCommands =
@@ -85,6 +85,7 @@ async function getAllComment(lock, obj, where) {
   const dataUnlock = [
     obj.thisVatId,
     dateFormatSQL,
+    frequency,
     dateFormatSQL,
     numberAccount[0].number,
   ];
@@ -136,6 +137,75 @@ router.post('/getIncomeReport', (req, res) => {
         res.end(JSON.stringify({ isLock: lock, result }));
         // console.log('alllll ', result);
       }
+    } catch (error) {
+      console.error(error.message);
+      res.end(
+        JSON.stringify({
+          isUpDate: false,
+          message: 'שגיאת שאילתה',
+        })
+      );
+    }
+  });
+});
+
+async function closeIncomeReports(obj) {
+  const dateSQL = getNextMonthFirstDay(obj.month.value, obj.year.value);
+  const numberAccount = await getNumberAccount(obj);
+  const tax = obj.month.value + monthCalc * obj.year.value;
+
+  const insertVats =
+    'INSERT INTO `tax_income_report`(`id_vat_num`, `year`, `month`) VALUES (?,?,?)';
+
+  const dataInsert = [obj.thisVatId, obj.year.value, obj.month.value];
+
+  const updateCommands =
+    'UPDATE `command` SET `tax_income_report`= ? ' +
+    whereUnlocked +
+    ' AND `credit_account` = ?';
+
+  const dataUpdate = [
+    tax,
+    obj.thisVatId,
+    dateSQL,
+    obj.incomeFrequency,
+    dateSQL,
+    numberAccount,
+  ];
+
+  return new Promise((resolve, reject) => {
+    con.query(insertVats, dataInsert, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+    });
+
+    con.query(updateCommands, dataUpdate, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+      console.log(updateCommands);
+      resolve();
+    });
+  });
+}
+
+router.post('/lockReport', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    console.log(obj);
+    try {
+      await closeIncomeReports(obj);
+      res.end(
+        JSON.stringify({
+          isUpDate: true,
+          message: 'הדוח ננעל בהצלחה',
+        })
+      );
     } catch (error) {
       console.error(error.message);
       res.end(

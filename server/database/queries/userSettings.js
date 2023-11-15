@@ -179,9 +179,10 @@ router.post('/getVatFrequency', (req, res) => {
     const obj = JSON.parse(body);
     // console.log(obj);
 
-    const getFrequency = 'SELECT `vat_frequency` FROM `customers` WHERE `id_vat_num`=?'
+    const getFrequency =
+      'SELECT `vat_frequency` FROM `customers` WHERE `id_vat_num`=?';
 
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
       con.query(getFrequency, [obj.thisVatId], (err, rows) => {
         if (err) {
           reject(err);
@@ -190,7 +191,7 @@ router.post('/getVatFrequency', (req, res) => {
         res.end(JSON.stringify(rows[0]));
         resolve();
       });
-    })
+    });
   });
 });
 
@@ -213,6 +214,33 @@ router.post('/getIncomeFrequency', (req, res) => {
           reject(err);
         }
         console.log(rows);
+        res.end(JSON.stringify(rows[0]));
+        resolve();
+      });
+    });
+  });
+});
+
+router.post('/getTaxIncomePercent', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    // console.log(obj);
+
+    //A query that returns the customer's revenue percentage
+    const selectPercentUser =
+      'SELECT `tax_income_percent` FROM `customers` WHERE `id_vat_num` =?';
+
+    return new Promise((resolve, reject) => {
+      con.query(selectPercentUser, [obj.thisVatId], (err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        // console.log('rows:', rows);
         res.end(JSON.stringify(rows[0]));
         resolve();
       });

@@ -18,6 +18,7 @@ export default function IncomeTaxReport() {
   const [month, setMonth] = useState();
   const [lock, setLock] = useState('?');
   const [data, setData] = useState([]);
+  const [taxIncomePercent, setTaxIncomePercent] = useState('?');
 
   useEffect(() => {
     let list = [];
@@ -28,13 +29,14 @@ export default function IncomeTaxReport() {
     }
     setSelectYear(list);
 
+    // Imports dealer data in order to display the data according to the dealer's settings
     fetch('/userSettings/getIncomeFrequency', {
       method: 'POST',
       body: JSON.stringify({ thisVatId }),
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res);
+        // console.log(res);
         setIncomeFrequency(res.tax_income_frequency);
         if (currentMonth % res.tax_income_frequency === 0) {
           setMonth(
@@ -62,20 +64,43 @@ export default function IncomeTaxReport() {
     // isLocked()
   }, []);
 
+  useEffect(() => {
+    fetch('/userSettings/getTaxIncomePercent', {
+      method: 'POST',
+      body: JSON.stringify({ thisVatId }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        // console.log(res);
+        setTaxIncomePercent(res.tax_income_percent);
+      });
+  }, []);
+
   const getIncome = () => {
     fetch('incomeReport/getIncomeReport', {
       method: 'POST',
-      body: JSON.stringify({ thisVatId, month, year }),
+      body: JSON.stringify({ thisVatId, month, year, incomeFrequency }),
     })
       .then(res => res.json())
       .then(res => {
         console.log(res);
         setData(res);
-        setLock(res.isLock)
+        setLock(res.isLock);
         // commands.forEach(commands,el => {
         //   setSumIncome(el.credit_amount);
         // });
         // console.log(sumIncome);
+      });
+  };
+
+  const lockReport = () => {
+    fetch('incomeReport/lockReport', {
+      method: 'POST',
+      body: JSON.stringify({ thisVatId, month, year, incomeFrequency }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
       });
   };
 
@@ -104,6 +129,7 @@ export default function IncomeTaxReport() {
             text='הצג'
             fun={() => {
               getIncome();
+              console.log(taxIncomePercent);
             }}
           />
         </div>
@@ -115,27 +141,41 @@ export default function IncomeTaxReport() {
           <p className={`${css.allPAout} ${css.allDiv}`}>X</p>
 
           <div className={css.allDiv}>
-            <p>0</p>
+            <p>{taxIncomePercent}</p>
             <p>אחוז המקדמה</p>
           </div>
           <p className={`${css.allPAout} ${css.allDiv}`}>=</p>
 
           <div className={css.allDiv}>
-            <p>0</p>
+            <p>
+              {data.length === 0
+                ? 0
+                : (taxIncomePercent * data.result.mySum) / 100}
+            </p>
             <p>מקדמות על פי אחוז המקדמה</p>
           </div>
-          <div className={css.allDiv}>
+          {/* <div className={css.allDiv}>
             <p>0</p>
             <p>ניכויים במקור לקיזוז</p>
-          </div>
+          </div> */}
           <div className={css.allDiv}>
-            <p>0</p>
+            <p>
+              {data.length === 0
+                ? 0
+                : (taxIncomePercent * data.result.mySum) / 100}
+            </p>
             <p>סה"כ לתשלום</p>
           </div>
           <Button
             text={lock === true ? 'שחרר דוח' : 'נעל דוח'}
             isDisable={lock === '?'}
-            fun={() => {}}
+            fun={() => {
+              if (lock === true) {
+                // unlockReport();
+              } else {
+                lockReport();
+              }
+            }}
           />
           {lock === true ? <FaLock /> : <FaLockOpen />}
         </div>
