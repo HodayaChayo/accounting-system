@@ -10,7 +10,7 @@ import UserSettings from './components/pages/UserSettings/UserSettings.js';
 import UploadingDocuments from './components/pages/UploadingDocuments/UploadingDocuments.js';
 import ReceivingDocuments from './components/pages/ReceivingDocuments/ReceivingDocuments.js';
 import WorkerSettings from './components/pages/WorkerSettings/WorkerSettings.js';
-
+import Archive from './components/pages/Archive/Archive.js';
 import IncomeTaxReport from './components/pages/IncomeTaxReport/IncomeTaxReport.js';
 
 import LedgerReport from './components/pages/LedgerReport/LedgerReport.js';
@@ -42,6 +42,7 @@ function App() {
           ></Route>
           <Route path='/WorkerSettings' element={<WorkerSettings />}></Route>
           <Route path='/IncomeTaxReport' element={<IncomeTaxReport />}></Route>
+          <Route path='/Archive' element={<Archive />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

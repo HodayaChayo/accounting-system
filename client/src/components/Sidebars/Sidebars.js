@@ -231,8 +231,15 @@ function Sidebars() {
             </MenuItem>
           </SubMenu>
           <SubMenu defaultclose='true' label={'תיקיות'} icon={<BsFolderFill />}>
-            <MenuItem icon={<BsFillArchiveFill />}>ארכיון</MenuItem>
-            <MenuItem icon={<FaFolderPlus />}>חומרים לדוח שנתי</MenuItem>
+            <MenuItem
+              onClick={() => {
+                window.location.href = 'http://localhost:3000/Archive';
+              }}
+              icon={<BsFillArchiveFill />}
+            >
+              ארכיון
+            </MenuItem>
+            {/* <MenuItem icon={<FaFolderPlus />}>חומרים לדוח שנתי</MenuItem> */}
           </SubMenu>
           <MenuItem
             className='link'

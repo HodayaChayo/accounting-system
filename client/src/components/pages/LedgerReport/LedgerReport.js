@@ -6,8 +6,11 @@ import Header from '../../Header/Header';
 import Footer from '../../Footer/Footer';
 import Select from 'react-select';
 import Button from '../../Button/Button';
+import ButtonIcon from '../../Button/ButtonIcon';
 import Table from '../../Table/Table';
+import { FaImage } from 'react-icons/fa';
 import { ledgerReportColumns } from './ledgerReportColumns';
+import Photo from '../../Photo/Photo';
 
 export default function LedgerReport() {
   const thisVatId = localStorage.getItem('CusVAT_Id');
@@ -17,6 +20,28 @@ export default function LedgerReport() {
   const [fromDate, setFromDate] = useState(`${currentYear}-01-01`);
   const [toDate, setToDate] = useState(`${currentYear}-12-31`);
   const [allData, setAllData] = useState([]);
+  const [displayPhoto, setDisplayPhoto] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState('');
+  const [doc, setDoc] = useState('?');
+  const objColumn = {
+    Header: 'מסמך',
+    accessor: 'photo',
+    disableFilters: true,
+    Cell: ({ row }) => (
+      <ButtonIcon
+        src={row.original.photo !== '' && <FaImage />}
+        fun={() => {
+          // console.log(row.original);
+          setSelectedPhoto(row.original.photo);
+          setDisplayPhoto(true);
+        }}
+      />
+    ),
+  };
+  const [allLedgerReportColumns, setLedgerReportColumns] = useState([
+    ...ledgerReportColumns,
+    objColumn,
+  ]);
 
   // get all the accounts for select and data
   useEffect(() => {
@@ -55,14 +80,32 @@ export default function LedgerReport() {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res);
+        // console.log(res);
         setAllData(res);
       });
   };
 
+  useEffect(() => {
+    if (selectedPhoto !== '') {
+      const selectedDoc = {name: selectedPhoto}
+      fetch('/documents/getDoc', {
+        method: 'POST',
+        body: JSON.stringify({ selectedDoc }),
+      })
+        .then(res => (res.ok ? res.blob() : Promise.reject(res)))
+        .then(blob => {
+          const blobUrl = URL.createObjectURL(blob);
+          // now do something with the URL
+          console.log('what?', blobUrl);
+          setDoc(blobUrl);
+        });
+    }
+  }, [selectedPhoto]);
+
   return (
     <div className='body'>
       <Sidebars />
+      {displayPhoto && doc !== '?' && <Photo doc={doc} setDisplay={setDisplayPhoto} />}
       <Header title='דוח כרטסת' />
       <main>
         <div className={css.selectors}>
@@ -102,6 +145,7 @@ export default function LedgerReport() {
             text='הצג'
             fun={() => {
               requestData();
+              console.log(doc);
             }}
           />
         </div>
@@ -111,7 +155,9 @@ export default function LedgerReport() {
               <Table
                 key={uuid()}
                 myData={el.data}
-                myColumns={[{ Header: el.name, columns: ledgerReportColumns }]}
+                myColumns={[
+                  { Header: el.name, columns: allLedgerReportColumns },
+                ]}
               />
             );
           })}

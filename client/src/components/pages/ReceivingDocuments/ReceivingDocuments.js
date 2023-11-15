@@ -9,6 +9,7 @@ import myFile from './WaitingAnimation.gif';
 import Sidebar from '../../Sidebars/Sidebars';
 import Footer from '../../Footer/Footer';
 import Header from '../../Header/Header';
+import ArchiveBox from './ArchiveBox';
 import Select from 'react-select';
 import { BsArrowLeftSquareFill, BsArrowRightSquareFill } from 'react-icons/bs';
 import {
@@ -26,7 +27,7 @@ export default function ReceivingDocuments(props) {
   const [doc, setDoc] = useState(myFile);
   const [docNumber, setDocNumber] = useState(0);
   const [firstLoad, setFirstLoad] = useState(true);
-  const [change, setChange] = useState(true);
+  const [archivePopup, setArchivePopup] = useState(false);
   const [selectCommandType, setSelectCommandType] = useState([]);
   const [selectAccount, setSelectAccount] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -107,8 +108,6 @@ export default function ReceivingDocuments(props) {
         }
       });
   };
-
-
 
   useEffect(() => {
     if (docList.length !== 0) {
@@ -239,7 +238,7 @@ export default function ReceivingDocuments(props) {
             thisVatId: thisVatId,
             connectedUser: connectedUser,
           });
-          getOpenDocList()
+          getOpenDocList();
           setSelectedDebitOptions('');
           setSelectedCreditOptions('');
           setTotalAmount(0);
@@ -256,8 +255,23 @@ export default function ReceivingDocuments(props) {
       <Sidebar />
       <ToastContainer />
       <Header title='קליטת מסמכים' />
+      {archivePopup && (
+        <ArchiveBox
+          setDisplay={setArchivePopup}
+          doc={selectedDoc}
+          fun={getOpenDocList}
+        />
+      )}
       <main className={css.allMain}>
         <div className={css.allInput}>
+          <div>
+            <Button
+              text='העבר לארכיון'
+              fun={() => {
+                setArchivePopup(true);
+              }}
+            />
+          </div>
           <div className={css.buttons}>
             <ButtonIcon src={<BsArrowRightSquareFill />} fun={rightArrowDoc} />
             מסמך: {docNumber} מתוך: {docList.length}
@@ -321,10 +335,10 @@ export default function ReceivingDocuments(props) {
             type='text'
             name='InvoiceAmount'
             placeholder='סכום כולל מע"מ'
-            value={Number(totalAmount)}
+            value={totalAmount}
             maxLength={20}
             onChange={e => {
-              setTotalAmount(Number(e.target.value).toFixed(2));
+              setTotalAmount(e.target.value);
             }}
           ></input>
           <p>
@@ -351,8 +365,9 @@ export default function ReceivingDocuments(props) {
             rows='5'
             onChange={e => {
               setCommandData({ ...commandData, note: e.target.value });
-              console.log(selectedDoc);
-              console.log(change);
+              console.log(totalAmount);
+              console.log(typeof totalAmount);
+              console.log(commandData);
             }}
           ></textarea>
           <Button
