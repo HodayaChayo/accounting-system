@@ -50,7 +50,7 @@ const isLocked = obj => {
 // global where query wether tha report is locked or unlocked
 const whereLocked = 'WHERE `id_vat_num`=? AND `vat_report`=?';
 const whereUnlocked =
-  'WHERE `id_vat_num`=? AND `vat_report`=0 AND `date` BETWEEN DATE_SUB(?, INTERVAL 6 MONTH) AND ? ';
+  'WHERE `id_vat_num`=? AND `vat_report`=0 AND `date` BETWEEN DATE_SUB(?, INTERVAL 6 MONTH) AND ? AND `date` != ?';
 
 // get the account of the incomes without Vat
 const getIncomeNoVatAccount = idVAT => {
@@ -78,7 +78,7 @@ const incomeNoVatData = async (isLock, idVAT, month, year, where) => {
   const account = await getIncomeNoVatAccount(idVAT);
   const date = getNextMonthFirstDay(month, year);
   const vat = month + monthCalc * year;
-  const unlockData = [idVAT, date, date, account];
+  const unlockData = [idVAT, date, date, date, account];
   const lockData = [idVAT, vat, account];
   const data = isLock ? lockData : unlockData;
   const sum =
@@ -129,7 +129,7 @@ const incomeWithVatData = async (isLock, idVAT, month, year, where) => {
   const account = await getIncomeWithVatAccount(idVAT);
   const date = getNextMonthFirstDay(month, year);
   const vat = month + monthCalc * year;
-  const unlockData = [idVAT, date, date, account];
+  const unlockData = [idVAT, date, date, date, account];
   const lockData = [idVAT, vat, account];
   const data = isLock ? lockData : unlockData;
   const sum =
@@ -177,7 +177,7 @@ const vatIncomeSum = async (isLock, idVAT, month, year, where) => {
   const account = await getVatIncomeAccount(idVAT);
   const date = getNextMonthFirstDay(month, year);
   const vat = month + monthCalc * year;
-  const unlockData = [idVAT, date, date, account];
+  const unlockData = [idVAT, date, date, date, account];
   const lockData = [idVAT, vat, account];
   const data = isLock ? lockData : unlockData;
   const sum =
@@ -224,7 +224,7 @@ const expensesOnAssetsData = async (isLock, idVAT, month, year, where) => {
   // console.log(account);
   const date = getNextMonthFirstDay(month, year);
   const vat = month + monthCalc * year;
-  const unlockData = [idVAT, date, date, account];
+  const unlockData = [idVAT, date, date, date, account];
   const lockData = [idVAT, vat, account];
   const data = isLock ? lockData : unlockData;
   const sum =
@@ -276,7 +276,7 @@ const getExpensesData = async (isLock, idVAT, month, year, where) => {
   // console.log(account);
   const date = getNextMonthFirstDay(month, year);
   const vat = month + monthCalc * year;
-  const unlockData = [idVAT, date, date, account];
+  const unlockData = [idVAT, date, date, date, account];
   const lockData = [idVAT, vat, account];
   const data = isLock ? lockData : unlockData;
   const sum =
@@ -305,7 +305,7 @@ const lockReport = (idVAT, month, year, where) => {
   const vat = month + monthCalc * year;
   const date = getNextMonthFirstDay(month, year);
   const sql1 = 'UPDATE `command` SET `vat_report`=? ' + where;
-  const data1 = [vat, idVAT, date, date];
+  const data1 = [vat, idVAT, date, date, date];
 
   const sql2 =
     'INSERT INTO `vat_report`(`id_vat_num`, `year`, `month`) VALUES (?,?,?)';

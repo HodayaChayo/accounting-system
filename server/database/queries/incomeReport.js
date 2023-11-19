@@ -70,7 +70,7 @@ async function getNumberAccount(obj) {
   });
 }
 
-async function getAllComment(lock, obj, where, frequency) {
+async function getAllComment(lock, obj, where) {
   const numberAccount = await getNumberAccount(obj);
   const dateFormatSQL = getNextMonthFirstDay(obj.month.value, obj.year.value);
   let getCommands =
@@ -85,7 +85,7 @@ async function getAllComment(lock, obj, where, frequency) {
   const dataUnlock = [
     obj.thisVatId,
     dateFormatSQL,
-    frequency,
+    Number(obj.incomeFrequency),
     dateFormatSQL,
     numberAccount[0].number,
   ];
@@ -113,7 +113,7 @@ async function getAllComment(lock, obj, where, frequency) {
           reject(err);
         }
         resolve({ rows, mySum });
-        // console.log(rows);
+        console.log(getCommands);
       });
     });
   });
@@ -126,7 +126,7 @@ router.post('/getIncomeReport', (req, res) => {
   });
   req.on('end', async () => {
     const obj = JSON.parse(body);
-    // console.log(obj);
+    console.log(obj);
     try {
       const lock = await isLocked(obj);
       if (lock) {
