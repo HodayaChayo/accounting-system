@@ -34,10 +34,17 @@
   flex-direction: row;
   gap: 1em;
   justify-content: center;
-  margin-bottom: 4em;
+  margin-bottom: 1em;
 }
 
 .selectItem{
   width: 10em;
 
+}
+
+.title{
+  text-align: center;
+  align-items: center;
+  margin-bottom: 1em;
+  /* border: solid rebeccapurple 3px; */
 }

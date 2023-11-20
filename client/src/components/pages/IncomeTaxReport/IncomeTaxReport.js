@@ -7,6 +7,10 @@ import { FaLockOpen, FaLock } from 'react-icons/fa';
 import Header from '../../Header/Header';
 import Sidebars from '../../Sidebars/Sidebars';
 import Footer from '../../Footer/Footer';
+import { taxReportColumns } from './taxReportColumns';
+import Table from '../../Table/Table'
+import { ToastContainer, toast } from 'react-toastify';
+
 
 export default function IncomeTaxReport() {
   const thisVatId = localStorage.getItem('CusVAT_Id');
@@ -19,6 +23,8 @@ export default function IncomeTaxReport() {
   const [lock, setLock] = useState('?');
   const [data, setData] = useState([]);
   const [taxIncomePercent, setTaxIncomePercent] = useState('?');
+  const [monthTitle, setMonthTitle] = useState({ value: '--', label: '--' });
+  const [tableData, setTableData] = useState();
 
   useEffect(() => {
     let list = [];
@@ -85,6 +91,7 @@ export default function IncomeTaxReport() {
       .then(res => {
         console.log(res);
         setData(res);
+        setTableData(res)
         setLock(res.isLock);
         // commands.forEach(commands,el => {
         //   setSumIncome(el.credit_amount);
@@ -101,11 +108,22 @@ export default function IncomeTaxReport() {
       .then(res => res.json())
       .then(res => {
         console.log(res);
+        if (res.isUpDate) {
+          toast.success(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          getIncome()
+        } else {
+          toast.error(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+        }
       });
   };
 
   return (
     <div className='body'>
+      <ToastContainer/>
       <Header title={'דו"ח מס הכנסה'} />
       <Sidebars />
       <main>
@@ -129,10 +147,13 @@ export default function IncomeTaxReport() {
             text='הצג'
             fun={() => {
               getIncome();
-              console.log(taxIncomePercent);
+              console.log(tableData);
+              setMonthTitle(month);
             }}
           />
         </div>
+        
+        <h3 className={css.title}>מע"מ לדיווח: {monthTitle.label}</h3>
         <div className={css.mainAll}>
           <div className={css.allDiv}>
             <p>{lock === '?' ? '--' : data.result.mySum}</p>
@@ -150,7 +171,7 @@ export default function IncomeTaxReport() {
             <p>
               {data.length === 0
                 ? 0
-                : (taxIncomePercent * data.result.mySum) / 100}
+                : ((taxIncomePercent * data.result.mySum) / 100).toFixed(2)}
             </p>
             <p>מקדמות על פי אחוז המקדמה</p>
           </div>
@@ -162,7 +183,7 @@ export default function IncomeTaxReport() {
             <p>
               {data.length === 0
                 ? 0
-                : (taxIncomePercent * data.result.mySum) / 100}
+                : ((taxIncomePercent * data.result.mySum) / 100).toFixed(2)}
             </p>
             <p>סה"כ לתשלום</p>
           </div>
@@ -179,6 +200,10 @@ export default function IncomeTaxReport() {
           />
           {lock === true ? <FaLock /> : <FaLockOpen />}
         </div>
+        <h2 className={css.title}>פירוט הכנסות</h2>
+        {lock !== '?' && (
+          <Table myData={tableData.result.rows} myColumns={taxReportColumns} />
+        )}
       </main>
       <Footer />
     </div>

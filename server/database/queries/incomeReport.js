@@ -49,7 +49,7 @@ const isLocked = obj => {
 
 const whereLocked = 'WHERE `id_vat_num`=? AND `tax_income_report`=?';
 const whereUnlocked =
-  'WHERE `id_vat_num`= ? AND `date` BETWEEN DATE_SUB(?, INTERVAL ? MONTH) AND ? ';
+  'WHERE `id_vat_num`= ? AND `date` BETWEEN DATE_SUB(?, INTERVAL ? MONTH) AND ? AND `date` != ? ';
 
 // get the accounts numbers of the incomes
 async function getNumberAccount(obj) {
@@ -74,18 +74,21 @@ async function getAllComment(lock, obj, where) {
   const numberAccount = await getNumberAccount(obj);
   const dateFormatSQL = getNextMonthFirstDay(obj.month.value, obj.year.value);
   let getCommands =
-    'SELECT * FROM `command` ' + where + ' AND `credit_account` = ?';
+    'SELECT *, DATE_FORMAT(`date`, "%d/%m/%Y") AS new_date, credit_amount AS amount, DATE_FORMAT(`input_date`, "%d/%m/%Y") AS new_input_date FROM `command` ' +
+    where +
+    ' AND (`credit_account` = ?';
   const tax = obj.month.value + monthCalc * obj.year.value;
 
   let sum =
     'SELECT SUM(`credit_amount`) AS sum FROM `command` ' +
     where +
-    ' AND `credit_account`=?';
+    ' AND (`credit_account`=?';
 
   const dataUnlock = [
     obj.thisVatId,
     dateFormatSQL,
     Number(obj.incomeFrequency),
+    dateFormatSQL,
     dateFormatSQL,
     numberAccount[0].number,
   ];
@@ -97,6 +100,8 @@ async function getAllComment(lock, obj, where) {
 
     dataUnlock.push(numberAccount[i].number);
   }
+  getCommands = getCommands.concat(')');
+  sum = sum.concat(')');
 
   const dataLock = [obj.thisVatId, tax];
 
@@ -107,7 +112,11 @@ async function getAllComment(lock, obj, where) {
       if (err) {
         reject(err);
       }
-      const mySum = rows[0].sum;
+      let mySum
+      if(rows.length !== 0){  // i have a bug
+
+        mySum = rows[0].sum;
+      }
       con.query(getCommands, data, (err, rows) => {
         if (err) {
           reject(err);
@@ -159,19 +168,27 @@ async function closeIncomeReports(obj) {
 
   const dataInsert = [obj.thisVatId, obj.year.value, obj.month.value];
 
-  const updateCommands =
+  let updateCommands =
     'UPDATE `command` SET `tax_income_report`= ? ' +
     whereUnlocked +
-    ' AND `credit_account` = ?';
+    ' AND (`credit_account` = ?';
 
-  const dataUpdate = [
+  let dataUpdate = [
     tax,
     obj.thisVatId,
     dateSQL,
-    obj.incomeFrequency,
+    Number(obj.incomeFrequency),
     dateSQL,
-    numberAccount,
+    dateSQL,
+    numberAccount[0].number
   ];
+
+  for (let i = 1; i < numberAccount.length; i++) {
+    updateCommands = updateCommands.concat(' OR `credit_account`= ? ');
+
+    dataUpdate.push(numberAccount[i].number);
+  }
+  updateCommands = updateCommands.concat(')');
 
   return new Promise((resolve, reject) => {
     con.query(insertVats, dataInsert, (err, rows) => {

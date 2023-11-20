@@ -102,7 +102,9 @@ router.post('/addCommand', (req, res) => {
 
       if (!isExist) {
         await addCommand(obj.commandData, obj.selectedDoc.name);
-        await updatePhoto(obj.selectedDoc.name, obj.selectedCus)
+        if(obj.selectedDoc.name !== ''){
+          await updatePhoto(obj.selectedDoc.name, obj.selectedCus)
+        }
         res.end(
           JSON.stringify({ isAdd: true, message: 'פקודה נקלטה בהצלחה' })
         );
@@ -116,6 +118,7 @@ router.post('/addCommand', (req, res) => {
       }
     } catch (error) {
       console.error(error.message);
+      console.log(error.message);
       res.end(
         JSON.stringify({
           isAdd: false,

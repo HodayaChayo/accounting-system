@@ -29,9 +29,9 @@ export default function LedgerReport() {
     disableFilters: true,
     Cell: ({ row }) => (
       <ButtonIcon
-        src={row.original.photo !== '' && <FaImage />}
+        src={row.original.photo !== null && <FaImage />}
         fun={() => {
-          // console.log(row.original);
+          console.log(row.original);
           setSelectedPhoto(row.original.photo);
           setDisplayPhoto(true);
         }}

@@ -250,6 +250,12 @@ export default function ReceivingDocuments(props) {
       });
   };
 
+  useEffect(()=>{
+    if(docList.length === 0){
+      setSelectedDoc('')
+    }
+  })
+
   return (
     <div className='body'>
       <Sidebar />
@@ -374,6 +380,7 @@ export default function ReceivingDocuments(props) {
             text='קלוט'
             fun={() => {
               console.log(commandData);
+              console.log(selectedDoc);
               sendCommand();
               // setChange(prev => !prev);
             }}
