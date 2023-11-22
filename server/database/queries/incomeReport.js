@@ -93,17 +93,18 @@ async function getAllComment(lock, obj, where) {
     numberAccount[0].number,
   ];
 
+  const dataLock = [obj.thisVatId, tax, numberAccount[0].number];
+
   console.log(numberAccount);
   for (let i = 1; i < numberAccount.length; i++) {
     getCommands = getCommands.concat(' OR `credit_account`=?');
     sum = sum.concat(' OR `credit_account`=?');
 
     dataUnlock.push(numberAccount[i].number);
+    dataLock.push(numberAccount[i].number);
   }
   getCommands = getCommands.concat(')');
   sum = sum.concat(')');
-
-  const dataLock = [obj.thisVatId, tax];
 
   const data = lock ? dataLock : dataUnlock;
 
@@ -112,9 +113,12 @@ async function getAllComment(lock, obj, where) {
       if (err) {
         reject(err);
       }
-      let mySum
-      if(rows.length !== 0){  // i have a bug
-
+      let mySum;
+      console.log(rows);
+      console.log(sum);
+      console.log(data);
+      if (rows.length !== 0) {
+        // i have a bug
         mySum = rows[0].sum;
       }
       con.query(getCommands, data, (err, rows) => {
@@ -122,7 +126,7 @@ async function getAllComment(lock, obj, where) {
           reject(err);
         }
         resolve({ rows, mySum });
-        console.log(getCommands);
+        // console.log(getCommands);
       });
     });
   });
@@ -140,7 +144,7 @@ router.post('/getIncomeReport', (req, res) => {
       const lock = await isLocked(obj);
       if (lock) {
         const result = await getAllComment(lock, obj, whereLocked);
-        res.end(JSON.stringify(result));
+        res.end(JSON.stringify({ isLock: lock, result }));
       } else {
         const result = await getAllComment(lock, obj, whereUnlocked);
         res.end(JSON.stringify({ isLock: lock, result }));
@@ -180,7 +184,7 @@ async function closeIncomeReports(obj) {
     Number(obj.incomeFrequency),
     dateSQL,
     dateSQL,
-    numberAccount[0].number
+    numberAccount[0].number,
   ];
 
   for (let i = 1; i < numberAccount.length; i++) {
@@ -195,17 +199,44 @@ async function closeIncomeReports(obj) {
       if (err) {
         reject(err);
       }
-    });
 
-    con.query(updateCommands, dataUpdate, (err, rows) => {
-      if (err) {
-        reject(err);
-      }
-      console.log(updateCommands);
-      resolve();
+      con.query(updateCommands, dataUpdate, (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        console.log(updateCommands);
+        resolve();
+      });
     });
   });
 }
+
+const openIncomeReports = (idVAT, month, year, where) => {
+  const tax = month + monthCalc * year;
+
+  const report =
+    'DELETE FROM `tax_income_report` WHERE `id_vat_num`= ? AND `year`= ? AND `month`= ?';
+  const reportData = [idVAT, year, month];
+
+  const commands = 'UPDATE `command` SET `tax_income_report`=? ' + where
+  const commandsData = [0, idVAT, tax]
+
+  return new Promise((resolve, reject) => {
+    con.query(report, reportData, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+    });
+
+    con.query(commands, commandsData, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+    });
+
+    resolve();
+  });
+};
 
 router.post('/lockReport', (req, res) => {
   const body = [];
@@ -221,6 +252,34 @@ router.post('/lockReport', (req, res) => {
         JSON.stringify({
           isUpDate: true,
           message: 'הדוח ננעל בהצלחה',
+        })
+      );
+    } catch (error) {
+      console.error(error.message);
+      res.end(
+        JSON.stringify({
+          isUpDate: false,
+          message: 'שגיאת שאילתה',
+        })
+      );
+    }
+  });
+});
+
+router.post('/unlockReport', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    console.log(obj);
+    try {
+      await openIncomeReports(obj.thisVatId, obj.month.value, obj.year.value, whereLocked);
+      res.end(
+        JSON.stringify({
+          isUpDate: true,
+          message: 'הדוח שוחרר בהצלחה',
         })
       );
     } catch (error) {

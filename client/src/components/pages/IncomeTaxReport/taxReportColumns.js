@@ -24,10 +24,6 @@ export const taxReportColumns = [
     accessor: 'other_amount',
   },
   {
-    Header: 'מסמך',
-    accessor: 'photo',
-  },
-  {
     Header: 'תאריך קליטה',
     accessor: 'new_input_date',
   },

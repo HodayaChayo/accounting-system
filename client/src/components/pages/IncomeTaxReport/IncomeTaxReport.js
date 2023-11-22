@@ -5,14 +5,17 @@ import Button from '../../Button/Button';
 import { monthly, biMonthly } from '../../monthSelect/monthSelect';
 import { FaLockOpen, FaLock } from 'react-icons/fa';
 import Header from '../../Header/Header';
+import ButtonIcon from '../../Button/ButtonIcon';
+import { FaImage } from 'react-icons/fa';
 import Sidebars from '../../Sidebars/Sidebars';
 import Footer from '../../Footer/Footer';
 import { taxReportColumns } from './taxReportColumns';
-import Table from '../../Table/Table'
+import Table from '../../Table/Table';
 import { ToastContainer, toast } from 'react-toastify';
-
+import Photo from '../../Photo/Photo';
 
 export default function IncomeTaxReport() {
+  const userType = localStorage.getItem('UserType');
   const thisVatId = localStorage.getItem('CusVAT_Id');
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
@@ -25,6 +28,27 @@ export default function IncomeTaxReport() {
   const [taxIncomePercent, setTaxIncomePercent] = useState('?');
   const [monthTitle, setMonthTitle] = useState({ value: '--', label: '--' });
   const [tableData, setTableData] = useState();
+  const [displayPhoto, setDisplayPhoto] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState('');
+  const [doc, setDoc] = useState('?');
+  const [columns, setColumns] = useState([
+    ...taxReportColumns,
+    {
+      Header: 'מסמך',
+      accessor: 'photo',
+      disableFilters: true,
+      Cell: ({ row }) => (
+        <ButtonIcon
+          src={row.original.photo !== null && <FaImage />}
+          fun={() => {
+            console.log(row.original);
+            setSelectedPhoto(row.original.photo);
+            setDisplayPhoto(true);
+          }}
+        />
+      ),
+    },
+  ]);
 
   useEffect(() => {
     let list = [];
@@ -91,7 +115,7 @@ export default function IncomeTaxReport() {
       .then(res => {
         console.log(res);
         setData(res);
-        setTableData(res)
+        setTableData(res);
         setLock(res.isLock);
         // commands.forEach(commands,el => {
         //   setSumIncome(el.credit_amount);
@@ -112,7 +136,7 @@ export default function IncomeTaxReport() {
           toast.success(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
           });
-          getIncome()
+          getIncome();
         } else {
           toast.error(res.message, {
             position: toast.POSITION.BOTTOM_CENTER,
@@ -121,9 +145,50 @@ export default function IncomeTaxReport() {
       });
   };
 
+  const unlockReport = () => {
+    fetch('incomeReport/unlockReport', {
+      method: 'POST',
+      body: JSON.stringify({ thisVatId, month, year }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if (res.isUpDate) {
+          toast.success(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          getIncome();
+        } else {
+          toast.error(res.message, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+        }
+      });
+  };
+
+  useEffect(() => {
+    if (selectedPhoto !== '') {
+      const selectedDoc = { name: selectedPhoto };
+      fetch('/documents/getDoc', {
+        method: 'POST',
+        body: JSON.stringify({ selectedDoc }),
+      })
+        .then(res => (res.ok ? res.blob() : Promise.reject(res)))
+        .then(blob => {
+          const blobUrl = URL.createObjectURL(blob);
+          // now do something with the URL
+          console.log('what?', blobUrl);
+          setDoc(blobUrl);
+        });
+    }
+  }, [selectedPhoto]);
+
   return (
     <div className='body'>
-      <ToastContainer/>
+      <ToastContainer />
+      {displayPhoto && doc !== '?' && (
+        <Photo doc={doc} setDisplay={setDisplayPhoto} />
+      )}
       <Header title={'דו"ח מס הכנסה'} />
       <Sidebars />
       <main>
@@ -152,7 +217,7 @@ export default function IncomeTaxReport() {
             }}
           />
         </div>
-        
+
         <h3 className={css.title}>מע"מ לדיווח: {monthTitle.label}</h3>
         <div className={css.mainAll}>
           <div className={css.allDiv}>
@@ -187,22 +252,24 @@ export default function IncomeTaxReport() {
             </p>
             <p>סה"כ לתשלום</p>
           </div>
-          <Button
-            text={lock === true ? 'שחרר דוח' : 'נעל דוח'}
-            isDisable={lock === '?'}
-            fun={() => {
-              if (lock === true) {
-                // unlockReport();
-              } else {
-                lockReport();
-              }
-            }}
-          />
+          {userType !== 'לקוח' && (
+            <Button
+              text={lock === true ? 'שחרר דוח' : 'נעל דוח'}
+              isDisable={lock === '?'}
+              fun={() => {
+                if (lock === true) {
+                  unlockReport();
+                } else {
+                  lockReport();
+                }
+              }}
+            />
+          )}
           {lock === true ? <FaLock /> : <FaLockOpen />}
         </div>
         <h2 className={css.title}>פירוט הכנסות</h2>
         {lock !== '?' && (
-          <Table myData={tableData.result.rows} myColumns={taxReportColumns} />
+          <Table myData={tableData.result.rows} myColumns={columns} />
         )}
       </main>
       <Footer />
