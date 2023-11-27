@@ -248,4 +248,31 @@ router.post('/getTaxIncomePercent', (req, res) => {
   });
 });
 
+router.post('/resetPassword', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    console.log(obj);
+
+    try{
+      await updateUser(obj);
+      res.end(
+        JSON.stringify({ isUpDate: true, message: 'סיסמה שוחזרה בהצלחה' })
+      );
+    }catch (error) {
+      console.error(error.message);
+      res.end(
+        JSON.stringify({
+          isUpDate: false,
+          message: 'שגיאת שרת',
+        })
+      );
+    }
+
+  });
+});
+
 module.exports = router;

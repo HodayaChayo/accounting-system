@@ -5,6 +5,7 @@ import Footer from '../../Footer/Footer';
 import Button from '../../Button/Button';
 import Header from '../../Header/Header';
 import { ToastContainer, toast } from 'react-toastify';
+import ResetPassword from './ResetPassword';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   checkUserName,
@@ -27,7 +28,7 @@ export default function UserSettings(props) {
   const [taxPercent, setTaxPercent] = useState('');
   const [manager, setManager] = useState('');
   const [note, setNote] = useState('');
-
+  const [display, setDisplay] = useState(false)
   const thisMail = localStorage.getItem('SelectedCus');
   const thisVatId = localStorage.getItem('CusVAT_Id');
 
@@ -107,6 +108,7 @@ export default function UserSettings(props) {
     <div className='body'>
       <ToastContainer />
       <Sidebars />
+      {display && <ResetPassword setDisplay={setDisplay}/>}
       <Header title='הגדרות עוסק' />
       <h2>פרטי לקוח:</h2>
       <div className={css.userDetails}>
@@ -122,14 +124,15 @@ export default function UserSettings(props) {
         </p>
         <p className={css.p}>
           סיסמה:
-          <input
+          {/* <input
             value={password}
             type='text'
             name='password'
-            placeholder='סיסמה'
+            placeholder='סיסמה חדשה'
             maxLength={20}
             onChange={e => setPassword(e.target.value)}
-          ></input>
+          ></input> */}
+          <Button text='איפוס סיסמה' fun={()=>{setDisplay(true)}} />
         </p>
         <p className={css.p}>
           שם לקוח/חברה:
@@ -260,7 +263,7 @@ export default function UserSettings(props) {
         }
       ></Button>
       <main></main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
