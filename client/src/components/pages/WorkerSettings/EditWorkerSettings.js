@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 import css from '../Home/addCustomer.module.css';
 import Button from '../../Button/Button';
 import cssPopup from '../../AlertDialog/popupGeneral.module.css';
+import ResetPasswordWorker from './ResetPasswordWorker';
 import {
   checkUserName,
   checkPassword,
@@ -18,6 +19,7 @@ export default function EditWorkerSettings(props) {
   const [workerType, setWorkerType] = useState('');
   const [isActive, setIsActive] = useState('');
   const [mailSelected, setMailSelected] = useState('');
+  const [display, setDisplay] = useState(false)
   const sentUserName = props.selectedUserRow;
 
   useEffect(() => {
@@ -74,6 +76,7 @@ export default function EditWorkerSettings(props) {
 
   return (
     <div className={cssPopup.screen}>
+      {display && <ResetPasswordWorker setDisplay={setDisplay} userName={sentUserName}/>}
       <div className={cssPopup.popup}>
         <p>
           *שם העובד:
@@ -98,7 +101,7 @@ export default function EditWorkerSettings(props) {
           ></input>
         </p>
         <p>
-          *סיסמה:
+          {/* *סיסמה:
           <input
             value={password}
             type='text'
@@ -106,7 +109,8 @@ export default function EditWorkerSettings(props) {
             placeholder='סיסמה'
             maxLength={20}
             onChange={e => setPassword(e.target.value)}
-          ></input>
+          ></input> */}
+          <Button text='איפוס סיסמה' fun={()=>{setDisplay(true)}} />
         </p>
         <p>
           *תפקיד:
