@@ -158,14 +158,14 @@ function Sidebars() {
                   הגדרת עובדים
                 </MenuItem>
               )}
-              {userType !== 'עובד' && (
+              {/* {userType !== 'עובד' && (
                 <MenuItem icon={<BsBriefcaseFill />}>
                   ניהול תיקי לקוחות
                 </MenuItem>
-              )}
-              {userType !== 'עובד' && (
+              )} */}
+              {/* {userType !== 'עובד' && (
                 <MenuItem icon={<GrUserWorker />}>דוחות עובדים</MenuItem>
-              )}
+              )} */}
             </SubMenu>
           )}
           <SubMenu
@@ -193,16 +193,16 @@ function Sidebars() {
                 קליטת מסמכים
               </MenuItem>
             )}
-            {userType !== 'לקוח' && (
+            {/* {userType !== 'לקוח' && (
               <MenuItem icon={<FaHandHoldingMedical />}>פקודות ידניות</MenuItem>
-            )}
+            )} */}
           </SubMenu>
           <SubMenu
             defaultclose='true'
             label={'דוחות'}
             icon={<HiDocumentReport />}
           >
-            <MenuItem icon={<VscGraphLine />}>רווח והפסד</MenuItem>
+            {/* <MenuItem icon={<VscGraphLine />}>רווח והפסד</MenuItem> */}
             <MenuItem
               onClick={() => {
                 window.location.href = 'http://localhost:3000/LedgerReport';

@@ -125,7 +125,7 @@ export default function VatReport() {
 
   useEffect(() => {
     if (selectedPhoto !== '') {
-      const selectedDoc = {name: selectedPhoto}
+      const selectedDoc = { name: selectedPhoto };
       fetch('/documents/getDoc', {
         method: 'POST',
         body: JSON.stringify({ selectedDoc }),
@@ -143,7 +143,9 @@ export default function VatReport() {
   return (
     <div className='body'>
       <Sidebars />
-      {displayPhoto && doc !== '?' && <Photo doc={doc} setDisplay={setDisplayPhoto} />}
+      {displayPhoto && doc !== '?' && (
+        <Photo doc={doc} setDisplay={setDisplayPhoto} />
+      )}
       <ToastContainer />
       <Header title='דוח מע"מ' />
       <main className={css.mainAll}>
@@ -200,13 +202,15 @@ export default function VatReport() {
             <p>
               {lock === '?'
                 ? '--'
-                : (data.vat.mySum -
-                  data.vatOnAssets.mySum -
-                  data.vatOnOthers.mySum).toFixed(2)}
+                : (
+                    data.vat.mySum -
+                    data.vatOnAssets.mySum -
+                    data.vatOnOthers.mySum
+                  ).toFixed(2)}
             </p>
           </div>
 
-          {userType !== 'לקוח' && (
+          {userType !== 'לקוח' ? (
             <Button
               text={lock === true ? 'שחרר דוח' : 'נעל דוח'}
               isDisable={lock === '?'}
@@ -218,15 +222,17 @@ export default function VatReport() {
                 }
               }}
             />
+          ) : lock === true ? (
+            <p>נעול</p>
+          ) : (
+            <p>פתוח</p>
           )}
 
           {lock === true ? <FaLock /> : <FaLockOpen />}
         </div>
         <h2>פירוט מע"מ</h2>
         <h3>הכנסות פטורות</h3>
-        {lock !== '?' && (
-          <Table myData={data.noVat.rows} myColumns={columns} />
-        )}
+        {lock !== '?' && <Table myData={data.noVat.rows} myColumns={columns} />}
         <h3>הכנסות חייבות</h3>
         {lock !== '?' && (
           <Table myData={data.withVat.rows} myColumns={columns} />

@@ -40,7 +40,7 @@ export default function ResetPassword(props) {
   return (
     <div className={cssPopup.screen}>
       <div className={cssPopup.popup}>
-        <h2>שחזור סיסמה</h2>
+        <h2>איפוס סיסמה</h2>
         <input
             value={password}
             type='text'

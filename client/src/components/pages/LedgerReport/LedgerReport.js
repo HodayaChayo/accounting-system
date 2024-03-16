@@ -143,6 +143,7 @@ export default function LedgerReport() {
           </div>
           <Button
             text='הצג'
+            isDisable = {toDate < fromDate}
             fun={() => {
               requestData();
               console.log(doc);

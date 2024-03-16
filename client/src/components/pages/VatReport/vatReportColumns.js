@@ -1,6 +1,6 @@
 export const vatReportColumns = [
   {
-    Header: 'אינדקס',
+    Header: 'מספר סידורי',
     accessor: 'command_index',
   },
   {

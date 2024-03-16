@@ -92,7 +92,7 @@ export default function Login() {
             placeholder='שם משתמש'
             onChange={e => setUserName(e.target.value)}
           ></input>
-          {{ userName } !== '' && (
+          {{ userName } != '' && (
             <span className={css.errMessage}>{errUser}</span>
           )}
           <input
@@ -101,10 +101,10 @@ export default function Login() {
             placeholder='סיסמה'
             onChange={e => setPassword(e.target.value)}
           ></input>
-          {{ errPass } !== '' && (
+          {{ errPass } != '' && (
             <span className={css.errMessage}>{errPass}</span>
           )}
-          {{ loginMess } !== '' && (
+          {{ loginMess } != '' && (
             <span className={css.errMessage}>{loginMess}</span>
           )}
           <Button

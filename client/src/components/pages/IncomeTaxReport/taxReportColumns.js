@@ -1,6 +1,6 @@
 export const taxReportColumns = [
   {
-    Header: 'אינדקס',
+    Header: 'מספר סידורי',
     accessor: 'command_index',
   },
   {

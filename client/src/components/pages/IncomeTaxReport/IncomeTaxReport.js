@@ -252,7 +252,7 @@ export default function IncomeTaxReport() {
             </p>
             <p>סה"כ לתשלום</p>
           </div>
-          {userType !== 'לקוח' && (
+          {userType !== 'לקוח' ? (
             <Button
               text={lock === true ? 'שחרר דוח' : 'נעל דוח'}
               isDisable={lock === '?'}
@@ -264,7 +264,12 @@ export default function IncomeTaxReport() {
                 }
               }}
             />
+          ) : lock === true ? (
+            <p>נעול</p>
+          ) : (
+            <p>פתוח</p>
           )}
+          
           {lock === true ? <FaLock /> : <FaLockOpen />}
         </div>
         <h2 className={css.title}>פירוט הכנסות</h2>

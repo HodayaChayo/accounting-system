@@ -5,7 +5,7 @@ import Photo from "../../Photo/Photo";
 
 export const ledgerReportColumns = [
   {
-    Header: 'אינדקס',
+    Header: 'מספר סידורי',
     accessor: 'command_index',
   },
   {
