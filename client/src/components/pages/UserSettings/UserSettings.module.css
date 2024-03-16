@@ -2,8 +2,9 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 2em;
+  justify-content: right;
+  margin-bottom: 2em
+  ;
   width: 74%;
   /* border: solid black 1.5px; */
 }
@@ -11,12 +12,12 @@
 .userDetails :nth-of-type(5) {
   /* border: solid red 3px; */
   /* flex-grow: 1; */
-  margin-left: 38%;
+  /* margin-left: 40%; */
 }
 
 .p {
   /* border: solid black 1px; */
-  text-align: center;
+  text-align: left;
   width: 45%;
   margin: 0.5em;
   padding: 0.5em;
