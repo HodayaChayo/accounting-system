@@ -36,6 +36,8 @@ export default function UploadingDocuments(props) {
     setErrorFilesToPrint([...errorFilesToPrint]);
 
     console.log(arrFiles);
+
+    
     if (arrFiles.length <= 20) {
       let errorFiles = [];
       const except = /(\.pdf|\.png|\.jpeg|\.PNG|\.PDF|\.JPEG)$/;
@@ -47,7 +49,9 @@ export default function UploadingDocuments(props) {
         } else {
           errorFiles.push(arrFiles[i]);
         }
-      }
+      } 
+
+      
 
       // prints for checking.
       console.log(formData);
@@ -66,6 +70,8 @@ export default function UploadingDocuments(props) {
         setErrorFilesToPrint(errorFiles);
         setMessage('ניתן להעלות רק קבצים מסוג: PDF, PNG, JPEG.');
       }
+    }else{
+        setMessage('לא ניתן להעלות יותר מ- 20 קבצים!');
     }
 
     // -----------------------
