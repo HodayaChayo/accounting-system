@@ -5,13 +5,13 @@ import { createRoot } from 'react-dom/client';
 import { AgChartsReact } from 'ag-charts-react';
 import { getData } from './dataBarChart';
 
-export default function BarChart () {
+export default function BarChart (props) {
   const [options, setOptions] = useState({
     title: {
       text: 'מצב תיק לפי חודשים',
     },
     subtitle: {
-      text: '2023',
+      text: '2024',
     },
     data: getData(),
     series: [

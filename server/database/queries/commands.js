@@ -66,14 +66,11 @@ const addCommand = (obj, photo) => {
   });
 };
 
-const updatePhoto = (photo, user)=>{
-  const sqlPhoto ='UPDATE `photos` SET `input_date`=? WHERE `user_name`=? AND `name`=?'
+const updatePhoto = (photo, user) => {
+  const sqlPhoto =
+    'UPDATE `photos` SET `input_date`=? WHERE `user_name`=? AND `name`=?';
 
-  const data = [
-    new Date(),
-    user,
-    photo
-  ]
+  const data = [new Date(), user, photo];
 
   return new Promise((resolve, reject) => {
     con.query(sqlPhoto, data, (err, rows) => {
@@ -85,7 +82,52 @@ const updatePhoto = (photo, user)=>{
       resolve(rows);
     });
   });
-}
+};
+
+const getBarChartData = (year, thisVatId) => {
+  const sql =
+    'SELECT year, ' +
+    'month, ' +
+    'COALESCE(SUM(expenses), 0) AS expenses, ' +
+    'COALESCE(SUM(income), 0) AS income ' +
+    'FROM (' +
+    'SELECT YEAR(`date`) AS year, ' +
+    'MONTH(`date`) AS month, ' +
+    'SUM(debit_amount) AS expenses, ' +
+    'NULL AS income ' +
+    'FROM command ' +
+    'WHERE id_vat_num=? ' +
+    'AND debit_account BETWEEN 700 AND 900 ' +
+    'AND `date` BETWEEN DATE_SUB("?-01-01", INTERVAL 12 MONTH) AND "?-01-02" ' +
+    'AND `date` != "?-01-01" ' +
+    'GROUP BY YEAR(`date`), MONTH(`date`) ' +
+    'UNION ALL ' +
+    'SELECT YEAR(`date`) AS year, ' +
+    'MONTH(`date`) AS month, ' +
+    'NULL AS expenses, ' +
+    'SUM(credit_amount) AS income ' +
+    'FROM command ' +
+    'WHERE id_vat_num=? ' +
+    'AND credit_account BETWEEN 300 AND 350 ' +
+    'AND `date` BETWEEN DATE_SUB("?-01-01", INTERVAL 12 MONTH) AND "?-01-02" ' +
+    'AND `date` != "?-01-01" ' +
+    'GROUP BY YEAR(`date`), MONTH(`date`) ' +
+    ') AS combined_data ' +
+    'GROUP BY year, month; ';
+
+  const data = [thisVatId, year, year, year, thisVatId, year, year, year];
+
+  return new Promise((resolve, reject) => {
+    con.query(sql, data, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      // console.log('rows:', rows);
+      resolve(rows);
+    });
+  });
+};
 
 // handler the request of adding a command
 router.post('/addCommand', (req, res) => {
@@ -102,12 +144,10 @@ router.post('/addCommand', (req, res) => {
 
       if (!isExist) {
         await addCommand(obj.commandData, obj.selectedDoc.name);
-        if(obj.selectedDoc.name !== ''){
-          await updatePhoto(obj.selectedDoc.name, obj.selectedCus)
+        if (obj.selectedDoc.name !== '') {
+          await updatePhoto(obj.selectedDoc.name, obj.selectedCus);
         }
-        res.end(
-          JSON.stringify({ isAdd: true, message: 'פקודה נקלטה בהצלחה' })
-        );
+        res.end(JSON.stringify({ isAdd: true, message: 'פקודה נקלטה בהצלחה' }));
       } else {
         res.end(
           JSON.stringify({
@@ -129,5 +169,19 @@ router.post('/addCommand', (req, res) => {
   });
 });
 
+// send BarChartData
+router.post('/barChartData', (req, res) => {
+  const body = [];
+  req.on('data', chunk => {
+    body.push(chunk);
+  });
+  req.on('end', async () => {
+    const obj = JSON.parse(body);
+    console.log(obj);
+    const result = await getBarChartData(obj.currentYear, obj.thisVatId)
+    res.end(JSON.stringify(result));
+
+  });
+});
 
 module.exports = router;
